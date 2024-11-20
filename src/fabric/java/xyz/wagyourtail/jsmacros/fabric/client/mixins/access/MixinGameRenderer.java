@@ -54,7 +54,7 @@ public class MixinGameRenderer {
     }
 
     @Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=hand"), method = "renderWorld")
-    public void render(RenderTickCounter tickCounter, CallbackInfo ci, @Local(ordinal = 1) Matrix4f matrix4f2) {
+    public void render(RenderTickCounter tickCounter, CallbackInfo ci, @Local(ordinal = 2) Matrix4f matrix4f2) {
         Profiler profilerfiller = Profilers.get();
         profilerfiller.swap("jsmacros_draw3d");
         MatrixStack ms = new MatrixStack();
