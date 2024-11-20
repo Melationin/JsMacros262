@@ -75,7 +75,7 @@ public class PlayerInput {
      * @since 1.4.0
      */
     public PlayerInput(Input input, float yaw, float pitch, boolean sprinting) {
-        this(input.movementForward, input.movementSideways, yaw, pitch, input.jumping, input.sneaking, sprinting);
+        this(input.movementForward, input.movementSideways, yaw, pitch, input.playerInput.jump(), input.playerInput.sneak(), sprinting);
     }
 
     /**

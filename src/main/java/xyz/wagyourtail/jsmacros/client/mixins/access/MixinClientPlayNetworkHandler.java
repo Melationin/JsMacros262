@@ -36,7 +36,7 @@ public class MixinClientPlayNetworkHandler {
     @Inject(at = @At("HEAD"), method = "onWorldTimeUpdate")
     public void onServerTime(WorldTimeUpdateS2CPacket packet, CallbackInfo info) {
         synchronized (jsmacros$timeSync) {
-            final long tick = packet.getTime();
+            final long tick = packet.time();
             final long time = System.currentTimeMillis();
             if (tick != jsmacros$lastServerTimeRecvTick) {
                 double mspt = (double) (time - jsmacros$lastServerTimeRecvTime) / (double) (tick - jsmacros$lastServerTimeRecvTick);

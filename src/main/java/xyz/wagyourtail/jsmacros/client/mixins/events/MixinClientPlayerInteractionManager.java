@@ -36,7 +36,7 @@ public class MixinClientPlayerInteractionManager {
             BlockPos pos = hitResult.getBlockPos();
             new EventInteractBlock(
                     hand != Hand.MAIN_HAND,
-                    cir.getReturnValue().name(),
+                    cir.getReturnValue().isAccepted(),
                     new BlockDataHelper(player.getWorld().getBlockState(pos), player.getWorld().getBlockEntity(pos), pos),
                     hitResult.getSide().getId()
             ).trigger();
@@ -62,7 +62,7 @@ public class MixinClientPlayerInteractionManager {
     @Inject(at = @At("RETURN"), method = "interactEntity")
     public void onInteractEntity(PlayerEntity player, Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (cir.getReturnValue() != ActionResult.FAIL) {
-            new EventInteractEntity(hand != Hand.MAIN_HAND, cir.getReturnValue().name(), entity).trigger();
+            new EventInteractEntity(hand != Hand.MAIN_HAND, cir.getReturnValue().isAccepted(), entity).trigger();
         }
     }
 

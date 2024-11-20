@@ -45,12 +45,4 @@ public class ArrowEntityHelper extends EntityHelper<PersistentProjectileEntity> 
         return base.getPierceLevel();
     }
 
-    /**
-     * @return {@code true} if the arrow is shot from a crossbow, {@code false} otherwise.
-     * @since 1.8.4
-     */
-    public boolean isShotFromCrossbow() {
-        return base.isShotFromCrossbow();
-    }
-
 }

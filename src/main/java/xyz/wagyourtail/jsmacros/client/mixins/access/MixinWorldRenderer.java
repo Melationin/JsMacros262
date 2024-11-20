@@ -1,28 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.render.WorldRenderer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
 
-    @Shadow
+    // TODO: Was not used before
+/*    @Shadow
     @Final
     private MinecraftClient client;
 
@@ -55,6 +40,6 @@ public abstract class MixinWorldRenderer {
 //                campos.getX(), campos.getY(), campos.getZ(),
 //                pos, Blocks.STONE.getDefaultState() // stone won't ever change its shape, right?
 //        );
-    }
+    }*/
 
 }

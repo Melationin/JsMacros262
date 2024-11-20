@@ -3,14 +3,14 @@ package xyz.wagyourtail.jsmacros.client.gui.containers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.util.TranslationUtil;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -190,7 +190,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             drawContext.fill(x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
             drawContext.fill(x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
             drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
-            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+            RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
             // icon for keystate
             Identifier tex;
             if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
@@ -200,7 +200,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                     tex = script_fork_tex;
                 }
                 RenderSystem.enableBlend();
-                drawContext.drawTexture(tex, x + w / 4 - 2 * height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - 2 * height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
                 switch (macro.triggerType) {
                     default:
@@ -215,7 +215,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                         break;
                 }
                 RenderSystem.enableBlend();
-                drawContext.drawTexture(tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             } else {
                 if (macro.joined) {
@@ -224,7 +224,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                     tex = script_fork_tex;
                 }
                 RenderSystem.enableBlend();
-                drawContext.drawTexture(tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             }
 

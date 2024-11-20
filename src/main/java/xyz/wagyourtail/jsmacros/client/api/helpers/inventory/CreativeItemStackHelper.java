@@ -3,24 +3,15 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.*;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.BlockPredicatesChecker;
-import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
-import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 
@@ -95,7 +86,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        return addEnchantment(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Identifier.of(id)).orElseThrow(), level);
+        return addEnchantment(mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Identifier.of(id)).orElseThrow(), level);
     }
 
     /**

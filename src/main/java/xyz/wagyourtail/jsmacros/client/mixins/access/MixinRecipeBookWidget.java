@@ -18,10 +18,9 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     private boolean searching;
 
     @Shadow
-    protected abstract void refreshResults(boolean resetCurrentPage);
-
-    @Shadow
     private ClientRecipeBook recipeBook;
+
+    @Shadow protected abstract void refreshResults(boolean resetCurrentPage, boolean filteringCraftable);
 
     @Override
     public RecipeBookResults jsmacros_getResults() {
@@ -35,7 +34,7 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
 
     @Override
     public void jsmacros_refreshResultList() {
-        refreshResults(false);
+        refreshResults(true, false);
     }
 
     @Override

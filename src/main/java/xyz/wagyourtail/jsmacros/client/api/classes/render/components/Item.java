@@ -286,7 +286,7 @@ public class Item implements RenderElement, Alignable<Item> {
             if (is3dRender) {
                 matrices.translate(0, 0, -199.5);
             }
-            drawContext.drawItemInSlot(mc.textRenderer, item, x, y, ovText);
+            drawContext.drawStackOverlay(mc.textRenderer, item, x, y, ovText);
         }
         matrices.pop();
     }

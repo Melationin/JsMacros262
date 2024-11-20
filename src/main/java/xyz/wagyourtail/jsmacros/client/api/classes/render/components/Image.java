@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -306,7 +307,7 @@ public class Image implements RenderElement, Alignable<Image> {
         MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
-        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, imageid);

@@ -5,9 +5,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -62,7 +65,7 @@ public class ItemHelper extends BaseHelper<Item> {
      */
     public boolean canBeRepairedWith(ItemStackHelper stack) {
         // At least in vanilla the first item stack is never used
-        return base.canRepair(null, stack.getRaw());
+        return base.getDefaultStack().canRepairWith(stack.getRaw());
     }
 
     /**
@@ -131,7 +134,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean hasRecipeRemainder() {
-        return base.hasRecipeRemainder();
+        return !base.getRecipeRemainder().isEmpty();
     }
 
     /**
@@ -139,19 +142,20 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     @Nullable
-    public ItemHelper getRecipeRemainder() {
-        return base.getRecipeRemainder() == null ? null : new ItemHelper(base.getRecipeRemainder());
+    public ItemStackHelper getRecipeRemainder() {
+        return new ItemStackHelper(base.getRecipeRemainder());
     }
 
+    // TODO: Fix this
     /**
      * With increased enchantability the change to get more and better enchantments increases.
      *
      * @return the enchantability of this item, returns {@code 0} by default.
      * @since 1.8.4
-     */
+     *//*
     public int getEnchantability() {
         return base.getEnchantability();
-    }
+    }*/
 
     /**
      * @return the name of this item, translated to the current language.
@@ -188,29 +192,30 @@ public class ItemHelper extends BaseHelper<Item> {
         return base.getComponents().getOrDefault(DataComponentTypes.MAX_DAMAGE, 0);
     }
 
+    // TODO: Fix this
     /**
      * @return {@code true} if this item is fireproof, {@code false} otherwise.
      * @since 1.8.4
-     */
+     *//*
     public boolean isFireproof() {
         return base.getComponents().get(DataComponentTypes.FIRE_RESISTANT) != null;
     }
 
-    /**
+    *//**
      * @return {@code true} if this item is a tool, {@code false} otherwise.
      * @since 1.8.4
-     */
+     *//*
     public boolean isTool() {
         return base instanceof ToolItem;
     }
 
-    /**
+    *//**
      * @return {@code true} if this item can be worn in the armor slot, {@code false} otherwise.
      * @since 1.8.4
-     */
+     *//*
     public boolean isWearable() {
         return base instanceof Equipment && ((Equipment) base).getSlotType().isArmorSlot();
-    }
+    }*/
 
     /**
      * @return {@code true} if this item is food, {@code false} otherwise.

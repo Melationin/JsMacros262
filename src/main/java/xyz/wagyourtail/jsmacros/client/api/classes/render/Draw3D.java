@@ -2,22 +2,27 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.*;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Box;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.EntityTraceLine;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.RenderElement3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.TraceLine;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * {@link Draw2D} is cool
@@ -702,7 +707,7 @@ public class Draw3D implements Registrable<Draw3D> {
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
 
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
         matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
@@ -721,7 +726,7 @@ public class Draw3D implements Registrable<Draw3D> {
         }
 
         //reset
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
 
         matrixStack.pop();
 

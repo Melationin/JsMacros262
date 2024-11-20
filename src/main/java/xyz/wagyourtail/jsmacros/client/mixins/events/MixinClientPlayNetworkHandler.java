@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientCommonNetworkHandler;
@@ -15,9 +14,22 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.DeathMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
+import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
+import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
+import net.minecraft.network.packet.s2c.play.ItemPickupAnimationS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
+import net.minecraft.network.packet.s2c.play.RemoveEntityStatusEffectS2CPacket;
+import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.UnloadChunkS2CPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
@@ -36,10 +48,19 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemPickup;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventSlotUpdate;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDeath;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventStatusEffectUpdate;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventBlockUpdate;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventChunkLoad;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventChunkUnload;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventJoinServer;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventPlayerJoin;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventPlayerLeave;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkHandler {
@@ -169,23 +190,6 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
             assert client.player != null;
             new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.effect())), null, false).trigger();
         }
-    }
-
-    @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;setCursorStack(Lnet/minecraft/item/ItemStack;)V"))
-    public void onHeldSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
-        HandledScreen<?> screen;
-        if (this.client.currentScreen instanceof HandledScreen<?>) {
-            screen = (HandledScreen<?>) this.client.currentScreen;
-        } else {
-            screen = new InventoryScreen(this.client.player);
-        }
-        new EventSlotUpdate(screen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getStack()).trigger();
-    }
-
-    @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V"))
-    public void onInventorySlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
-        assert client.player != null;
-        new EventSlotUpdate(new InventoryScreen(client.player), "INVENTORY", packet.getSlot(), this.client.player.playerScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/PlayerScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V"))

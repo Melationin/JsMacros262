@@ -27,7 +27,6 @@
     "access.MixinEntity2",
     "access.MixinFishingBobberEntity",
     "access.MixinFontManager",
-    "access.MixinFontStorage",
     "access.MixinFoxEntity",
     "access.MixinHandledScreen",
     "access.MixinHorseEntity",

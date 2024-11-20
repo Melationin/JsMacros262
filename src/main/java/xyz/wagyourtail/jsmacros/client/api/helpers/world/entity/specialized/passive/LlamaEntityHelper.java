@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.entity.passive.LlamaEntity;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
 
 /**
  * @author Etheradon
@@ -22,14 +21,6 @@ public class LlamaEntityHelper<T extends LlamaEntity> extends DonkeyEntityHelper
     @DocletReplaceReturn("LlamaVariant")
     public String getVariant() {
         return base.getVariant().asString();
-    }
-
-    /**
-     * @return the color of this llama's carpet.
-     * @since 1.8.4
-     */
-    public DyeColorHelper getCarpetColor() {
-        return new DyeColorHelper(base.getCarpetColor());
     }
 
     /**

@@ -10,7 +10,6 @@ import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -18,7 +17,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
-import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -202,7 +200,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.5.0
      */
     public boolean isFallFlying() {
-        return base.isFallFlying();
+        return base.isGliding();
     }
 
     /**

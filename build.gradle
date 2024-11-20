@@ -42,6 +42,12 @@ configurations {
     shadowForge
 }
 
+configurations.all {
+    resolutionStrategy {
+        force "org.ow2.asm:asm:9.7.1"
+    }
+}
+
 sourceSets {
     core {
         java {
@@ -145,10 +151,10 @@ if (enabled_loaders.contains("fabric")) {
 }
 
 dependencies {
-    implementation "io.noties:prism4j:${project.prism_version}"
+    implementation "io.noties:prism4j:2.0.0"
     compileOnly "org.spongepowered:mixin:0.8.5"
     compileOnly "io.github.llamalad7:mixinextras-common:0.3.2"
-    compileOnly "org.ow2.asm:asm:9.5"
+    compileOnly "org.ow2.asm:asm:9.7.1"
 
     coreImplementation 'org.jooq:joor:0.9.15'
     coreImplementation "com.neovisionaries:nv-websocket-client:2.14"
@@ -171,10 +177,10 @@ dependencies {
         fabricInclude fabricApi.fabricModule("fabric-resource-loader-v0", project.fapi_version)
         fabricInclude fabricApi.fabricModule("fabric-command-api-v2", project.fapi_version)
 
-        fabricInclude "io.noties:prism4j:${project.prism_version}"
+        fabricInclude "io.noties:prism4j:2.0.0"
         fabricInclude "com.neovisionaries:nv-websocket-client:2.14"
         fabricInclude "org.javassist:javassist:3.30.2-GA"
-        fabricInclude "org.jooq:joor:0.9.14"
+        fabricInclude "org.jooq:joor:0.9.15"
 
         fabricModImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
         fabricModImplementation fabricApi.fabricModule("fabric-screen-api-v1", project.fapi_version)
@@ -185,12 +191,12 @@ dependencies {
 
     if (enabled_loaders.contains("forge")) {
 
-        forgeInclude "io.noties:prism4j:${project.prism_version}", {
+        forgeInclude "io.noties:prism4j:2.0.0", {
             exclude module: "annotations-java5"
         }
         forgeInclude "com.neovisionaries:nv-websocket-client:2.14"
         forgeInclude "org.javassist:javassist:3.30.2-GA"
-        forgeInclude "org.jooq:joor:0.9.14"
+        forgeInclude "org.jooq:joor:0.9.15"
 
 
         forgeRuntimeOnly(project(":extension:graal"))

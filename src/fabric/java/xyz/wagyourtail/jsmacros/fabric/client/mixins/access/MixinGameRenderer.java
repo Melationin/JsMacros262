@@ -9,6 +9,8 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiler.Profilers;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,7 +55,8 @@ public class MixinGameRenderer {
 
     @Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=hand"), method = "renderWorld")
     public void render(RenderTickCounter tickCounter, CallbackInfo ci, @Local(ordinal = 1) Matrix4f matrix4f2) {
-        client.getProfiler().swap("jsmacros_draw3d");
+        Profiler profilerfiller = Profilers.get();
+        profilerfiller.swap("jsmacros_draw3d");
         MatrixStack ms = new MatrixStack();
         ms.multiplyPositionMatrix(matrix4f2);
         try {
@@ -68,7 +71,6 @@ public class MixinGameRenderer {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        client.getProfiler().pop();
     }
 
     @Inject(at = @At("HEAD"), method = "updateCrosshairTarget", cancellable = true)

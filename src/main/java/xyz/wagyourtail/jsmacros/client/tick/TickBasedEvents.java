@@ -6,14 +6,12 @@ import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventArmorChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventFallFlying;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeldItemChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventTick;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
@@ -63,7 +61,7 @@ public class TickBasedEvents {
         }
 
         if (mc.player != null) {
-            boolean state = mc.player.isFallFlying();
+            boolean state = mc.player.isGliding();
             if (previousFallFlyState ^ state) {
                 new EventFallFlying(state).trigger();
                 previousFallFlyState = state;

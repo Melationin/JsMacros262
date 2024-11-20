@@ -2,7 +2,14 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.*;
+import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.client.option.CloudRenderMode;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.GraphicsMode;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.NarratorMode;
+import net.minecraft.client.option.Perspective;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.render.ChunkBuilderMode;
 import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.LanguageManager;
@@ -11,6 +18,7 @@ import net.minecraft.client.util.Window;
 import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.network.message.ChatVisibility;
 import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
+import net.minecraft.particle.ParticlesMode;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.sound.SoundCategory;
@@ -27,7 +35,13 @@ import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSimpleOption;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -454,7 +468,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleCape(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.CAPE, val);
+            base.setPlayerModelPart(PlayerModelPart.CAPE, val);
             return this;
         }
 
@@ -464,7 +478,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleJacket(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.JACKET, val);
+            base.setPlayerModelPart(PlayerModelPart.JACKET, val);
             return this;
         }
 
@@ -474,7 +488,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftSleeve(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
+            base.setPlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
             return this;
         }
 
@@ -484,7 +498,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightSleeve(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
+            base.setPlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
             return this;
         }
 
@@ -494,7 +508,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftPants(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
+            base.setPlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
             return this;
         }
 
@@ -504,7 +518,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightPants(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
+            base.setPlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
             return this;
         }
 
@@ -514,7 +528,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleHat(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.HAT, val);
+            base.setPlayerModelPart(PlayerModelPart.HAT, val);
             return this;
         }
 

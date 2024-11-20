@@ -58,7 +58,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public int getMaxBuildHeight() {
-        return base.getTopY();
+        return base.getHeight();
     }
 
     /**
@@ -113,7 +113,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     @DocletReplaceReturn("Biome")
     public String getBiome(int xOffset, int y, int zOffset) {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
     }
 
     /**
@@ -155,7 +155,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
         // Maybe adapt this to the WorldScanner way?
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = base.getBottomY(); y < base.getTopY(); y++) {
+                for (int y = base.getBottomY(); y < base.getHeight(); y++) {
                     BlockPos pos = base.getPos().getBlockPos(x, y, z);
                     BlockState state = base.getBlockState(pos);
                     if (!includeAir && state.isAir()) {

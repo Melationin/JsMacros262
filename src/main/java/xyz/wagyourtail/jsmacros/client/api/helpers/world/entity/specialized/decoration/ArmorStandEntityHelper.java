@@ -44,7 +44,7 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * @since 1.8.4
      */
     public boolean hasBasePlate() {
-        return !base.shouldHideBasePlate();
+        return !base.shouldShowBasePlate();
     }
 
     /**

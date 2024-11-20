@@ -3,15 +3,22 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.*;
+import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.DyedColorComponent;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockPredicatesChecker;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
@@ -161,22 +168,23 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantments() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).streamEntries()
             .filter(enchantment -> enchantment.value().isAcceptableItem(base))
             .map(EnchantmentHelper::new).toList();
     }
 
+    // TODO: Fix this
     /**
      * @return a list of all enchantments that can be applied to this item through an enchanting table.
      * @since 1.8.4
-     */
+     *//*
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.IN_ENCHANTING_TABLE)
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.IN_ENCHANTING_TABLE)
             .map(registryEntries -> registryEntries.stream()
                 .filter(enchantment -> enchantment.value().isAcceptableItem(base))
                 .map(EnchantmentHelper::new).toList())
             .orElse(Collections.emptyList());
-    }
+    }*/
 
     /**
      * The returned list is a copy of the original list and can be modified without affecting the
@@ -246,7 +254,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public double getAttackDamage() {
         assert mc.player != null;
         AttributeModifiersComponent lv = base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-        return lv.applyOperations(mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+        return lv.applyOperations(mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
     }
 
     /**
@@ -332,22 +340,6 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public boolean isFood() {
         return base.get(DataComponentTypes.FOOD) != null;
-    }
-
-    /**
-     * @return
-     * @since 1.8.2
-     */
-    public boolean isTool() {
-        return base.getItem() instanceof ToolItem;
-    }
-
-    /**
-     * @return
-     * @since 1.8.2
-     */
-    public boolean isWearable() {
-        return base.getItem() instanceof Equipment && ((Equipment) base.getItem()).getSlotType().isArmorSlot();
     }
 
     /**
@@ -440,7 +432,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.6.5
      */
     public boolean isOnCooldown() {
-        return MinecraftClient.getInstance().player.getItemCooldownManager().isCoolingDown(base.getItem());
+        return MinecraftClient.getInstance().player.getItemCooldownManager().isCoolingDown(base.getItem().getDefaultStack());
     }
 
     /**
@@ -448,7 +440,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.6.5
      */
     public float getCooldownProgress() {
-        return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem(), mc.getRenderTickCounter().getTickDelta(false));
+        return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem().getDefaultStack(), mc.getRenderTickCounter().getTickDelta(false));
     }
 
     /**

@@ -465,7 +465,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     @DocletReplaceReturn("Biome")
     public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
     }
 
     @Override

@@ -7,6 +7,8 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiler.Profilers;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
@@ -100,7 +102,8 @@ public class ForgeEvents {
         if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
             return;
         }
-        client.getProfiler().swap("jsmacros_draw3d");
+        Profiler profilerfiller = Profilers.get();
+        profilerfiller.swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
                 DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, e.getPoseStack(), client.getBufferBuilders().getEntityVertexConsumers());
@@ -109,7 +112,6 @@ public class ForgeEvents {
                 t.printStackTrace();
             }
         }
-        client.getProfiler().pop();
     }
 
     public static void onTick(ClientTickEvent.Post event) {

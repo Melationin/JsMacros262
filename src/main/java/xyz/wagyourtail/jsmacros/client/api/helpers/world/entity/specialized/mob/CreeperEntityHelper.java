@@ -20,7 +20,7 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
      * @since 1.8.4
      */
     public boolean isCharged() {
-        return base.shouldRenderOverlay();
+        return base.isCharged();
     }
 
     /**

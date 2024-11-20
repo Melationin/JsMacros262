@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
@@ -73,7 +74,7 @@ public class RegistryHelper {
         }
 
         @Override
-        public <T> Optional<RegistryWrapper.Impl<T>> getOptionalWrapper(RegistryKey<? extends Registry<? extends T>> registryRef) {
+        public <T> Optional<RegistryWrapper.Impl<T>> getOptional(RegistryKey<? extends Registry<? extends T>> registryRef) {
             throw new RuntimeException("Unsupported operation.");
         }
 
@@ -183,7 +184,7 @@ public class RegistryHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<BlockId>, nbt: string")
     public BlockStateHelper getBlockState(String id, String nbt) throws CommandSyntaxException {
-        return new BlockStateHelper(BlockArgumentParser.block(Registries.BLOCK.getReadOnlyWrapper(), parseNameSpace(id) + nbt, false).blockState());
+        return new BlockStateHelper(BlockArgumentParser.block(Registries.BLOCK, parseNameSpace(id) + nbt, false).blockState());
     }
 
     /**
@@ -221,7 +222,7 @@ public class RegistryHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public EnchantmentHelper getEnchantment(String id, int level) {
-        return new EnchantmentHelper(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(parseIdentifier(id)).orElseThrow(), level);
+        return new EnchantmentHelper(mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(parseIdentifier(id)).orElseThrow(), level);
     }
 
     /**
@@ -230,7 +231,7 @@ public class RegistryHelper {
      */
     @DocletReplaceReturn("JavaList<EnchantmentId>")
     public List<String> getEnchantmentIds() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -238,7 +239,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getEnchantments() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries().map(EnchantmentHelper::new).collect(Collectors.toList());
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).streamEntries().map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -250,7 +251,7 @@ public class RegistryHelper {
     @DocletReplaceParams("type: E")
     @DocletReplaceReturn("EntityTypeFromId<E>")
     public EntityHelper<?> getEntity(String type) {
-        return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
+        return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world, SpawnReason.COMMAND));
     }
 
     /**
@@ -306,7 +307,7 @@ public class RegistryHelper {
      */
     @DocletReplaceReturn("JavaList<PaintingId>")
     public List<String> getPaintingIds() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.PAINTING_VARIANT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.PAINTING_VARIANT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

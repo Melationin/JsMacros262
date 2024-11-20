@@ -1,16 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.PropertyDelegate;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractFurnaceScreenHandler;
-
-import java.util.Map;
 
 /**
  * @author Etheradon
@@ -67,17 +60,18 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
         return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).invokeIsSmeltable(stack.getRaw());
     }
 
+    // TODO: Fix this
     /**
      * @return a map of all valid fuels and their burn times in ticks.
      * @since 1.8.4
-     */
+     *//*
     public Map<String, Integer> getFuelValues() {
         Object2IntMap<String> fuelMap = new Object2IntOpenHashMap<>();
         for (Map.Entry<Item, Integer> entry : FurnaceBlockEntity.createFuelTimeMap().entrySet()) {
             fuelMap.put(Registries.ITEM.getId(entry.getKey()).toString(), entry.getValue().intValue());
         }
         return fuelMap;
-    }
+    }*/
 
     /**
      * If the returned value equals {@link #getTotalSmeltingTime()} then the item is done smelting.

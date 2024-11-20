@@ -7,7 +7,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ClientBossBar;
-import net.minecraft.client.network.*;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -43,7 +47,13 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.PlayerListEntryHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.ScoreboardsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.PlayerEntityHelper;
@@ -52,10 +62,21 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -562,11 +583,23 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         if (world == null) return null;
         TargetPredicate target = TargetPredicate.createNonAttackable();
-        target.setPredicate((e) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
+        target.setPredicate((e, w) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
         List<LivingEntity> entities = (List) StreamSupport.stream(world.getEntities().spliterator(), false).filter(e -> e instanceof LivingEntity).collect(Collectors.toList());
-        LivingEntity e = world.getClosestEntity(entities, target, null, x1, y1, z1);
-        if (e != null) {
-            return EntityHelper.create(e);
+        LivingEntity closest = null;
+        double distance = -1;
+        PlayerEntity tester = MinecraftClient.getInstance().player;
+        for (LivingEntity entity : entities) {
+            if (target.test(null, tester, entity)) {
+                double d = entity.squaredDistanceTo(tester.getX(), tester.getY(), tester.getZ());
+                if (distance == -1 || d < distance) {
+                    distance = d;
+                    closest = entity;
+                }
+            }
+        }
+
+        if (closest != null) {
+            return EntityHelper.create(closest);
         }
         return null;
     }
@@ -594,7 +627,7 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
         if (world == null || player == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(player.getBlockPos()).value());
+        Identifier id = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(world.getBiome(player.getBlockPos()).value());
         return id == null ? null : id.toString();
     }
 
@@ -698,7 +731,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return world difficulty as an {@link java.lang.Integer Integer}. {@code -1} if world is not loaded.
+     * @return world difficulty as an {@link Integer Integer}. {@code -1} if world is not loaded.
      * @since 1.2.6
      */
     public int getDifficulty() {
@@ -708,7 +741,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return moon phase as an {@link java.lang.Integer Integer}. {@code -1} if world is not loaded.
+     * @return moon phase as an {@link Integer Integer}. {@code -1} if world is not loaded.
      * @since 1.2.6
      */
     public int getMoonPhase() {
@@ -721,7 +754,7 @@ public class FWorld extends BaseLibrary {
      * @param x
      * @param y
      * @param z
-     * @return sky light as an {@link java.lang.Integer Integer}. {@code -1} if world is not loaded.
+     * @return sky light as an {@link Integer Integer}. {@code -1} if world is not loaded.
      * @since 1.1.2
      */
     public int getSkyLight(int x, int y, int z) {
@@ -734,7 +767,7 @@ public class FWorld extends BaseLibrary {
      * @param x
      * @param y
      * @param z
-     * @return block light as an {@link java.lang.Integer Integer}. {@code -1} if world is not loaded.
+     * @return block light as an {@link Integer Integer}. {@code -1} if world is not loaded.
      * @since 1.1.2
      */
     public int getBlockLight(int x, int y, int z) {
@@ -882,7 +915,7 @@ public class FWorld extends BaseLibrary {
     public String getBiomeAt(int x, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, 10, z)).value());
+        Identifier id = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, 10, z)).value());
         return id == null ? null : id.toString();
     }
 
@@ -898,7 +931,7 @@ public class FWorld extends BaseLibrary {
     public String getBiomeAt(int x, int y, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, y, z)).value());
+        Identifier id = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, y, z)).value());
         return id == null ? null : id.toString();
     }
 

@@ -4,9 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -55,13 +52,14 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
         return inventory.getScreenHandler().getAvailableRecipeCount();
     }
 
+    // TODO: Fix this
     /**
      * @return a list of all available recipe results in the form of item stacks.
      * @since 1.8.4
-     */
+     *//*
     public List<ItemStackHelper> getRecipes() {
         return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.value().getResult(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()))).collect(Collectors.toList());
-    }
+    }*/
 
     /**
      * @return {@code true} if there is a selected recipe, {@code false} otherwise.

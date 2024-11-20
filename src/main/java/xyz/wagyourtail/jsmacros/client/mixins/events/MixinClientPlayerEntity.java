@@ -32,7 +32,6 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventRiding;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventSignEdit;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,8 +124,21 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         }
         this.input.movementForward = moveInput.movementForward;
         this.input.movementSideways = moveInput.movementSideways;
-        this.input.jumping = moveInput.jumping;
-        this.input.sneaking = moveInput.sneaking;
+        if (moveInput.jumping) {
+            this.input.jump();
+        }
+        if (moveInput.sneaking) {
+            net.minecraft.util.PlayerInput playerInput = this.input.playerInput;
+            this.input.playerInput = new net.minecraft.util.PlayerInput (
+                    playerInput.forward(),
+                    playerInput.backward(),
+                    playerInput.left(),
+                    playerInput.right(),
+                    playerInput.sneak(),
+                    true,
+                    playerInput.sprint()
+            );
+        }
         this.client.options.sprintKey.setPressed(moveInput.sprinting);
         this.setYaw(moveInput.yaw);
         this.setPitch(moveInput.pitch);

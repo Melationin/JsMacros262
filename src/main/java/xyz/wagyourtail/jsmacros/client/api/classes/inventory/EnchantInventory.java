@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.EnchantmentScreenHandler;
@@ -34,7 +33,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
      */
     public TextHelper[] getEnchantments() {
         TextHelper[] enchants = new TextHelper[3];
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
+        var enchRegistry = mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
         for (int j = 0; j < 3; ++j) {
             RegistryEntry<Enchantment> enchantment = enchRegistry.getEntry(inventory.getScreenHandler().enchantmentId[j]).orElseThrow();
             if ((enchantment) != null) {
@@ -51,7 +50,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     public EnchantmentHelper[] getEnchantmentHelpers() {
         EnchantmentScreenHandler handler = inventory.getScreenHandler();
         EnchantmentHelper[] enchantments = new EnchantmentHelper[3];
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
+        var enchRegistry = mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
         for (int i = 0; i < 3; i++) {
             enchantments[i] = new EnchantmentHelper(enchRegistry.getEntry(handler.enchantmentId[i]).orElseThrow(), handler.enchantmentLevel[i]);
         }
@@ -64,7 +63,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
      */
     public String[] getEnchantmentIds() {
         String[] enchants = new String[3];
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
+        var enchRegistry = mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
         for (int j = 0; j < 3; ++j) {
             RegistryEntry<Enchantment> enchantment = enchRegistry.getEntry(inventory.getScreenHandler().enchantmentId[j]).orElseThrow();
             enchants[j] = enchantment.getIdAsString();
