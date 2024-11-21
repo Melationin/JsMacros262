@@ -249,6 +249,13 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         return i;
     }
 
+    private double distanceSquared(Pos3D pos, Pos3D other) {
+        double dx = pos.x - other.x;
+        double dy = pos.y - other.y;
+        double dz = pos.z - other.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
     @Override
     @DocletIgnore
     public void render(DrawContext drawContext, float delta) {
@@ -256,17 +263,24 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         matrixStack.push();
         if (boundEntity != null && boundEntity.isAlive()) {
             Pos3D entityPos = boundEntity.getPos().add(boundOffset);
-            pos.x += (entityPos.x - pos.x) * delta;
-            pos.y += (entityPos.y - pos.y) * delta;
-            pos.z += (entityPos.z - pos.z) * delta;
+            // Arbitrary distance of when to teleport the surface instead of interpolating
+            if (distanceSquared(entityPos, pos) <= 3) {
+                pos.x += (entityPos.x - pos.x) * delta;
+                pos.y += (entityPos.y - pos.y) * delta;
+                pos.z += (entityPos.z - pos.z) * delta;
+            } else {
+                pos.x = entityPos.x;
+                pos.y = entityPos.y;
+                pos.z = entityPos.z;
+            }
         }
 
         matrixStack.translate(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
             Vector3f rot = toEulerDegrees(MinecraftClient.getInstance().gameRenderer.getCamera().getRotation());
-            rotations.x = -rot.x();
-            rotations.y = 180 + rot.y();
+            rotations.x = rot.x();
+            rotations.y = rot.y();
             rotations.z = 0;
         }
         if (rotateCenter) {
