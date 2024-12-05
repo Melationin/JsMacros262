@@ -989,7 +989,7 @@ public class FWorld extends BaseLibrary {
      * @param deltaY the y variation of the particle
      * @param deltaZ the z variation of the particle
      * @param speed  the speed of the particle
-     * @param count  the amount of particles to spawn
+     * @param count  the number of particles to spawn
      * @param force  whether to show the particle if it's more than 32 blocks away
      * @since 1.8.4
      */
@@ -1000,7 +1000,8 @@ public class FWorld extends BaseLibrary {
         ParticleEffect particle = (ParticleEffect) Registries.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
         particle = particle != null ? particle : ParticleTypes.CLOUD;
 
-        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
+        // Important is for whether the particle can spawn on the minimal setting
+        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, true, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
         mc.execute(() -> player.networkHandler.onParticle(packet));
     }
 

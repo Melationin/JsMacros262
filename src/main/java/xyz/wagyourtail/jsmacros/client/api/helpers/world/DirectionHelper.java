@@ -62,10 +62,10 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @since 1.8.4
      */
     public float getYaw() {
-        if (base.getHorizontal() == -1) {
+        if (base.getHorizontalQuarterTurns() == -1) {
             return 0;
         } else {
-            return base.asRotation();
+            return base.getPositiveHorizontalDegrees();
         }
     }
 

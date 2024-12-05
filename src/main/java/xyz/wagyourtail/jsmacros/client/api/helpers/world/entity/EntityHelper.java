@@ -555,6 +555,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                 return new WardenEntityHelper(((WardenEntity) e));
             } else if (e instanceof WitchEntity) {
                 return new WitchEntityHelper(((WitchEntity) e));
+            } else if (e instanceof CreakingEntity) {
+                return new CreakingEntityHelper(((CreakingEntity) e));
             }
 
             // Animals

@@ -27,7 +27,7 @@ public class CustomImage {
 
     public static final Map<String, CustomImage> IMAGES = new HashMap<>();
 
-    private static final String PREFIX = "jsmimage/";
+    private static final String PREFIX = "jsmimage";
     private static int currentId = 0;
 
     private final BufferedImage image;
@@ -45,7 +45,8 @@ public class CustomImage {
         this.graphics = image.createGraphics();
         this.name = name;
         this.texture = createTexture(image);
-        identifier = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture(PREFIX + name, texture);
+        this.identifier = Identifier.of(PREFIX + name);
+        MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, texture);
         update();
         currentId++;
         IMAGES.put(identifier.toString(), this);

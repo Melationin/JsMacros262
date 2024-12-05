@@ -185,7 +185,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         double yaw = getYaw();
         double pitch = getPitch();
         if (dir.getAxis().isHorizontal()) {
-            yaw = dir.asRotation();
+            yaw = dir.getPositiveHorizontalDegrees();
         } else {
             pitch = dir == Direction.UP ? -90 : 90;
         }
