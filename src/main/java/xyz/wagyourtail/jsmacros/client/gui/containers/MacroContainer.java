@@ -200,7 +200,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                     tex = script_fork_tex;
                 }
                 RenderSystem.enableBlend();
-                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - 2 * height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - 2 * height + 2, y + 2, 0, 0, height - 4, height - 4, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
                 switch (macro.triggerType) {
                     default:
@@ -215,7 +215,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                         break;
                 }
                 RenderSystem.enableBlend();
-                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, 0, 0, height - 4, height - 4, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             } else {
                 if (macro.joined) {
@@ -224,7 +224,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                     tex = script_fork_tex;
                 }
                 RenderSystem.enableBlend();
-                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, 0, 0, height - 4, height - 4, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             }
 
