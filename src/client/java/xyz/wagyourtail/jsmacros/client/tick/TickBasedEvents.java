@@ -7,12 +7,13 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventArmorChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventFallFlying;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeldItemChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventTick;
-import xyz.wagyourtail.jsmacros.client.api.library.FClient;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
     private static ItemStack mainHand = ItemStack.EMPTY;
@@ -47,8 +48,8 @@ public class TickBasedEvents {
     }
 
     public static void onTick(MinecraftClient mc) {
-        if (JsMacros.keyBinding.wasPressed() && mc.currentScreen == null) {
-            mc.setScreen(JsMacros.prevScreen);
+        if (JsMacrosClient.keyBinding.wasPressed() && mc.currentScreen == null) {
+            mc.setScreen(JsMacrosClient.prevScreen);
         }
 
         FClient.tickSynchronizer.tick();
@@ -57,7 +58,7 @@ public class TickBasedEvents {
         new EventTick().trigger();
 
         if (++counter % 10 == 0) {
-            JsMacros.core.services.tickReloadListener();
+            JsMacrosClient.clientCore.services.tickReloadListener();
         }
 
         if (mc.player != null) {

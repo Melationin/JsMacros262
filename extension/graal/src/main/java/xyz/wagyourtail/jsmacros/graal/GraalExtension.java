@@ -27,7 +27,12 @@ public class GraalExtension implements LanguageExtension, LibraryExtension {
     }
 
     @Override
-    public void init() {
+    public void init(Core<?, ?> runner) {
+        try {
+            runner.config.addOptions("graal", GraalConfig.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -16,13 +16,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.api.math.Pos2D;
 import xyz.wagyourtail.jsmacros.api.math.Vec2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Draw2DElement;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Image;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Item;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Line;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Rect;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.RenderElement;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.screen.*;
@@ -568,7 +575,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(b.get(), this);
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }).position(x, y).size(width, height).build();
         b.set(new ClickableWidgetHelper<>(button, zIndex));
@@ -602,7 +609,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }).pos(x, y).checked(checked).build();
 
@@ -640,7 +647,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }, steps);
 
@@ -664,7 +671,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         });
         ref.set(new LockButtonWidgetHelper(lockButton, zIndex));
@@ -711,7 +718,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         });
         ref.set(new CyclingButtonWidgetHelper<>(cyclingButton, zIndex));
@@ -745,7 +752,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                 try {
                     onChange.accept(str, this);
                 } catch (Throwable e) {
-                    Core.getInstance().profile.logError(e);
+                    JsMacrosClient.clientCore.profile.logError(e);
                 }
             });
         }
@@ -909,7 +916,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onMouseDown.accept(new Pos2D(mouseX, mouseY), button);
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }
         xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text hoverText = null;
@@ -936,7 +943,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onMouseDrag.accept(new Vec2D(mouseX, mouseY, deltaX, deltaY), button);
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }
     }
@@ -947,7 +954,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onMouseUp.accept(new Pos2D(mouseX, mouseY), button);
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }
     }
@@ -958,7 +965,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onKeyPressed.accept(keyCode, modifiers);
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }
     }
@@ -969,7 +976,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onCharTyped.accept(chr, modifiers);
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }
     }
@@ -980,7 +987,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onScroll.accept(new Pos2D(mouseX, mouseY), new Pos2D(horiz, vert));
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                JsMacrosClient.clientCore.profile.logError(e);
             }
         }
     }
@@ -1001,7 +1008,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                         throw e;
                     }
                 } catch (Throwable f) {
-                    Core.getInstance().profile.logError(f);
+                    JsMacrosClient.clientCore.profile.logError(f);
                 }
             }
         }

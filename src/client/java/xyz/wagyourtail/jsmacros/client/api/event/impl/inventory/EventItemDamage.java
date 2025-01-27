@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
 
 import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -15,6 +16,7 @@ public class EventItemDamage extends BaseEvent {
     public final int damage;
 
     public EventItemDamage(ItemStack stack, int damage) {
+        super(JsMacrosClient.clientCore);
         this.item = new ItemStackHelper(stack);
         this.damage = damage;
     }

@@ -11,6 +11,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
@@ -370,7 +371,7 @@ public abstract class CommandBuilder implements Registrable<CommandBuilder> {
             public String toString() {
                 return "CommandBuilder{\"called_by\": " + callback.getCtx().getTriggeringEvent().toString() + "}";
             }
-        }, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        }, JsMacrosClient.clientCore.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             callback.accept(new CommandContextHelper(context));
         } finally {

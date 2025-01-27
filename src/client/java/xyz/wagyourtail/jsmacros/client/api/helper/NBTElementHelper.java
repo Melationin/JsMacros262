@@ -184,7 +184,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      */
     public static class NBTNumberHelper extends NBTElementHelper<AbstractNbtNumber> {
 
-        private NBTNumberHelper(AbstractNbtNumber base) {
+        public NBTNumberHelper(AbstractNbtNumber base) {
             super(base);
         }
 
@@ -244,7 +244,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      */
     public static class NBTListHelper extends NBTElementHelper<AbstractNbtList<?>> {
 
-        private NBTListHelper(AbstractNbtList<?> base) {
+        public NBTListHelper(AbstractNbtList<?> base) {
             super(base);
         }
 
@@ -298,7 +298,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      */
     public static class NBTCompoundHelper extends NBTElementHelper<NbtCompound> {
 
-        private NBTCompoundHelper(NbtCompound base) {
+        public NBTCompoundHelper(NbtCompound base) {
             super(base);
         }
 

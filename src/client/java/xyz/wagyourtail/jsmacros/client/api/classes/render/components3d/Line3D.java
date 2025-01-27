@@ -6,8 +6,8 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.doclet.DocletIgnore;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
+import xyz.wagyourtail.jsmacros.api.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 

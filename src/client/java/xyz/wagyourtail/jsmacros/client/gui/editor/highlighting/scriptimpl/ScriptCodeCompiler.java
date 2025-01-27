@@ -5,6 +5,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
@@ -36,7 +37,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
-        EventContainer<?> t = Core.getInstance().exec(scriptTrigger, compileEvent, null, (ex) -> {
+        EventContainer<?> t = JsMacrosClient.clientCore.exec(scriptTrigger, compileEvent, null, (ex) -> {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));
@@ -64,7 +65,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         try {
             results = getRClickActions.apply(index);
         } catch (Throwable e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
         if (results == null) {
             return new LinkedHashMap<>();

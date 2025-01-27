@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -42,7 +43,7 @@ public class CancelScreen extends BaseScreen {
         s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height - 10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
 
         this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.back"), (btn) -> this.close()));
-        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.showservices"), Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices, btn -> Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices = ((AnnotatedCheckBox) btn).value));
+        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.showservices"), JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).showRunningServices, btn -> JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).showRunningServices = ((AnnotatedCheckBox) btn).value));
     }
 
     public void addContainer(BaseScriptContext<?> t) {
@@ -98,7 +99,7 @@ public class CancelScreen extends BaseScreen {
             return;
         }
         this.renderBackground(drawContext, mouseX, mouseY, delta);
-        List<BaseScriptContext<?>> tl = new ArrayList<>(Core.getInstance().getContexts());
+        List<BaseScriptContext<?>> tl = new ArrayList<>(JsMacrosClient.clientCore.getContexts());
 
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);

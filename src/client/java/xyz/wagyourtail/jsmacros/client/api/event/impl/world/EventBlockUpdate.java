@@ -5,6 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.event.filterer.FiltererBlockUpdate;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -22,6 +23,7 @@ public class EventBlockUpdate extends BaseEvent {
     public final String updateType;
 
     public EventBlockUpdate(BlockState block, BlockEntity blockEntity, BlockPos blockPos, String updateType) {
+        super(JsMacrosClient.clientCore);
         this.block = new BlockDataHelper(block, blockEntity, blockPos);
         this.updateType = updateType;
     }

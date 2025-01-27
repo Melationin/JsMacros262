@@ -4,6 +4,7 @@ import net.minecraft.client.gui.hud.ClientBossBar;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.BossBarHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -29,6 +30,7 @@ public class EventBossbar extends BaseEvent {
     public final String type;
 
     public EventBossbar(String type, UUID uuid, ClientBossBar bossBar) {
+        super(JsMacrosClient.clientCore);
         if (bossBar != null) {
             this.bossBar = new BossBarHelper(bossBar);
         } else {

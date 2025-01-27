@@ -2,8 +2,9 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl;
 
 import io.noties.prism4j.Prism4j;
 import xyz.wagyourtail.StringHashTrie;
-import xyz.wagyourtail.jsmacros.api.TextBuilder;
-import xyz.wagyourtail.jsmacros.api.helper.TextHelper;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
+import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
@@ -55,6 +56,7 @@ public class CodeCompileEvent extends BaseEvent {
     public MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> rightClickActions;
 
     public CodeCompileEvent(String code, String language, EditorScreen screen) {
+        super(JsMacrosClient.clientCore);
         this.code = code;
         this.language = language;
         this.screen = screen;
@@ -126,7 +128,7 @@ public class CodeCompileEvent extends BaseEvent {
      * to {@link TextBuilder#withColor(int)}
      */
     public Map<String, short[]> getThemeData() {
-        return Core.getInstance().config.getOptions(ClientConfigV2.class).getThemeData();
+        return JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).getThemeData();
     }
 
 }

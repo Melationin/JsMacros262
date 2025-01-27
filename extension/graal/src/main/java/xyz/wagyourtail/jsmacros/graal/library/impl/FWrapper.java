@@ -147,7 +147,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 throw new BaseScriptContext.ScriptAssertionError("Context closed");
             }
 
-            Core.getInstance().threadPool.runTask(() -> {
+            runner.threadPool.runTask(() -> {
                 try {
                     ctx.bindThread(Thread.currentThread());
                     if (!ctx.isMultiThreaded()) {
@@ -176,11 +176,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     try {
                         fn.executeVoid(args);
                     } catch (Throwable ex) {
-                        Core.getInstance().profile.logError(ex);
+                        runner.profile.logError(ex);
                     } finally {
                         ctx.getContext().leave();
                         ctx.releaseBoundEventIfPresent(Thread.currentThread());
-                        Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
+                        runner.profile.joinedThreadStack.remove(Thread.currentThread());
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -232,8 +232,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
 
                 ctx.getContext().enter();
                 try {
-                    if (await && Core.getInstance().profile.checkJoinedThreadStack()) {
-                        Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
+                    if (await && runner.profile.checkJoinedThreadStack()) {
+                        runner.profile.joinedThreadStack.add(Thread.currentThread());
                     }
                     return (R2) fn.execute(args).as(Object.class);
                 } catch (Throwable ex) {
@@ -241,7 +241,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 } finally {
                     ctx.getContext().leave();
                     ctx.releaseBoundEventIfPresent(Thread.currentThread());
-                    Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
+                    runner.profile.joinedThreadStack.remove(Thread.currentThread());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

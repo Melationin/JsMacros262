@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
@@ -23,9 +24,9 @@ public class ServiceScreen extends MacroScreen {
     protected void init() {
         super.init();
         serviceScreen.setColor(0x4FFFFFFF);
-        List<String> services = new ArrayList<>(Core.getInstance().services.getServices());
+        List<String> services = new ArrayList<>(JsMacrosClient.clientCore.services.getServices());
 
-        services.sort(Core.getInstance().config.getOptions(ClientConfigV2.class).getServiceSortComparator());
+        services.sort(JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).getServiceSortComparator());
 
         for (String service : services) {
             addService(service);
@@ -42,16 +43,16 @@ public class ServiceScreen extends MacroScreen {
         for (ClickableWidget b : macro.getButtons()) {
             remove(b);
         }
-        Core.getInstance().services.unregisterService(((ServiceContainer) macro).service);
+        JsMacrosClient.clientCore.services.unregisterService(((ServiceContainer) macro).service);
         macros.remove(macro);
         setMacroPos();
     }
 
     @Override
     public void setFile(MultiElementContainer<MacroScreen> macro) {
-        File f = new File(Core.getInstance().config.macroFolder, ((ServiceContainer) macro).getTrigger().file);
-        File dir = Core.getInstance().config.macroFolder;
-        if (!f.equals(Core.getInstance().config.macroFolder)) {
+        File f = ((ServiceContainer) macro).getTrigger().file;
+        File dir = JsMacrosClient.clientCore.config.macroFolder;
+        if (!f.equals(JsMacrosClient.clientCore.config.macroFolder)) {
             dir = f.getParentFile();
         }
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((ServiceContainer) macro)::setFile, this::editFile));
@@ -64,7 +65,7 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void close() {
-        Core.getInstance().services.save();
+        JsMacrosClient.clientCore.services.save();
         super.close();
     }
 

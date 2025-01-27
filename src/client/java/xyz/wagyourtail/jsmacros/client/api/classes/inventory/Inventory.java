@@ -21,10 +21,11 @@ import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
+import xyz.wagyourtail.jsmacros.api.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
@@ -523,7 +524,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     @DocletReplaceReturn("ScreenName")
     public String getType() {
-        return JsMacros.getScreenName(this.inventory);
+        return JsMacrosClient.getScreenName(this.inventory);
     }
 
     /**

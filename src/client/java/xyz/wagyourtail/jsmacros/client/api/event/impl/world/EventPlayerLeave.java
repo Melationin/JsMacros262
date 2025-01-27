@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.client.network.PlayerListEntry;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.PlayerListEntryHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -17,6 +18,7 @@ public class EventPlayerLeave extends BaseEvent {
     public final PlayerListEntryHelper player;
 
     public EventPlayerLeave(UUID uuid, PlayerListEntry player) {
+        super(JsMacrosClient.clientCore);
         this.UUID = uuid.toString();
         this.player = new PlayerListEntryHelper(player);
     }

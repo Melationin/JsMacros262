@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -19,6 +20,7 @@ public class EventInteractBlock extends BaseEvent {
     public final int side;
 
     public EventInteractBlock(boolean offhand, String resultStatus, BlockDataHelper block, int side) {
+        super(JsMacrosClient.clientCore);
         this.offhand = offhand;
         this.result = resultStatus;
         this.block = block;

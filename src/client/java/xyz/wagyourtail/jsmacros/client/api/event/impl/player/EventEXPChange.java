@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -26,6 +27,7 @@ public class EventEXPChange extends BaseEvent {
     public final int prevLevel;
 
     public EventEXPChange(float progress, int total, int level, float prevProgress, int prevTotal, int prevLevel) {
+        super(JsMacrosClient.clientCore);
         this.progress = progress;
         this.total = total;
         this.level = level;

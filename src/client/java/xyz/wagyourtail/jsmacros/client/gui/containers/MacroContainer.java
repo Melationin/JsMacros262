@@ -10,6 +10,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.util.TranslationUtil;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -99,7 +100,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
 
         editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("selectServer.edit"), (btn) -> {
             if (!macro.scriptFile.equals("")) {
-                parent.editFile(new File(Core.getInstance().config.macroFolder, macro.scriptFile));
+                parent.editFile(new File(JsMacrosClient.clientCore.config.macroFolder, macro.scriptFile));
             }
         }));
 
@@ -109,7 +110,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setEventType(String type) {
-        BaseEventRegistry reg = Core.getInstance().eventRegistry;
+        BaseEventRegistry reg = JsMacrosClient.clientCore.eventRegistry;
         reg.removeScriptTrigger(macro);
         macro.event = type;
         reg.addScriptTrigger(macro);
@@ -117,7 +118,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setFile(File f) {
-        macro.scriptFile = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
+        macro.scriptFile = JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
         fileBtn.setMessage(Text.literal("./" + macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
@@ -154,23 +155,23 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             if (notfirst) {
                 text.append("+");
             }
-            text.append(JsMacros.getKeyText(s));
+            text.append(JsMacrosClient.getKeyText(s));
             notfirst = true;
         }
         return text;
     }
 
     public void setKey(String translationKeys) {
-        Core.getInstance().eventRegistry.removeScriptTrigger(macro);
+        JsMacrosClient.clientCore.eventRegistry.removeScriptTrigger(macro);
         macro.event = translationKeys;
-        Core.getInstance().eventRegistry.addScriptTrigger(macro);
+        JsMacrosClient.clientCore.eventRegistry.addScriptTrigger(macro);
         keyBtn.setMessage(buildKeyName(translationKeys));
         selectkey = false;
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        BaseEventRegistry reg = Core.getInstance().eventRegistry;
+        BaseEventRegistry reg = JsMacrosClient.clientCore.eventRegistry;
         if (macro.triggerType == ScriptTrigger.TriggerType.EVENT && reg.events.contains(macro.event)) {
             joinedBtn.active = reg.joinableEvents.contains(macro.event);
             if (!joinedBtn.active) {

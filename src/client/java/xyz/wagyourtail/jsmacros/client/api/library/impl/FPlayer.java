@@ -26,6 +26,8 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
+import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -366,7 +368,7 @@ public class FPlayer extends BaseLibrary {
      */
     public PlayerInput getCurrentPlayerInput() {
         assert mc.player != null;
-        return new PlayerInput(mc.player.input, mc.player.getYaw(), mc.player.getPitch(), mc.player.isSprinting());
+        return new PlayerInput(mc.player.input.movementForward, mc.player.input.movementSideways, mc.player.getYaw(), mc.player.getPitch(), mc.player.input.jumping, mc.player.input.sneaking, mc.player.isSprinting());
     }
 
     /**

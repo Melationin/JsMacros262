@@ -44,4 +44,5 @@ public abstract class MixinChatHud implements IChatHud {
         return jsmacros$positionOverride.get();
     }
 
+
 }

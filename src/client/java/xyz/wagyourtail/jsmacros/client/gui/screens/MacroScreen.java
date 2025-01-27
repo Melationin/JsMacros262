@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
@@ -102,9 +103,9 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void setFile(MultiElementContainer<MacroScreen> macro) {
-        File f = new File(Core.getInstance().config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
-        File dir = Core.getInstance().config.macroFolder;
-        if (!f.equals(Core.getInstance().config.macroFolder)) {
+        File f = new File(JsMacrosClient.clientCore.config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
+        File dir = JsMacrosClient.clientCore.config.macroFolder;
+        if (!f.equals(JsMacrosClient.clientCore.config.macroFolder)) {
             dir = f.getParentFile();
         }
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
@@ -115,8 +116,8 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void runFile() {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, Core.getInstance().config.macroFolder, null, this, (file) -> {
-            Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true, false), null);
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, JsMacrosClient.clientCore.config.macroFolder, null, this, (file) -> {
+            JsMacrosClient.clientCore.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true, false), null);
         }, this::editFile));
     }
 
@@ -125,7 +126,7 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
-        Core.getInstance().eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
+        JsMacrosClient.clientCore.eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
         for (ClickableWidget b : macro.getButtons()) {
             remove(b);
         }
@@ -148,12 +149,12 @@ public class MacroScreen extends BaseScreen {
 
     public void editFile(File file) {
         if (file != null && file.exists() && file.isFile()) {
-            if (Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditor) {
-                String[] args = Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
+            if (JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).externalEditor) {
+                String[] args = JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
                 for (int i = 0; i < args.length; ++i) {
                     args[i] = args[i]
                             .replace("%File", file.getAbsolutePath())
-                            .replace("%MacroFolder", Core.getInstance().config.macroFolder.getAbsolutePath())
+                            .replace("%MacroFolder", JsMacrosClient.clientCore.config.macroFolder.getAbsolutePath())
                             .replace("%Folder", file.getParentFile().getAbsolutePath());
                     File f = file;
                     if (args[i].startsWith("%Parent")) {
@@ -180,7 +181,7 @@ public class MacroScreen extends BaseScreen {
                     }
                 }
                 System.out.println(System.getenv("PATH"));
-                System.out.printf("Failed to run cmd '%s'", Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand);
+                System.out.printf("Failed to run cmd '%s'", JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).externalEditorCommand);
             }
             assert client != null;
             client.setScreen(new EditorScreen(this, file));
@@ -206,7 +207,7 @@ public class MacroScreen extends BaseScreen {
             macro.render(drawContext, mouseX, mouseY, delta);
         }
 
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, JsMacrosClient.clientCore.profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
 
         drawContext.fill(this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         drawContext.fill(this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
@@ -224,7 +225,7 @@ public class MacroScreen extends BaseScreen {
 
     @Override
     public void removed() {
-        Core.getInstance().profile.saveProfile();
+        JsMacrosClient.clientCore.profile.saveProfile();
         super.removed();
     }
 }

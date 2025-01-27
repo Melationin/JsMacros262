@@ -7,13 +7,10 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.packet.c2s.play.UpdateBeaconC2SPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -40,7 +37,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     @DocletReplaceReturn("BeaconStatusEffect | null")
     @Nullable
     public String getFirstEffect() {
-        RegistryEntry<StatusEffect> effect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
+        RegistryEntry<StatusEffect> effect = inventory.primaryEffect;
         return effect == null ? null : Registries.STATUS_EFFECT.getId(effect.value()).toString();
     }
 
@@ -51,7 +48,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     @DocletReplaceReturn("BeaconStatusEffect | null")
     @Nullable
     public String getSecondEffect() {
-        RegistryEntry<StatusEffect> effect = ((IBeaconScreen) inventory).jsmacros_getSecondaryEffect();
+        RegistryEntry<StatusEffect> effect = inventory.secondaryEffect;
         return effect == null ? null : Registries.STATUS_EFFECT.getId(effect.value()).toString();
     }
 
@@ -66,7 +63,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
         for (int i = 0; i < Math.min(getLevel(), 2); i++) {
             matchEffect = BeaconBlockEntity.EFFECTS_BY_LEVEL.get(i).stream().filter(e -> Registries.STATUS_EFFECT.getId(e.value()).toString().equals(id)).findFirst().orElse(null);
             if (matchEffect != null) {
-                ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);
+                inventory.primaryEffect = matchEffect;
                 return true;
             }
         }
@@ -81,9 +78,9 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     @DocletReplaceParams("id: BeaconStatusEffect")
     public boolean selectSecondEffect(String id) {
         if (getLevel() >= 3) {
-            RegistryEntry<StatusEffect> primaryEffect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
+            RegistryEntry<StatusEffect> primaryEffect = inventory.primaryEffect;
             if (primaryEffect != null && Registries.STATUS_EFFECT.getId(primaryEffect.value()).toString().equals(id)) {
-                ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(primaryEffect);
+                inventory.secondaryEffect = primaryEffect;
                 return true;
             }
             RegistryEntry<StatusEffect> matchEffect;
@@ -91,10 +88,10 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
                 matchEffect = BeaconBlockEntity.EFFECTS_BY_LEVEL.get(i).stream().filter(e -> Registries.STATUS_EFFECT.getId(e.value()).toString().equals(id)).findFirst().orElse(null);
                 if (matchEffect != null) {
                     if (primaryEffect != null && matchEffect.equals(StatusEffects.REGENERATION)) {
-                        ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
+                        inventory.primaryEffect = matchEffect;
                     } else {
-                        ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);
-                        ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
+                        inventory.primaryEffect = matchEffect;
+                        inventory.secondaryEffect = matchEffect;
                         return true;
                     }
                 }
@@ -110,8 +107,8 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     public boolean applyEffects() {
         if (inventory.getScreenHandler().hasPayment()) {
             mc.getNetworkHandler().sendPacket(new UpdateBeaconC2SPacket(
-                Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getPrimaryEffect()),
-                Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getSecondaryEffect())
+                Optional.ofNullable(inventory.primaryEffect),
+                Optional.ofNullable(inventory.secondaryEffect)
             ));
             player.closeHandledScreen();
             return true;

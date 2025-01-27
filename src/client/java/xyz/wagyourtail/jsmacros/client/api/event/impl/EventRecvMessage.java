@@ -4,6 +4,7 @@ import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -30,6 +31,7 @@ public class EventRecvMessage extends BaseEvent {
     public String messageType;
 
     public EventRecvMessage(Text message, MessageSignatureData signature, MessageIndicator indicator) {
+        super(JsMacrosClient.clientCore);
         this.text = TextHelper.wrap(message);
 
         if (signature == null) {

@@ -21,11 +21,6 @@ public class PythonExtension implements Extension {
             con.close();
         });
         t.start();
-        try {
-            runner.config.addOptions("python", GraalConfig.class);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

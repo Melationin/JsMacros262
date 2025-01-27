@@ -6,6 +6,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -26,7 +27,7 @@ public class FileChooser extends OverlayContainer {
     private File directory;
     private Text dirname;
     private File selected;
-    public File root = Core.getInstance().config.macroFolder;
+    public File root = JsMacrosClient.clientCore.config.macroFolder;
     private final List<fileObj> files = new ArrayList<>();
     private final Consumer<File> setFile;
     private final Consumer<File> editFile;
@@ -137,8 +138,8 @@ public class FileChooser extends OverlayContainer {
 
             // has extension
             File f = new File(directory, str);
-            if (Core.getInstance().extensions.getExtensionForFile(f) == null) {
-                str += "." + Core.getInstance().extensions.getHighestPriorityExtension().defaultFileExtension();
+            if (JsMacrosClient.clientCore.extensions.getExtensionForFile(f) == null) {
+                str += "." + JsMacrosClient.clientCore.extensions.getHighestPriorityExtension().defaultFileExtension();
                 f = new File(directory, str);
             }
             try {

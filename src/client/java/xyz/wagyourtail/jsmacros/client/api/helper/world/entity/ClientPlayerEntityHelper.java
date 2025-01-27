@@ -24,17 +24,16 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
+import xyz.wagyourtail.jsmacros.api.math.Vec3D;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
-import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementManagerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.List;
 import java.util.Locale;
@@ -103,7 +102,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.8.4
      */
     private ClientPlayerEntityHelper<T> setPos(Vec3d pos, boolean await) throws InterruptedException {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             base.setPosition(pos);
         } else {
@@ -332,7 +331,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     @Deprecated
     public ClientPlayerEntityHelper<T> attack(EntityHelper<?> entity, boolean await) throws InterruptedException {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         assert mc.interactionManager != null;
         if (entity.getRaw() == mc.player) {
             throw new AssertionError("Can't interact with self!");
@@ -413,7 +412,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, await: boolean")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
             assert mc.player != null;
@@ -457,7 +456,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
             throw new AssertionError("Can't interact with self!");
         }
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
@@ -499,7 +498,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public ClientPlayerEntityHelper<T> interactItem(boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
             assert mc.player != null;
@@ -582,7 +581,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
@@ -624,13 +623,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     @Deprecated
     public ClientPlayerEntityHelper<T> interact(boolean await) throws InterruptedException {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ((IMinecraftClient) mc).jsmacros_doItemUse();
+            mc.doItemUse();
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ((IMinecraftClient) mc).jsmacros_doItemUse();
+                mc.doItemUse();
                 wait.release();
             });
             wait.acquire();
@@ -654,13 +653,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     @Deprecated
     public ClientPlayerEntityHelper<T> attack(boolean await) throws InterruptedException {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ((IMinecraftClient) mc).jsmacros_doAttack();
+            mc.doAttack();
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ((IMinecraftClient) mc).jsmacros_doAttack();
+                mc.doAttack();
                 wait.release();
             });
             wait.acquire();

@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.graal.language.impl;
 
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.PrioryFiFoTaskQueue;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
@@ -10,8 +11,8 @@ import java.io.File;
 public class GraalScriptContext extends BaseScriptContext<Context> {
     public final PrioryFiFoTaskQueue<WrappedThread> tasks = new PrioryFiFoTaskQueue<>(GraalScriptContext::getThreadPriority);
 
-    public GraalScriptContext(BaseEvent event, File file) {
-        super(event, file);
+    public GraalScriptContext(Core<?, ?> runner, BaseEvent event, File file) {
+        super(runner, event, file);
     }
 
     @Override

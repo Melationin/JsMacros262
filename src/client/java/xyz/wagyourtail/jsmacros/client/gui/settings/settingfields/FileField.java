@@ -5,6 +5,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
@@ -28,15 +29,15 @@ public class FileField extends AbstractSettingField<String> {
                     case "MC":
                         return MinecraftClient.getInstance().runDirectory;
                     case "CONFIG":
-                        return Core.getInstance().config.configFolder;
+                        return JsMacrosClient.clientCore.config.configFolder;
                     case "MACRO":
                     default:
-                        return Core.getInstance().config.macroFolder;
+                        return JsMacrosClient.clientCore.config.macroFolder;
                 }
             }
         }
         //default
-        return Core.getInstance().config.macroFolder;
+        return JsMacrosClient.clientCore.config.macroFolder;
     }
 
     public static String relativize(SettingsOverlay.SettingField<?> setting, File file) {

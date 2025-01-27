@@ -4,10 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IFontManager;
-import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.Option;
 import xyz.wagyourtail.jsmacros.core.config.OptionType;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
@@ -61,7 +60,7 @@ public class ClientConfigV2 {
 
     @SuppressWarnings("resource")
     public List<String> getFonts() {
-        return ((IFontManager) ((IMinecraftClient) MinecraftClient.getInstance()).jsmacros_getFontManager()).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
+        return ((IFontManager) MinecraftClient.getInstance().fontManager).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     public Map<String, short[]> getThemeData() {
@@ -92,7 +91,7 @@ public class ClientConfigV2 {
             editorTheme.put("escape", new short[]{0xFF, 0xE2, 0x00});
             editorTheme.put("charclass", new short[]{0xFF, 0xE2, 0x00});
             editorTheme.put("quantifier", new short[]{0x79, 0xAB, 0xFF});
-            Core.getInstance().config.saveConfig();
+            JsMacrosClient.clientCore.config.saveConfig();
         }
         return editorTheme;
     }
@@ -100,9 +99,9 @@ public class ClientConfigV2 {
     public void setServiceAutoReload(boolean value) {
         serviceAutoReload = value;
         if (value) {
-            Core.getInstance().services.startReloadListener();
+            JsMacrosClient.clientCore.services.startReloadListener();
         } else {
-            Core.getInstance().services.stopReloadListener();
+            JsMacrosClient.clientCore.services.stopReloadListener();
         }
     }
 
@@ -127,13 +126,13 @@ public class ClientConfigV2 {
         }
         switch (this.sortServicesMethod) {
             case Enabled:
-                return new Sorting.SortServiceByEnabled();
+                return new Sorting.SortServiceByEnabled(JsMacrosClient.clientCore);
             case Name:
                 return new Sorting.SortServiceByName();
             case Running:
-                return new Sorting.SortServiceByRunning();
+                return new Sorting.SortServiceByRunning(JsMacrosClient.clientCore);
             case FileName:
-                return new Sorting.SortServiceByFileName();
+                return new Sorting.SortServiceByFileName(JsMacrosClient.clientCore);
             default:
                 throw new IllegalArgumentException();
         }

@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinTextFieldWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -55,7 +56,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.3.1
      */
     public TextFieldWidgetHelper setText(String text, boolean await) throws InterruptedException {
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+        if (JsMacrosClient.clientCore.profile.checkJoinedThreadStack()) {
             base.setText(text);
         } else {
             final Semaphore waiter = new Semaphore(await ? 0 : 1);
@@ -290,7 +291,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
                         action.accept(text, screen);
                     }
                 } catch (Throwable e) {
-                    Core.getInstance().profile.logError(e);
+                    JsMacrosClient.clientCore.profile.logError(e);
                 }
             });
             textField.setSuggestion(suggestion);

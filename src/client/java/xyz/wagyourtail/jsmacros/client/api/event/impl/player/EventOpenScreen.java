@@ -4,6 +4,7 @@ import net.minecraft.client.gui.screen.Screen;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -20,8 +21,9 @@ public class EventOpenScreen extends BaseEvent {
     public final String screenName;
 
     public EventOpenScreen(Screen screen) {
+        super(JsMacrosClient.clientCore);
         this.screen = (IScreen) screen;
-        this.screenName = JsMacros.getScreenName(screen);
+        this.screenName = JsMacrosClient.getScreenName(screen);
     }
 
     @Override

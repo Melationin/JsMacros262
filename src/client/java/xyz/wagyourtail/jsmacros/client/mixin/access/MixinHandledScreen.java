@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -56,7 +57,7 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.BEFORE))
     public void onDrawForeground(DrawContext drawContext, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!Core.getInstance().config.getOptions(ClientConfigV2.class).showSlotIndexes) {
+        if (!JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).showSlotIndexes) {
             return;
         }
         MatrixStack matrices = drawContext.getMatrices();

@@ -35,11 +35,11 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
@@ -88,6 +88,10 @@ public class FWorld extends BaseLibrary {
      * Don't modify.
      */
     public static double server15MAverageTPS = 20;
+
+    public FWorld(Core<?, ?> runner) {
+        super(runner);
+    }
 
     /**
      * returns whether a world is currently loaded
@@ -756,7 +760,7 @@ public class FWorld extends BaseLibrary {
      */
     public Clip playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         Clip clip = AudioSystem.getClip();
-        clip.open(AudioSystem.getAudioInputStream(new File(Core.getInstance().config.macroFolder, file)));
+        clip.open(AudioSystem.getAudioInputStream(new File(JsMacrosClient.clientCore.config.macroFolder, file)));
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         double min = gainControl.getMinimum();
         double range = gainControl.getMaximum() - min;
@@ -832,7 +836,7 @@ public class FWorld extends BaseLibrary {
      */
     public Map<String, BossBarHelper> getBossBars() {
         assert mc.inGameHud != null;
-        Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).jsmacros_GetBossBars());
+        Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(mc.inGameHud.getBossBarHud().bossBars);
         Map<String, BossBarHelper> out = new HashMap<>();
         for (Map.Entry<UUID, ClientBossBar> e : ImmutableList.copyOf(bars.entrySet())) {
             out.put(e.getKey().toString(), new BossBarHelper(e.getValue()));

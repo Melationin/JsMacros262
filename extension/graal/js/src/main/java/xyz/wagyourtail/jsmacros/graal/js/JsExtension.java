@@ -21,11 +21,6 @@ public class JsExtension implements Extension {
             con.close();
         });
         t.start();
-        try {
-            runner.config.addOptions("js", GraalConfig.class);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

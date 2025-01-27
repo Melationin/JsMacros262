@@ -39,7 +39,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
             try {
                 build.option(e.getKey(), e.getValue());
             } catch (IllegalArgumentException ex) {
-                Core.getInstance().profile.logError(new RuntimeException("Invalid GraalVM option: " + e.getKey() + " = " + e.getValue(), ex));
+                runner.profile.logError(new RuntimeException("Invalid GraalVM option: " + e.getKey() + " = " + e.getValue(), ex));
             }
         }
 
@@ -156,7 +156,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
 
     @Override
     public GraalScriptContext createContext(BaseEvent event, File file) {
-        return new GraalScriptContext(event, file);
+        return new GraalScriptContext(runner, event, file);
     }
 
 }

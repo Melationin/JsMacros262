@@ -18,6 +18,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.FakeServerCommandSource;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
@@ -39,6 +40,7 @@ public class CommandContextHelper extends BaseEvent {
     protected CommandContext<?> base;
 
     public CommandContextHelper(CommandContext<?> base) {
+        super(JsMacrosClient.clientCore);
         this.base = base;
     }
 

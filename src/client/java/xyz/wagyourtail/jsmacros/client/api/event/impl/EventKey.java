@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
@@ -48,6 +49,7 @@ public class EventKey extends BaseEvent {
     private static final Set<Integer> wasNullOnDown = new HashSet<>();
 
     public EventKey(int action, String key, String mods) {
+        super(JsMacrosClient.clientCore);
         this.action = action;
         this.key = key;
         this.mods = mods;
@@ -76,7 +78,7 @@ public class EventKey extends BaseEvent {
 
         if (mc.currentScreen != null) {
             if (action != 0 || !wasNullOnDown.contains(key)) {
-                if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) {
+                if (JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) {
                     return false;
                 }
                 if (mc.currentScreen instanceof BaseScreen) {

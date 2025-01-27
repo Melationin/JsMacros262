@@ -1,20 +1,51 @@
 package xyz.wagyourtail.jsmacros.client.config;
 
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.CommandNode;
+import net.minecraft.advancement.AdvancementManager;
+import net.minecraft.advancement.AdvancementProgress;
+import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.nbt.AbstractNbtList;
+import net.minecraft.nbt.AbstractNbtNumber;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.predicate.BlockPredicate;
+import net.minecraft.predicate.NbtPredicate;
+import net.minecraft.predicate.StatePredicate;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import org.slf4j.Logger;
+import xyz.wagyourtail.jsmacros.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.api.library.FJavaUtils;
 import xyz.wagyourtail.jsmacros.api.library.FUtils;
-import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
+import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementManagerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementProgressHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.BlockPredicateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.CommandContextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.CommandNodeHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.DyeColorHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.FormattingHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.InteractionManagerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.NBTElementHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.NbtPredicateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.PacketByteBufferHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.StatePredicateHelper;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.*;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -24,10 +55,10 @@ import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 
 import java.util.Arrays;
 
-public class Profile extends BaseProfile {
+public class ClientProfile extends BaseProfile {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    public Profile(Core<Profile, ?> runner, Logger logger) {
+    public ClientProfile(Core<ClientProfile, ?> runner, Logger logger) {
         super(runner, logger);
     }
 
@@ -196,6 +227,26 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FJavaUtils.class);
         runner.libraryRegistry.addLibrary(FUtils.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
+
+        runner.registerHelper(PlacedAdvancement.class, AdvancementHelper.class);
+        runner.registerHelper(AdvancementManager.class, AdvancementManagerHelper.class);
+        runner.registerHelper(AdvancementProgress.class, AdvancementProgressHelper.class);
+        runner.registerHelper(BlockPredicate.class, BlockPredicateHelper.class);
+//        runner.registerHelper(CommandContext.class, CommandContextHelper.class);
+        runner.registerHelper(CommandNode.class, CommandNodeHelper.class);
+        runner.registerHelper(DyeColor.class, DyeColorHelper.class);
+        runner.registerHelper(Formatting.class, FormattingHelper.class);
+        runner.registerHelper(ClientPlayerInteractionManager.class, InteractionManagerHelper.class);
+        runner.registerHelper(NbtElement.class, NBTElementHelper.class);
+        runner.registerHelper(AbstractNbtNumber.class, NBTElementHelper.NBTNumberHelper.class);
+        runner.registerHelper(NbtCompound.class, NBTElementHelper.NBTCompoundHelper.class);
+        runner.registerHelper(AbstractNbtList.class, (Class) NBTElementHelper.NBTListHelper.class);
+        runner.registerHelper(NbtPredicate.class, NbtPredicateHelper.class);
+        runner.registerHelper(GameOptions.class, OptionsHelper.class);
+        runner.registerHelper(PacketByteBuf.class, PacketByteBufferHelper.class);
+        runner.registerHelper(StatePredicate.class, StatePredicateHelper.class);
+        // TODO: complete list
+
     }
 
 }

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -14,6 +15,7 @@ public class EventDimensionChange extends BaseEvent {
     public final String dimension;
 
     public EventDimensionChange(String dimension) {
+        super(JsMacrosClient.clientCore);
         this.dimension = dimension;
     }
 

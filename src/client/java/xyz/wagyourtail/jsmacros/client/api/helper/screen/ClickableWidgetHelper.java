@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
@@ -30,7 +31,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
 
     public static void clickedOn(IScreen screen) {
         if (screen instanceof HandledScreen<?> handled) {
-            ((IInventory) handled).jsmacros_cancelNextRelease();
+            handled.cancelNextRelease = true;
         }
     }
 
@@ -172,7 +173,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.3.1
      */
     public B click(boolean await) throws InterruptedException {
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+        if (JsMacrosClient.clientCore.profile.checkJoinedThreadStack()) {
             base.mouseClicked(base.getX(), base.getY(), 0);
             base.mouseReleased(base.getX(), base.getY(), 0);
         } else {

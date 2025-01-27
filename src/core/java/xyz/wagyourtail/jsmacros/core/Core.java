@@ -8,7 +8,6 @@ import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
-import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
 import xyz.wagyourtail.jsmacros.core.helper.ClassWrapperTree;
@@ -21,15 +20,19 @@ import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 import xyz.wagyourtail.jsmacros.core.threads.JsMacrosThreadPool;
 
 import java.io.File;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
+    private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
+
     private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
 
     public final ClassWrapperTree<Object, BaseHelper<?>> helperRegistry = new ClassWrapperTree<>(Object.class, a -> null);
@@ -143,6 +146,22 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     private BaseWrappedException<StackTraceElement> wrapHostInternal(StackTraceElement e, Iterator<StackTraceElement> elements) {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
+    }
+
+    public <E, R extends BaseHelper<E>> void registerHelper(Class<E> type, Class<R> wrapper) {
+        try {
+            MethodHandle mh = lookup.findConstructor(wrapper, MethodType.methodType(void.class, type));
+            MethodHandle exact = MethodHandles.explicitCastArguments(mh, MethodType.methodType(BaseHelper.class, Object.class));
+            helperRegistry.registerType(type, t -> {
+                try {
+                    return (BaseHelper<?>) exact.invokeExact(t);
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

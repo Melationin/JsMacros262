@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -17,6 +18,7 @@ public class EventStatusEffectUpdate extends BaseEvent {
     public final boolean removed;
 
     public EventStatusEffectUpdate(StatusEffectHelper oldEffect, StatusEffectHelper newEffect, boolean added) {
+        super(JsMacrosClient.clientCore);
         this.oldEffect = oldEffect;
         this.newEffect = newEffect;
         this.added = added;

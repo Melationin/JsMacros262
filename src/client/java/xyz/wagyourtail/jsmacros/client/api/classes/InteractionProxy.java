@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 
 import java.util.List;
@@ -68,7 +67,7 @@ public class InteractionProxy {
                 override = value;
                 if (value != null && value.getType() == HitResult.Type.ENTITY) overrideEntity = ((EntityHitResult) value).getEntity();
                 else overrideEntity = null;
-                onUpdate(0, null);
+                onUpdate(0f);
                 Break.isBreaking();
             }
         }
@@ -81,31 +80,32 @@ public class InteractionProxy {
             return override != null;
         }
 
-        public static void onUpdate(float tickDelta, @Nullable CallbackInfo ci) {
+        public static boolean onUpdate(float tickDelta) {
+            boolean cancel = false;
             synchronized (Target.class) {
                 if (override != null) {
                     boolean shouldMiss = false;
                     if (overrideEntity != null) {
                         if (!overrideEntity.isAlive()) {
                             setTarget(null);
-                            return;
+                            return shouldMiss;
                         }
                     } else if ((checkAir || checkShape) && override.getType() == HitResult.Type.BLOCK) {
-                        if (mc.world == null) return;
+                        if (mc.world == null) return shouldMiss;
                         BlockPos pos = ((BlockHitResult) override).getBlockPos();
                         BlockState state = mc.world.getBlockState(pos);
                         if (checkAir && state.isAir()) {
                             if (!clearIfIsAir) shouldMiss = true;
                             else {
                                 setTarget(null);
-                                return;
+                                return shouldMiss;
                             }
                         }
                         if (checkShape && !state.isAir() && state.getOutlineShape(mc.world, pos).isEmpty()) {
                             if (!clearIfEmptyShape) shouldMiss = true;
                             else {
                                 setTarget(null);
-                                return;
+                                return shouldMiss;
                             }
                         }
                     }
@@ -113,11 +113,11 @@ public class InteractionProxy {
                         if (!clearIfOutOfRange) shouldMiss = true;
                         else {
                             setTarget(null);
-                            return;
+                            return shouldMiss;
                         }
                     }
-                    if (override == null) return;
-                    if (ci != null) ci.cancel();
+                    if (override == null) return shouldMiss;
+                    cancel = true;
                     if (shouldMiss) {
                         mc.crosshairTarget = MISSED;
                         mc.targetedEntity = null;
@@ -127,6 +127,7 @@ public class InteractionProxy {
                     }
                 }
             }
+            return cancel;
         }
 
         public static boolean isInRange(float tickDelta) {
@@ -281,7 +282,7 @@ public class InteractionProxy {
             if (override && !value) releaseCheck = true;
             else if (value) releaseCheck = false;
             override = value;
-            if (value) ((IMinecraftClient) mc).jsmacros_doItemUse();
+            if (value) mc.doItemUse();
         }
 
         public static boolean isInteracting() {
@@ -291,7 +292,7 @@ public class InteractionProxy {
         public static void ensureInteracting(int cooldown) {
             if (mc.player == null) return;
             if (mc.options.useKey.isPressed()) override = false;
-            if (isInteracting() && cooldown == 0 && !mc.player.isUsingItem()) ((IMinecraftClient) mc).jsmacros_doItemUse();
+            if (isInteracting() && cooldown == 0 && !mc.player.isUsingItem()) mc.doItemUse();
             else if (releaseCheck) {
                 if (mc.interactionManager != null && mc.player.isUsingItem() && !mc.options.useKey.isPressed()) mc.interactionManager.stopUsingItem(mc.player);
                 releaseCheck = false;

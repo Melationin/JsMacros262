@@ -8,6 +8,8 @@ accessible field net/minecraft/client/MinecraftClient fontManager Lnet/minecraft
 accessible method net/minecraft/client/MinecraftClient doItemUse ()V
 accessible method net/minecraft/client/MinecraftClient doAttack ()Z
 
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen cancelNextRelease Z
+
 accessible field net/minecraft/client/gui/hud/ChatHud messages Ljava/util/List;
 
 accessible method net/minecraft/world/World getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;

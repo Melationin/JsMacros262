@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
 
 import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -14,6 +15,7 @@ public class EventItemPickup extends BaseEvent {
     public final ItemStackHelper item;
 
     public EventItemPickup(ItemStack item) {
+        super(JsMacrosClient.clientCore);
         this.item = new ItemStackHelper(item);
     }
 

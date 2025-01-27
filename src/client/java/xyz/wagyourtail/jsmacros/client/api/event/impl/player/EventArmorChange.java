@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -20,6 +21,7 @@ public class EventArmorChange extends BaseEvent {
     public final ItemStackHelper oldItem;
 
     public EventArmorChange(String slot, ItemStack item, ItemStack old) {
+        super(JsMacrosClient.clientCore);
         this.slot = slot;
         this.item = new ItemStackHelper(item);
         this.oldItem = new ItemStackHelper(old);

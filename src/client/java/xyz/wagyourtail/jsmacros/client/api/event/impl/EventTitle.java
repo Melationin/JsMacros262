@@ -4,6 +4,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -21,6 +22,7 @@ public class EventTitle extends BaseEvent {
     public TextHelper message;
 
     public EventTitle(String type, Text message) {
+        super(JsMacrosClient.clientCore);
         this.type = type;
         this.message = TextHelper.wrap(message);
     }

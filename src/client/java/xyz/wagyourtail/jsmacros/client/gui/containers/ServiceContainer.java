@@ -4,6 +4,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
@@ -37,7 +38,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         int w = width - 12;
         nameBtn = addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal(service), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, Text.literal("Enter new service name"), service, getFirstOverlayParent(), (newService) -> {
-                if (!Core.getInstance().services.renameService(service, newService)) {
+                if (!JsMacrosClient.clientCore.services.renameService(service, newService)) {
                     openOverlay(new TextOverlay(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, getFirstOverlayParent(), Text.literal("Failed to rename service").styled(s -> s.withColor(Formatting.RED))));
                     return;
                 }
@@ -46,7 +47,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }));
         }));
 
-        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal("./" + getTrigger().file.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 
@@ -55,11 +56,11 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
 
         enableBtn = addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
             if (getEnabled()) {
-                Core.getInstance().services.disableService(service);
+                JsMacrosClient.clientCore.services.disableService(service);
                 btn.setColor(0x70FF0000);
                 btn.setMessage(Text.translatable("jsmacros.disabled"));
             } else {
-                Core.getInstance().services.enableService(service);
+                JsMacrosClient.clientCore.services.enableService(service);
                 btn.setColor(0x7000FF00);
                 btn.setMessage(Text.translatable("jsmacros.enabled"));
             }
@@ -67,9 +68,9 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
 
         runningBtn = addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, running ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (running ? "running" : "stopped")), (btn) -> {
             if (getRunning()) {
-                Core.getInstance().services.stopService(service);
+                JsMacrosClient.clientCore.services.stopService(service);
             } else {
-                Core.getInstance().services.startService(service);
+                JsMacrosClient.clientCore.services.startService(service);
             }
         }));
 
@@ -80,23 +81,23 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public boolean getEnabled() {
-        ServiceManager.ServiceStatus status = Core.getInstance().services.status(service);
+        ServiceManager.ServiceStatus status = JsMacrosClient.clientCore.services.status(service);
         return status == ServiceManager.ServiceStatus.ENABLED || status == ServiceManager.ServiceStatus.STOPPED;
     }
 
     public boolean getRunning() {
-        ServiceManager.ServiceStatus status = Core.getInstance().services.status(service);
+        ServiceManager.ServiceStatus status = JsMacrosClient.clientCore.services.status(service);
         return status == ServiceManager.ServiceStatus.ENABLED || status == ServiceManager.ServiceStatus.RUNNING;
     }
 
     public ServiceTrigger getTrigger() {
-        return Core.getInstance().services.getTrigger(service);
+        return JsMacrosClient.clientCore.services.getTrigger(service);
     }
 
     public void setFile(File file) {
-        getTrigger().file = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toString();
-        Core.getInstance().services.disableReload(service);
-        fileBtn.setMessage(Text.literal("./" + getTrigger().file.replaceAll("\\\\", "/")));
+        getTrigger().file = JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toFile();
+        JsMacrosClient.clientCore.services.disableReload(service);
+        fileBtn.setMessage(Text.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")));
     }
 
     @Override

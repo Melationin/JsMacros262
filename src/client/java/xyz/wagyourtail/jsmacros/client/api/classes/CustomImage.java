@@ -5,8 +5,7 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -71,9 +70,9 @@ public class CustomImage {
     @Nullable
     public BufferedImage loadImage(String path) {
         try {
-            return ImageIO.read(JsMacros.core.config.configFolder.toPath().resolve(path).toFile());
+            return ImageIO.read(JsMacrosClient.clientCore.config.configFolder.toPath().resolve(path).toFile());
         } catch (IOException e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
         return null;
     }
@@ -118,7 +117,7 @@ public class CustomImage {
             });
             semaphore.acquire();
         } catch (InterruptedException e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
         return this;
     }
@@ -147,16 +146,16 @@ public class CustomImage {
      */
     public CustomImage saveImage(String path, String fileName) {
         try {
-            File file = JsMacros.core.config.configFolder.toPath().resolve(path).resolve(fileName + ".png").toFile();
+            File file = JsMacrosClient.clientCore.config.configFolder.toPath().resolve(path).resolve(fileName + ".png").toFile();
             if (!file.exists()) {
                 if (!file.mkdirs() && !file.createNewFile()) {
-                    Core.getInstance().profile.logError(new RuntimeException("Could not create file: " + file.getAbsolutePath()));
+                    JsMacrosClient.clientCore.profile.logError(new RuntimeException("Could not create file: " + file.getAbsolutePath()));
                     return this;
                 }
             }
             ImageIO.write(image, "png", file);
         } catch (IOException e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
         return this;
     }
@@ -616,7 +615,7 @@ public class CustomImage {
             });
             semaphore.acquire();
         } catch (InterruptedException e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
         return texture.get();
     }
@@ -629,10 +628,10 @@ public class CustomImage {
     @Nullable
     public static CustomImage createWidget(String path, String name) {
         try {
-            File file = JsMacros.core.config.configFolder.toPath().resolve(path).toFile();
+            File file = JsMacrosClient.clientCore.config.configFolder.toPath().resolve(path).toFile();
             return new CustomImage(ImageIO.read(file), name);
         } catch (IOException e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
         return null;
     }

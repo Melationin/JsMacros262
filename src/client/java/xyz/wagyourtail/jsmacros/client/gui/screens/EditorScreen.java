@@ -19,6 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.editor.History;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
@@ -95,7 +96,7 @@ public class EditorScreen extends BaseScreen {
         savedString = content;
 
         this.handler = handler;
-        defaultStyle = Style.EMPTY.withFont(Identifier.of(Core.getInstance().config.getOptions(ClientConfigV2.class).editorFont));
+        defaultStyle = Style.EMPTY.withFont(Identifier.of(JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).editorFont));
 
         cursor = new SelectCursor(defaultStyle);
 
@@ -136,11 +137,11 @@ public class EditorScreen extends BaseScreen {
         mc.execute(() -> {
             EditorScreen screen;
             try {
-                if (JsMacros.prevScreen instanceof EditorScreen &&
-                        ((EditorScreen) JsMacros.prevScreen).file.getCanonicalPath().equals(file.getCanonicalPath())) {
-                    screen = (EditorScreen) JsMacros.prevScreen;
+                if (JsMacrosClient.prevScreen instanceof EditorScreen &&
+                        ((EditorScreen) JsMacrosClient.prevScreen).file.getCanonicalPath().equals(file.getCanonicalPath())) {
+                    screen = (EditorScreen) JsMacrosClient.prevScreen;
                 } else {
-                    screen = new EditorScreen(JsMacros.prevScreen, file);
+                    screen = new EditorScreen(JsMacrosClient.prevScreen, file);
                 }
                 screen.cursor.updateStartIndex(startIndex, screen.history.current);
                 screen.cursor.updateEndIndex(finalEndIndex, screen.history.current);
@@ -156,11 +157,11 @@ public class EditorScreen extends BaseScreen {
         mc.execute(() -> {
             EditorScreen screen;
             try {
-                if (JsMacros.prevScreen instanceof EditorScreen &&
-                        ((EditorScreen) JsMacros.prevScreen).file.getCanonicalPath().equals(file.getCanonicalPath())) {
-                    screen = (EditorScreen) JsMacros.prevScreen;
+                if (JsMacrosClient.prevScreen instanceof EditorScreen &&
+                        ((EditorScreen) JsMacrosClient.prevScreen).file.getCanonicalPath().equals(file.getCanonicalPath())) {
+                    screen = (EditorScreen) JsMacrosClient.prevScreen;
                 } else {
-                    screen = new EditorScreen(JsMacros.prevScreen, file);
+                    screen = new EditorScreen(JsMacrosClient.prevScreen, file);
                 }
                 String[] lines = screen.history.current.split("\n", -1);
                 int lineIndex = 0;
@@ -200,13 +201,13 @@ public class EditorScreen extends BaseScreen {
 
     public synchronized void setLanguage(String language) {
         this.language = language;
-        Map<String, String> linterOverrides = Core.getInstance().config.getOptions(ClientConfigV2.class).editorLinterOverrides;
+        Map<String, String> linterOverrides = JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).editorLinterOverrides;
         if (!language.equals("none")) {
             if (linterOverrides.containsKey(language)) {
                 this.codeCompiler = new ScriptCodeCompiler(
                         language,
                         this,
-                        Core.getInstance().config.macroFolder.getAbsoluteFile()
+                        JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile()
                                 .toPath()
                                 .resolve(linterOverrides.get(language))
                                 .toFile()
@@ -576,7 +577,7 @@ public class EditorScreen extends BaseScreen {
             closeOverlay(overlay);
         }
 
-        if (suggestionList.size() > 0 && Core.getInstance().config.getOptions(ClientConfigV2.class).editorSuggestions) {
+        if (suggestionList.size() > 0 && JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).editorSuggestions) {
             suggestionList.sort(Comparator.comparing(a -> a.suggestion));
             int startIndex = cursor.startIndex;
             int maxWidth = 0;
@@ -839,7 +840,7 @@ public class EditorScreen extends BaseScreen {
 
     @Override
     public void updateSettings() {
-        defaultStyle = Style.EMPTY.withFont(Identifier.of(Core.getInstance().config.getOptions(ClientConfigV2.class).editorFont));
+        defaultStyle = Style.EMPTY.withFont(Identifier.of(JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).editorFont));
         cursor.defaultStyle = defaultStyle;
         cursor.updateStartIndex(cursor.startIndex, history.current);
         cursor.updateEndIndex(cursor.endIndex, history.current);

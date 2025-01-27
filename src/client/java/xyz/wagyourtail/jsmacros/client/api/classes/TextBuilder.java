@@ -5,7 +5,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
-import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.StyleHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
@@ -179,7 +180,7 @@ public class TextBuilder {
             try {
                 action.run();
             } catch (Throwable ex) {
-                Core.getInstance().profile.logError(ex);
+                JsMacrosClient.clientCore.profile.logError(ex);
             }
         })));
         return this;

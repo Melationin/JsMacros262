@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -21,6 +22,7 @@ public class EventNameChange extends BaseEvent {
     public TextHelper newName;
 
     public EventNameChange(Entity entity, @Nullable Text oldName, @Nullable Text newName) {
+        super(JsMacrosClient.clientCore);
         this.entity = EntityHelper.create(entity);
         this.oldName = TextHelper.wrap(oldName);
         this.newName = TextHelper.wrap(newName);

@@ -12,6 +12,7 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
@@ -134,7 +135,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
         if (recipeBookWidget == null) {
             return null;
         }
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+        if (JsMacrosClient.clientCore.profile.checkJoinedThreadStack()) {
             if (mc.currentScreen != inventory) {
                 ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, handler);
             }

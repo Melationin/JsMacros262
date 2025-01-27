@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.LinkedHashMap;
@@ -22,7 +23,7 @@ public class MixinTranslationStorage {
     private static void insertFabricLanguageData(ResourceManager resourceManager, List<String> definitions, boolean rightToLeft, CallbackInfoReturnable<TranslationStorage> cir, Map<String, String> map) {
         Map<String, String> translations = new LinkedHashMap<>();
         for (String lang : definitions) {
-            Set<Map<String, String>> res = Core.getInstance().extensions.getAllExtensions().stream().map(e -> e.getTranslations(lang)).collect(Collectors.toSet());
+            Set<Map<String, String>> res = JsMacrosClient.clientCore.extensions.getAllExtensions().stream().map(e -> e.getTranslations(lang)).collect(Collectors.toSet());
             for (Map<String, String> r : res) {
                 translations.putAll(r);
             }

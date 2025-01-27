@@ -6,9 +6,10 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
@@ -44,9 +45,9 @@ public class ScriptScreen extends BaseScreen {
 
     @Override
     protected void init() {
-        BaseScreen prev = JsMacros.prevScreen;
+        BaseScreen prev = JsMacrosClient.prevScreen;
         super.init();
-        JsMacros.prevScreen = prev;
+        JsMacrosClient.prevScreen = prev;
     }
 
     /**
@@ -97,7 +98,7 @@ public class ScriptScreen extends BaseScreen {
                 onRender.accept(new Pos3D(mouseX, mouseY, delta), drawContext);
             }
         } catch (Throwable e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
             onRender = null;
         }
     }

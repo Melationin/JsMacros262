@@ -5,6 +5,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.util.TranslationUtil;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -61,7 +62,7 @@ public class EventChooser extends OverlayContainer {
             }
         }));
 
-        List<String> events = new ArrayList<>(Core.getInstance().eventRegistry.events);
+        List<String> events = new ArrayList<>(JsMacrosClient.clientCore.eventRegistry.events);
         Collections.sort(events);
         for (String e : events) {
             addEvent(e);

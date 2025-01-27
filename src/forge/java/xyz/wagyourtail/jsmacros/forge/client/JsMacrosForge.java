@@ -12,7 +12,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.command.CommandManager;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandManagerForge;
 import xyz.wagyourtail.jsmacros.forge.client.forgeevents.ForgeEvents;
 
@@ -29,8 +30,8 @@ public class JsMacrosForge {
         modBus.addListener(this::onRegisterKeyMappings);
         modBus.addListener(ForgeEvents::onRegisterGuiOverlays);
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (mc, parent) -> {
-            JsMacros.prevScreen.setParent(parent);
-            return JsMacros.prevScreen;
+            JsMacrosClient.prevScreen.setParent(parent);
+            return JsMacrosClient.prevScreen;
         });
         JsMacros.onInitialize();
     }
@@ -45,12 +46,12 @@ public class JsMacrosForge {
 
     @SubscribeEvent
     public void onInitializeClient(FMLClientSetupEvent event) {
-        JsMacros.onInitializeClient();
+        JsMacrosClient.onInitializeClient();
     }
 
     @SubscribeEvent
     public void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(JsMacros.keyBinding);
+        event.register(JsMacrosClient.keyBinding);
     }
 
 }

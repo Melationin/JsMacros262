@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Drawable;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
@@ -583,7 +584,7 @@ public class Draw2D implements IDraw2D<Draw2D>, Registrable<Draw2D> {
                         throw e;
                     }
                 } catch (Throwable f) {
-                    Core.getInstance().profile.logError(f);
+                    JsMacrosClient.clientCore.profile.logError(f);
                 }
             }
         }

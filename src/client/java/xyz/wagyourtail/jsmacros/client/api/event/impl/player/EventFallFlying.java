@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -8,6 +9,7 @@ public class EventFallFlying extends BaseEvent {
     public final boolean state;
 
     public EventFallFlying(boolean state) {
+        super(JsMacrosClient.clientCore);
         this.state = state;
     }
 

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -89,7 +90,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                         action.accept(b.get(), screen);
                     }
                 } catch (Throwable e) {
-                    Core.getInstance().profile.logError(e);
+                    JsMacrosClient.clientCore.profile.logError(e);
                 }
                 clickedOn(screen);
             }).position(getX(), getY()).size(getWidth(), 20).build();
@@ -232,7 +233,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                         getAction().accept(b.get(), screen);
                     }
                 } catch (Throwable e) {
-                    Core.getInstance().profile.logError(e);
+                    JsMacrosClient.clientCore.profile.logError(e);
                 }
                 clickedOn(screen);
             }, getMessage().getRaw());

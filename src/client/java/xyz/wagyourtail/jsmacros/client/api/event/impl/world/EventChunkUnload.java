@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -13,6 +14,7 @@ public class EventChunkUnload extends BaseEvent {
     public final int z;
 
     public EventChunkUnload(int x, int z) {
+        super(JsMacrosClient.clientCore);
         this.x = x;
         this.z = z;
     }

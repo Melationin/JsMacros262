@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -21,6 +23,7 @@ public class EventSignEdit extends BaseEvent {
 
     @SuppressWarnings("NullableProblems")
     public EventSignEdit(List<String> signText, int x, int y, int z, boolean front) {
+        super(JsMacrosClient.clientCore);
         this.pos = new Pos3D(x, y, z);
         this.front = front;
         this.signText = signText;

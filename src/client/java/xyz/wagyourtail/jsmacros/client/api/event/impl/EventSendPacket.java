@@ -4,6 +4,7 @@ import net.minecraft.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.event.filterer.FiltererSendPacket;
 import xyz.wagyourtail.jsmacros.client.api.helper.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -25,6 +26,7 @@ public class EventSendPacket extends BaseEvent {
     public final String type;
 
     public EventSendPacket(@NotNull Packet<?> packet) {
+        super(JsMacrosClient.clientCore);
         this.packet = packet;
         this.type = PacketByteBufferHelper.getPacketName(packet);
     }

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -17,6 +18,7 @@ public class EventDisconnect extends BaseEvent {
     public final TextHelper message;
 
     public EventDisconnect(Text message) {
+        super(JsMacrosClient.clientCore);
         this.message = TextHelper.wrap(message);
     }
 

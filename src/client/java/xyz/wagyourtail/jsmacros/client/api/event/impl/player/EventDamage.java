@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import net.minecraft.entity.damage.DamageSource;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -27,6 +28,7 @@ public class EventDamage extends BaseEvent {
     public final float change;
 
     public EventDamage(DamageSource source, float health, float change) {
+        super(JsMacrosClient.clientCore);
         if (source.getAttacker() == null) {
             this.attacker = null;
         } else {

@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.entity.Entity;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -13,6 +14,7 @@ public class EventEntityUnload extends BaseEvent {
     public final String reason;
 
     public EventEntityUnload(Entity e, Entity.RemovalReason reason) {
+        super(JsMacrosClient.clientCore);
         this.entity = EntityHelper.create(e);
         this.reason = reason.toString();
     }

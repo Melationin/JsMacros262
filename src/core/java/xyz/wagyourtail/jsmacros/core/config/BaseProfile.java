@@ -19,7 +19,7 @@ import java.util.*;
  * @since 1.2.7
  */
 public abstract class BaseProfile {
-    public final Core runner;
+    public final Core<?, ?> runner;
     public final Logger LOGGER;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
 

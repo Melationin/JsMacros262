@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.access.IClientPlayerInteractionManager;
-import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.HitResultHelper;
@@ -297,13 +297,13 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.6.0
      */
     public InteractionManagerHelper attack(boolean await) throws InterruptedException {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ((IMinecraftClient) mc).jsmacros_doAttack();
+            mc.doAttack();
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ((IMinecraftClient) mc).jsmacros_doAttack();
+                mc.doAttack();
                 wait.release();
             });
             wait.acquire();
@@ -326,7 +326,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     public InteractionManagerHelper attack(EntityHelper<?> entity, boolean await) throws InterruptedException {
         if (!checkBase(autoUpdateBase)) return this;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (entity.getRaw() == mc.player) {
             throw new AssertionError("Can't interact with self!");
         }
@@ -400,7 +400,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         if (!checkBase(autoUpdateBase)) return this;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             base.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
             assert mc.player != null;
@@ -432,7 +432,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     public InteractionProxy.Break.BreakBlockResult breakBlock() throws InterruptedException {
         InteractionProxy.Break.BreakBlockResult insta = checkInstaBreak();
         if (insta != null) return insta;
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+        if (JsMacrosClient.clientCore.profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
 
@@ -591,13 +591,13 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.6.0
      */
     public InteractionManagerHelper interact(boolean await) throws InterruptedException {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ((IMinecraftClient) mc).jsmacros_doItemUse();
+           mc.doItemUse();
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ((IMinecraftClient) mc).jsmacros_doItemUse();
+                mc.doItemUse();
                 wait.release();
             });
             wait.acquire();
@@ -627,7 +627,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
             throw new AssertionError("Can't interact with self!");
         }
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = base.interactEntity(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
@@ -665,7 +665,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     public InteractionManagerHelper interactItem(boolean offHand, boolean await) throws InterruptedException {
         if (!checkBase(autoUpdateBase)) return this;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = base.interactItem(mc.player, hand);
             assert mc.player != null;
@@ -742,7 +742,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     public InteractionManagerHelper interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         if (!checkBase(autoUpdateBase)) return this;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = base.interactBlock(mc.player, hand,
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
@@ -787,7 +787,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
             InteractionProxy.Interact.setOverride(false);
             return this;
         }
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             InteractionProxy.Interact.setOverride(true);
         } else {
@@ -820,7 +820,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.9.0
      */
     public int holdInteract(int ticks, boolean stopOnPause) throws InterruptedException {
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+        if (JsMacrosClient.clientCore.profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
 

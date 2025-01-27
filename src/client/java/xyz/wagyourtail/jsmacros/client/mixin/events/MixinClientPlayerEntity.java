@@ -27,7 +27,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAirChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventEXPChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventRiding;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventSignEdit;
-import xyz.wagyourtail.jsmacros.client.api.movement.MovementQueue;
+import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,7 +69,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
     public void onOpenEditSignScreen(SignBlockEntity sign, boolean front, CallbackInfo ci) {
         List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
-        final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
+        final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ(), front);
         event.trigger();
         lines = event.signText;
         if (lines == null) lines = Arrays.asList("", "", "", "");

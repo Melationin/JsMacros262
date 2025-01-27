@@ -33,10 +33,10 @@ import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventQuitGame;
 import xyz.wagyourtail.jsmacros.client.api.helper.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
-import xyz.wagyourtail.jsmacros.client.config.Profile;
+import xyz.wagyourtail.jsmacros.client.config.ClientProfile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
-import xyz.wagyourtail.jsmacros.client.api.movement.MovementQueue;
+import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
@@ -44,7 +44,7 @@ import java.io.File;
 
 public class JsMacrosClient extends JsMacros {
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
-    public static final Core<Profile, EventRegistry> clientCore = new Core<>(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
+    public static final Core<ClientProfile, EventRegistry> clientCore = new Core<>(EventRegistry::new, ClientProfile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
 
     public static BaseScreen prevScreen;
 
@@ -129,22 +129,6 @@ public class JsMacrosClient extends JsMacros {
     @Deprecated
     static public MinecraftClient getMinecraft() {
         return MinecraftClient.getInstance();
-    }
-
-    public static int[] range(int end) {
-        return range(0, end, 1);
-    }
-
-    public static int[] range(int start, int end) {
-        return range(start, end, 1);
-    }
-
-    public static int[] range(int start, int end, int iter) {
-        int[] a = new int[end - start];
-        for (int i = start; i < end; i += iter) {
-            a[i - start] = i;
-        }
-        return a;
     }
 
 }

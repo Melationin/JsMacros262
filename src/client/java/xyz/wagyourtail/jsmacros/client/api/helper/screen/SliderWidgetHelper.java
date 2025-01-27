@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper.screen;
 
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -143,7 +144,7 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
                         action.accept(b.get(), screen);
                     }
                 } catch (Exception e) {
-                    Core.getInstance().profile.logError(e);
+                    JsMacrosClient.clientCore.profile.logError(e);
                 }
             }, steps);
             b.set(new SliderWidgetHelper(slider, getZIndex()));

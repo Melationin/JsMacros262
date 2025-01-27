@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.api.command.CommandBuilder;
-import xyz.wagyourtail.jsmacros.client.api.command.CommandManager;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
 import xyz.wagyourtail.jsmacros.client.api.helper.CommandNodeHelper;
 
 public class CommandManagerFabric extends CommandManager {
@@ -32,7 +32,7 @@ public class CommandManagerFabric extends CommandManager {
     @Override
     public void reRegisterCommand(CommandNodeHelper node) {
         if (node.fabric != null) {
-            ClientCommandManager.getActiveDispatcher().getRoot().addChild(node.fabric);
+            ClientCommandManager.getActiveDispatcher().getRoot().addChild((CommandNode) node.fabric);
         }
         ClientPlayNetworkHandler nh = MinecraftClient.getInstance().getNetworkHandler();
         if (nh != null) {

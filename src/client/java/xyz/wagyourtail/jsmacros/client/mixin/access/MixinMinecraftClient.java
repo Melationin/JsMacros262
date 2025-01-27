@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.mixin.access;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.FontManager;
 import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,29 +21,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
+import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.function.Consumer;
 
 @Mixin(MinecraftClient.class)
 abstract
-class MixinMinecraftClient implements IMinecraftClient {
-
-    @Shadow
-    @Final
-    private FontManager fontManager;
-
-    @Shadow
-    protected abstract void doItemUse();
-
-    @Shadow
-    protected abstract boolean doAttack();
+class MixinMinecraftClient {
 
     @Shadow
     protected abstract void handleBlockBreaking(boolean breaking);
@@ -93,7 +81,7 @@ class MixinMinecraftClient implements IMinecraftClient {
                 onClose.accept((IScreen) currentScreen);
             }
         } catch (Throwable e) {
-            Core.getInstance().profile.logError(e);
+            JsMacrosClient.clientCore.profile.logError(e);
         }
     }
 
@@ -159,21 +147,6 @@ class MixinMinecraftClient implements IMinecraftClient {
         if (value) return true;
         assert world != null;
         return world.getBlockState(blockPos).getOutlineShape(world, blockPos).isEmpty();
-    }
-
-    @Override
-    public FontManager jsmacros_getFontManager() {
-        return fontManager;
-    }
-
-    @Override
-    public void jsmacros_doItemUse() {
-        doItemUse();
-    }
-
-    @Override
-    public void jsmacros_doAttack() {
-        doAttack();
     }
 
 }
