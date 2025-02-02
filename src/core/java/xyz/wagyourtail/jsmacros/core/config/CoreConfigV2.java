@@ -11,7 +11,7 @@ import java.util.*;
 
 public class CoreConfigV2 {
 
-    private final Core<?, ?> runner;
+    private transient Core<?, ?> runner;
 
     @Option(translationKey = "jsmacros.maxlocktime", group = "jsmacros.settings.general")
     public long maxLockTime = 500;
@@ -32,8 +32,7 @@ public class CoreConfigV2 {
 
     public Map<String, ServiceTrigger> services = new HashMap<>();
 
-    public CoreConfigV2(Core<?, ?> runner) {
-        this.runner = runner;
+    public CoreConfigV2() {
         profiles.put("default", new ArrayList<>());
         profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true, false));
     }

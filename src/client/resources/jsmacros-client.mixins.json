@@ -11,7 +11,6 @@
     "access.MixinAllayEntity",
     "access.MixinAnvilScreen",
     "access.MixinBoatEntity",
-    "access.MixinBossBarHud",
     "access.MixinChatHud",
     "access.MixinChunkSelection",
     "access.MixinClientAdvancementManager",

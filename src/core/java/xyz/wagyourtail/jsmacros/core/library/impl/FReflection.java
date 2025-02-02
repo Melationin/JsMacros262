@@ -266,6 +266,10 @@ public class FReflection extends PerExecLibrary {
      * @since 1.2.7
      */
     public <T> T newInstance(Class<T> c, Object... objects) {
+        return newInstance0(c, objects);
+    }
+
+    public static <T> T newInstance0(Class<T> c, Object... objects) {
         Class<?>[] params = new Class<?>[objects.length];
         for (int i = 0; i < objects.length; ++i) {
             params[i] = objects[i].getClass();

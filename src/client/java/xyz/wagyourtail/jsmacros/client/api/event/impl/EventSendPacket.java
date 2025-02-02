@@ -19,7 +19,6 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FReflection;
 @SuppressWarnings("unused")
 public class EventSendPacket extends BaseEvent {
 
-    private static final FReflection REFLECTION = new FReflection(null);
     @Nullable
     public Packet<?> packet;
     @DocletReplaceReturn("PacketName")
@@ -41,7 +40,7 @@ public class EventSendPacket extends BaseEvent {
      */
     public void replacePacket(Object... args) {
         //noinspection DataFlowIssue
-        packet = REFLECTION.newInstance(packet.getClass(), args);
+        packet = FReflection.newInstance0(packet.getClass(), args);
     }
 
     /**

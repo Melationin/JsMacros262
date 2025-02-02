@@ -46,7 +46,7 @@ public class PyTest {
     @Test
     public void test() throws InterruptedException {
         Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom("test");
+        EventCustom custom = new EventCustom(core, "test");
         EventContainer<?> ev = core.exec("py",
                 TEST_SCRIPT,
                 null,
@@ -90,7 +90,7 @@ public class PyTest {
     @Test
     public void test2() throws InterruptedException {
         Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom("test");
+        EventCustom custom = new EventCustom(core ,"test");
         EventContainer<?> ev = core.exec("py",
                 TEST_SCRIPT_2,
                 null,
@@ -145,7 +145,7 @@ public class PyTest {
     @Test
     public void test3() throws InterruptedException {
         Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom("test");
+        EventCustom custom = new EventCustom(core, "test");
         EventContainer<?> ev = core.exec("py",
                 TEST_SCRIPT_3,
                 null,

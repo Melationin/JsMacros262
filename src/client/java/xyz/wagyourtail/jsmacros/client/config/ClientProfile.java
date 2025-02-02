@@ -237,7 +237,7 @@ public class ClientProfile extends BaseProfile {
         runner.registerHelper(DyeColor.class, DyeColorHelper.class);
         runner.registerHelper(Formatting.class, FormattingHelper.class);
         runner.registerHelper(ClientPlayerInteractionManager.class, InteractionManagerHelper.class);
-        runner.registerHelper(NbtElement.class, NBTElementHelper.class);
+        runner.helperRegistry.registerType(NbtElement.class, NBTElementHelper::wrap);
         runner.registerHelper(AbstractNbtNumber.class, NBTElementHelper.NBTNumberHelper.class);
         runner.registerHelper(NbtCompound.class, NBTElementHelper.NBTCompoundHelper.class);
         runner.registerHelper(AbstractNbtList.class, (Class) NBTElementHelper.NBTListHelper.class);

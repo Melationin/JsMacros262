@@ -33,6 +33,7 @@ public class GraalConfig {
         if (v1 != null && v1.isJsonObject()) {
             fromV1(v1.getAsJsonObject());
         }
+        v2.remove("client");
     }
 
 }

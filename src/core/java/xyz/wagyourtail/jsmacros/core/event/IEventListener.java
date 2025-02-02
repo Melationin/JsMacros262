@@ -1,10 +1,13 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 public interface IEventListener {
-    boolean joined();
+    IEventListener NULL = event -> null;
+
+    default boolean joined() {
+        return false;
+    }
 
     EventContainer<?> trigger(BaseEvent event);
 

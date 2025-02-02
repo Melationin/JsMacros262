@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -74,11 +75,15 @@ public class ConfigManager {
     public synchronized void convertConfigFormat(Class<?> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         try {
             Method m = clazz.getDeclaredMethod("fromV" + loadedAsVers, JsonObject.class);
-            Object option = clazz.getDeclaredConstructor(Core.class).newInstance(runner);
+            Object option = clazz.getDeclaredConstructor().newInstance();
             m.invoke(option, rawOptions);
             options.put(clazz, option);
+            try {
+                Field f = option.getClass().getDeclaredField("runner");
+                f.set(option, runner);
+            } catch (NoSuchFieldException ignored) {}
         } catch (NoSuchMethodException ignored) {
-            options.put(clazz, clazz.getDeclaredConstructor(Core.class).newInstance(runner));
+            options.put(clazz, clazz.getDeclaredConstructor().newInstance());
         }
     }
 
@@ -124,15 +129,20 @@ public class ConfigManager {
             }
             if (loadedAsVers != 1) {
                 for (Map.Entry<String, Class<?>> optionClass : optionClasses.entrySet()) {
+                    Object instance;
                     try {
                         if (!rawOptions.has(optionClass.getKey())) {
                             throw new NullPointerException();
                         }
-                        options.put(optionClass.getValue(), gson.fromJson(rawOptions.get(optionClass.getKey()), optionClass.getValue()));
+                        options.put(optionClass.getValue(), instance = gson.fromJson(rawOptions.get(optionClass.getKey()), optionClass.getValue()));
                     } catch (JsonSyntaxException | NullPointerException ignored) {
-                        options.put(optionClass.getValue(), optionClass.getValue().newInstance());
+                        options.put(optionClass.getValue(), instance = optionClass.getValue().getConstructor().newInstance());
                         saveConfig();
                     }
+                    try {
+                        Field f = instance.getClass().getDeclaredField("runner");
+                        f.set(instance, runner);
+                    } catch (NoSuchFieldException ignored) {}
                 }
             }
         } catch (Exception e) {

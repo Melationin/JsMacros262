@@ -100,7 +100,7 @@ unimined.minecraft {
             }
         }
 
-        devFallbackNamespace "intermediary"
+        devNamespace("yarn")
     }
 
     accessWidener {
@@ -116,7 +116,7 @@ unimined.minecraft {
 unimined.minecraft(sourceSets.client) {
     combineWith(":core")
     combineWith(":main")
-    side("combined")
+    side("joined")
 }
 
 sourceSets {
@@ -131,13 +131,13 @@ if (enabled_loaders.contains("forge")) {
 
     unimined.minecraft(sourceSets.forge) {
         combineWith(sourceSets.main)
-        side("combined")
+        side("joined")
 
         minecraftRemapper.config {
             ignoreConflicts(true)
         }
 
-        neoForged {
+        neoForge {
             loader project.forge_version
             accessTransformer(aw2at(file("src/main/resources/jsmacros.accesswidener")))
 
@@ -155,7 +155,7 @@ if (enabled_loaders.contains("fabric")) {
 
     unimined.minecraft(sourceSets.fabric) {
         combineWith(sourceSets.main)
-        side("combined")
+        side("joined")
 
         fabric {
             loader project.fabric_loader_version
