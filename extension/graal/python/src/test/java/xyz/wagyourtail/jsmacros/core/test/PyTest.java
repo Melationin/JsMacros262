@@ -7,14 +7,20 @@ import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
-import xyz.wagyourtail.jsmacros.stubs.CoreInstanceCreator;
-import xyz.wagyourtail.jsmacros.stubs.EventRegistryStub;
-import xyz.wagyourtail.jsmacros.stubs.ProfileStub;
+import xyz.wagyourtail.jsmacros.test.BaseTest;
+import xyz.wagyourtail.jsmacros.test.stubs.CoreInstanceCreator;
+import xyz.wagyourtail.jsmacros.test.stubs.EventRegistryStub;
+import xyz.wagyourtail.jsmacros.test.stubs.ProfileStub;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PyTest {
+public class PyTest extends BaseTest {
+
+    @Override
+    public String getLang() {
+        return "py";
+    }
 
     @Language("py")
     private final String TEST_SCRIPT = """
@@ -45,17 +51,7 @@ public class PyTest {
 
     @Test
     public void test() throws InterruptedException {
-        Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom(core, "test");
-        EventContainer<?> ev = core.exec("py",
-                TEST_SCRIPT,
-                null,
-                custom,
-                null,
-                null
-        );
-        ev.awaitLock(() -> {
-        });
+        EventCustom custom = runTestScript(TEST_SCRIPT);
         assertEquals("[0, 3, 1, 2]", custom.getString("test"));
     }
 
@@ -63,18 +59,24 @@ public class PyTest {
     private final String TEST_SCRIPT_2 = """
             import json
             j = []
+            atime = 0
+            btime = 0
             
             def a():
+                global atime
                 while len(j) < 10:
-                    j.append('a')
+                    j.append(f'a {atime}')
+                    atime += 100
                     Time.sleep(100)
             
             JavaWrapper.methodToJavaAsync(a).run()
 
             def b():
+                global btime
                 while len(j) < 10:
-                    j.append('b')
-                    Time.sleep(105)
+                    j.append(f'b {btime}')
+                    btime += 110        
+                    Time.sleep(110)
 
             JavaWrapper.methodToJavaAsync(b).run()
             JavaWrapper.deferCurrentTask(-1)
@@ -89,19 +91,8 @@ public class PyTest {
 
     @Test
     public void test2() throws InterruptedException {
-        Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom(core ,"test");
-        EventContainer<?> ev = core.exec("py",
-                TEST_SCRIPT_2,
-                null,
-                custom,
-                null,
-                null
-        );
-        EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, 3000);
-        ev.awaitLock(() -> {
-        });
-        assertEquals("[\"a\", \"b\", \"a\", \"b\", \"a\", \"b\", \"a\", \"b\", \"a\", \"b\", \"c\"]", custom.getString("test"));
+        EventCustom custom = runTestScript(TEST_SCRIPT_2, 5000);
+        assertEquals("[\"a 0\", \"b 0\", \"a 100\", \"b 110\", \"a 200\", \"b 220\", \"a 300\", \"b 330\", \"a 400\", \"b 440\", \"c\"]", custom.getString("test"));
     }
 
     @Language("py")
@@ -144,18 +135,7 @@ public class PyTest {
 
     @Test
     public void test3() throws InterruptedException {
-        Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom(core, "test");
-        EventContainer<?> ev = core.exec("py",
-                TEST_SCRIPT_3,
-                null,
-                custom,
-                null,
-                null
-        );
-        EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, 10000);
-        ev.awaitLock(() -> {
-        });
+        EventCustom custom = runTestScript(TEST_SCRIPT_3);
         System.out.println("Time: " + custom.getDouble("time"));
         assertEquals("[\"long started\", \"rapid 1\", \"rapid 2\", \"rapid 3\", \"rapid 4\", \"long finished\"]", custom.getString("test"));
         assertTrue(custom.getDouble("time") > 5000);

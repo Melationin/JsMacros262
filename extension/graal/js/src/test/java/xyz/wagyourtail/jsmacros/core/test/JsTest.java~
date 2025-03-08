@@ -71,7 +71,7 @@ public class JsTest extends BaseTest {
     @Test
     public void test2() throws InterruptedException {
         EventCustom custom = runTestScript(TEST_SCRIPT_2);
-        assertEquals("[\"a 0\",\"b 0\",\"a 100\",\"b 110\",\"a 200\",\"b 220\",\"a 300\",\"b 330\",\"a 400\",\"b 440\",\"c\"]", custom.getString("test"));
+        assertEquals("[\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"c\"]", custom.getString("test"));
     }
 
     @Language("js")

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.stubs;
+package xyz.wagyourtail.jsmacros.test.stubs;
 
 import com.google.common.collect.ImmutableList;
 import xyz.wagyourtail.jsmacros.core.Core;

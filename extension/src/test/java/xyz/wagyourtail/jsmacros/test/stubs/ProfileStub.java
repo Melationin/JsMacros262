@@ -1,16 +1,9 @@
-package xyz.wagyourtail.jsmacros.stubs;
+package xyz.wagyourtail.jsmacros.test.stubs;
 
 import org.slf4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
-import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.IEventListener;
-import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
-import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.stubs;
+package xyz.wagyourtail.jsmacros.test.stubs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
