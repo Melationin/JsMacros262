@@ -4,9 +4,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.session.Session;
 import net.minecraft.client.world.ClientWorld;
@@ -57,13 +57,7 @@ public abstract class MixinMinecraftClient {
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
             assert interactionManager != null;
-            if (screen instanceof AbstractInventoryScreen && interactionManager.hasCreativeInventory()) {
-                if (!(screen instanceof CreativeInventoryScreen)) {
-                    jsmacros$prevScreen = currentScreen;
-                }
-            } else {
-                jsmacros$prevScreen = currentScreen;
-            }
+            jsmacros$prevScreen = currentScreen;
             new EventOpenScreen(screen).trigger();
         }
     }

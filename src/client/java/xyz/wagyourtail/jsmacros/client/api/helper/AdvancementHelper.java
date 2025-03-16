@@ -5,6 +5,7 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -21,6 +22,8 @@ import java.util.stream.StreamSupport;
  */
 @SuppressWarnings("unused")
 public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
+
 
     public AdvancementHelper(PlacedAdvancement base) {
         super(base);
@@ -90,7 +93,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      */
     @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
-        return (String[]) base.getAdvancement().rewards().recipes().stream().map(Identifier::toString).toArray();
+        return (String[]) base.getAdvancement().rewards().recipes().stream().map(RegistryKey::getValue).map(Identifier::toString).toArray();
     }
 
     /**

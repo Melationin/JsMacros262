@@ -210,7 +210,7 @@ public class FileChooser extends OverlayContainer {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
 
-        drawContext.drawTextWrapped(textRenderer, this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
+        drawContext.drawWrappedText(textRenderer, this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF, false);
 
         drawContext.fill(x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
         drawContext.fill(x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);

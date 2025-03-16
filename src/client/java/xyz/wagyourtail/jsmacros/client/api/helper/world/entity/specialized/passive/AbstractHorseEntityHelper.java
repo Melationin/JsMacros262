@@ -96,7 +96,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @since 1.8.4
      */
     public double getJumpStrengthStat() {
-        return base.getAttributeValue(EntityAttributes.GENERIC_JUMP_STRENGTH);
+        return base.getAttributeValue(EntityAttributes.JUMP_STRENGTH);
     }
 
     /**
@@ -106,7 +106,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @since 1.8.4
      */
     public double getHorseJumpHeight() {
-        double jumpStrength = base.getAttributeValue(EntityAttributes.GENERIC_JUMP_STRENGTH);
+        double jumpStrength = base.getAttributeValue(EntityAttributes.JUMP_STRENGTH);
         return -0.1817584952 * Math.pow(jumpStrength, 3) + 3.689713992 * Math.pow(jumpStrength, 2) + 2.128599134 * jumpStrength - 0.343930367;
     }
 
@@ -131,7 +131,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @since 1.8.4
      */
     public double getSpeedStat() {
-        return base.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        return base.getAttributeValue(EntityAttributes.MOVEMENT_SPEED);
     }
 
     /**

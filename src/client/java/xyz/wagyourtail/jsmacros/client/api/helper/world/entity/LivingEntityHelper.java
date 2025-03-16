@@ -200,7 +200,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.5.0
      */
     public boolean isFallFlying() {
-        return base.isFallFlying();
+        return base.isGliding();
     }
 
     /**

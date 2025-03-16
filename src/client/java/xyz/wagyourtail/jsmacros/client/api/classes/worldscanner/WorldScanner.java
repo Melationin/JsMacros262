@@ -339,7 +339,7 @@ public class WorldScanner {
      */
     private Stream<Pos3D> scanCubeAreaInternal(int x1, int y1, int z1, int x2, int y2, int z2) {
         int worldBottom = world.getBottomY();
-        int worldTop = world.getTopY() - 1;
+        int worldTop = world.getHeight() - 1;
         if (Math.min(y1, y2) > worldTop || Math.max(y1, y2) < worldBottom) return Stream.empty();
 
         y1 = MathHelper.clamp(y1, worldBottom, worldTop);

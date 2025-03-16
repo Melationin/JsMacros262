@@ -10,14 +10,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("InteractEntity")
 public class EventInteractEntity extends BaseEvent {
     public final boolean offhand;
-    @DocletReplaceReturn("ActionResult")
-    public final String result;
+    public final boolean result;
     public final EntityHelper<?> entity;
 
-    public EventInteractEntity(boolean offhand, String resultStatus, Entity entity) {
+    public EventInteractEntity(boolean offhand, boolean accepted, Entity entity) {
         super(JsMacrosClient.clientCore);
         this.offhand = offhand;
-        this.result = resultStatus;
+        this.result = accepted;
         this.entity = EntityHelper.create(entity);
     }
 

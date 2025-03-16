@@ -139,11 +139,11 @@ public class MovementDummy extends LivingEntity {
      * so this is why we need to set the y-velocity to 0.<p>
      */
     @Override
-    public Vec3d applyMovementInput(Vec3d movementInput, float f) {
+    public void travel(Vec3d movementInput) {
         if (this.isClimbing() && this.getVelocity().getY() < 0.0D && !this.getBlockStateAtPos().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder()) {
             this.setVelocity(this.getVelocity().getX(), 0, this.getVelocity().getZ());
         }
-        return super.applyMovementInput(movementInput, f);
+        super.travel(movementInput);
     }
 
     //TODO: relink?

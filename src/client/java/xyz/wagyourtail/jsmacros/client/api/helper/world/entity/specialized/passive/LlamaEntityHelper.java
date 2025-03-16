@@ -25,14 +25,6 @@ public class LlamaEntityHelper<T extends LlamaEntity> extends DonkeyEntityHelper
     }
 
     /**
-     * @return the color of this llama's carpet.
-     * @since 1.8.4
-     */
-    public DyeColorHelper getCarpetColor() {
-        return new DyeColorHelper(base.getCarpetColor());
-    }
-
-    /**
      * @return the strength of this llama.
      * @since 1.8.4
      */

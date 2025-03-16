@@ -1726,7 +1726,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("AcknowledgeChunksC2SPacket", net.minecraft.network.packet.c2s.play.AcknowledgeChunksC2SPacket.class);
         PACKETS.put("UpdateBeaconC2SPacket", net.minecraft.network.packet.c2s.play.UpdateBeaconC2SPacket.class);
         PACKETS.put("BundleS2CPacket", net.minecraft.network.packet.s2c.play.BundleS2CPacket.class);
-        PACKETS.put("PickFromInventoryC2SPacket", net.minecraft.network.packet.c2s.play.PickFromInventoryC2SPacket.class);
         PACKETS.put("LoginQueryResponseC2SPacket", net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket.class);
         PACKETS.put("StatisticsS2CPacket", net.minecraft.network.packet.s2c.play.StatisticsS2CPacket.class);
         PACKETS.put("CommandTreeS2CPacket", net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket.class);
@@ -1746,7 +1745,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("DebugSampleSubscriptionC2SPacket", net.minecraft.network.packet.c2s.play.DebugSampleSubscriptionC2SPacket.class);
         PACKETS.put("ServerLinksS2CPacket", net.minecraft.network.packet.s2c.common.ServerLinksS2CPacket.class);
         PACKETS.put("CookieResponseC2SPacket", net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket.class);
-        PACKETS.put("ChangeUnlockedRecipesS2CPacket", net.minecraft.network.packet.s2c.play.ChangeUnlockedRecipesS2CPacket.class);
         PACKETS.put("UpdateTickRateS2CPacket", net.minecraft.network.packet.s2c.play.UpdateTickRateS2CPacket.class);
         PACKETS.put("BundleDelimiterS2CPacket", net.minecraft.network.packet.s2c.play.BundleDelimiterS2CPacket.class);
         PACKETS.put("CustomReportDetailsS2CPacket", net.minecraft.network.packet.s2c.common.CustomReportDetailsS2CPacket.class);

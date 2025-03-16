@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.item.Item;
@@ -23,6 +24,11 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
         super(inventory);
     }
 
+    @Override
+    public ItemStackHelper getOutput() {
+        return new ItemStackHelper(inventory.getScreenHandler().getOutputSlot().getStack());
+    }
+
     /**
      * @param x the x position of the input, will always be 0
      * @param y the y position of the input, will always be 0
@@ -31,6 +37,21 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      */
     public ItemStackHelper getInput(int x, int y) {
         return getSmeltedItem();
+    }
+
+    @Override
+    public int getCraftingWidth() {
+        return 1;
+    }
+
+    @Override
+    public int getCraftingHeight() {
+        return 1;
+    }
+
+    @Override
+    public int getCraftingSlotCount() {
+        return 1;
     }
 
     /**
@@ -73,7 +94,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      */
     public Map<String, Integer> getFuelValues() {
         Object2IntMap<String> fuelMap = new Object2IntOpenHashMap<>();
-        for (Map.Entry<Item, Integer> entry : FurnaceBlockEntity.createFuelTimeMap().entrySet()) {
+        for (Map.Entry<Item, Integer> entry : mc.world.getFuelRegistry().fuelValues.entrySet()) {
             fuelMap.put(Registries.ITEM.getId(entry.getKey()).toString(), entry.getValue().intValue());
         }
         return fuelMap;

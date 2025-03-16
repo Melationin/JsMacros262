@@ -7,6 +7,7 @@ import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.DamageTypeTags;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
@@ -60,8 +61,8 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean canBeRepairedWith(ItemStackHelper stack) {
-        // At least in vanilla the first item stack is never used
-        return base.canRepair(null, stack.getRaw());
+        var repair = base.getComponents().get(DataComponentTypes.REPAIRABLE);
+        return repair.matches(stack.getRaw());
     }
 
     /**
@@ -130,7 +131,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean hasRecipeRemainder() {
-        return base.hasRecipeRemainder();
+        return !base.getRecipeRemainder().isEmpty();
     }
 
     /**
@@ -138,8 +139,8 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     @Nullable
-    public ItemHelper getRecipeRemainder() {
-        return base.getRecipeRemainder() == null ? null : new ItemHelper(base.getRecipeRemainder());
+    public ItemStackHelper getRecipeRemainder() {
+        return new ItemStackHelper(base.getRecipeRemainder());
     }
 
     /**
@@ -149,7 +150,11 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public int getEnchantability() {
-        return base.getEnchantability();
+        var enchant = base.getComponents().get(DataComponentTypes.ENCHANTABLE);
+        if (enchant != null) {
+            return enchant.value();
+        }
+        return 0;
     }
 
     /**
@@ -192,7 +197,11 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isFireproof() {
-        return base.getComponents().get(DataComponentTypes.FIRE_RESISTANT) != null;
+        var types = base.getComponents().get(DataComponentTypes.DAMAGE_RESISTANT);
+        if (types == null) {
+            return false;
+        }
+        return types.types() == DamageTypeTags.IS_FIRE;
     }
 
     /**
@@ -200,7 +209,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isTool() {
-        return base instanceof ToolItem;
+        return base instanceof MiningToolItem;
     }
 
     /**
@@ -208,7 +217,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isWearable() {
-        return base instanceof Equipment && ((Equipment) base).getSlotType().isArmorSlot();
+        return base.getComponents().get(DataComponentTypes.EQUIPPABLE) != null;
     }
 
     /**

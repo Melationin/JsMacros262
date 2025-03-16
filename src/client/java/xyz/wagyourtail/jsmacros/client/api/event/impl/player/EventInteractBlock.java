@@ -13,16 +13,15 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("InteractBlock")
 public class EventInteractBlock extends BaseEvent {
     public final boolean offhand;
-    @DocletReplaceReturn("ActionResult")
-    public final String result;
+    public final boolean result;
     public final BlockDataHelper block;
     @DocletReplaceReturn("Side")
     public final int side;
 
-    public EventInteractBlock(boolean offhand, String resultStatus, BlockDataHelper block, int side) {
+    public EventInteractBlock(boolean offhand, boolean accepted, BlockDataHelper block, int side) {
         super(JsMacrosClient.clientCore);
         this.offhand = offhand;
-        this.result = resultStatus;
+        this.result = accepted;
         this.block = block;
         this.side = side;
     }

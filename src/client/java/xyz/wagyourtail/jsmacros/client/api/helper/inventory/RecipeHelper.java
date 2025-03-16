@@ -2,16 +2,20 @@ package xyz.wagyourtail.jsmacros.client.api.helper.inventory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.client.gui.screen.ingame.RecipeBookScreen;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.*;
+import net.minecraft.recipe.display.SlotDisplayContexts;
 import net.minecraft.registry.Registries;
+import net.minecraft.screen.AbstractRecipeScreenHandler;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -19,22 +23,23 @@ import java.util.stream.Collectors;
  * @since 1.3.1
  */
 @SuppressWarnings("unused")
-public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
+public class RecipeHelper extends BaseHelper<RecipeDisplayEntry> {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     protected int syncId;
 
-    public RecipeHelper(RecipeEntry<?> base, int syncId) {
+    public RecipeHelper(RecipeDisplayEntry base, int syncId) {
         super(base);
         this.syncId = syncId;
     }
 
-    /**
-     * @return
-     * @since 1.3.1
-     */
-    @DocletReplaceReturn("RecipeId")
-    public String getId() {
-        return base.id().toString();
-    }
+//    /**
+//     * @return
+//     * @since 1.3.1
+//     */
+//    @DocletReplaceReturn("RecipeId")
+//    public String getId() {
+//        return base.
+//    }
 
     /**
      * get ingredients list
@@ -44,9 +49,11 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      */
     public List<List<ItemStackHelper>> getIngredients() {
         List<List<ItemStackHelper>> ingredients = new ArrayList<>();
-        for (Ingredient in : base.value().getIngredients()) {
-            ingredients.add(Arrays.stream(in.getMatchingStacks()).map(ItemStackHelper::new).collect(Collectors.toList()));
+
+        for (Ingredient in : base.craftingRequirements().orElseGet(List::of)) {
+            ingredients.add(in.getMatchingItems().map(ItemStack::new).map(ItemStackHelper::new).collect(Collectors.toList()));
         }
+
         return ingredients;
     }
 
@@ -55,7 +62,8 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.3.1
      */
     public ItemStackHelper getOutput() {
-        return new ItemStackHelper(base.value().getResult(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()));
+        assert mc.world != null;
+        return new ItemStackHelper(base.getStacks(SlotDisplayContexts.createParameters(mc.world)).getFirst());
     }
 
     /**
@@ -68,7 +76,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
         if ((mc.currentScreen instanceof HandledScreen && ((HandledScreen<?>) mc.currentScreen).getScreenHandler().syncId == syncId) ||
                 (mc.currentScreen == null && syncId == mc.player.playerScreenHandler.syncId)) {
             assert mc.interactionManager != null;
-            mc.interactionManager.clickRecipe(syncId, base, craftAll);
+            mc.interactionManager.clickRecipe(syncId, base.id(), craftAll);
             return this;
         }
         throw new AssertionError("Crafting Screen no longer open!");
@@ -79,39 +87,40 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public String getGroup() {
-        return base.value().getGroup();
+        return Registries.RECIPE_BOOK_CATEGORY.getId(base.category()).toString();
     }
 
-    /**
-     * This will not account for the actual items used in the recipe, but only the default recipe
-     * itself. Items with durability or with a lot of tags will probably not work correctly.
-     *
-     * @return will return {@code true} if any of the default ingredients have a recipe remainder.
-     * @since 1.8.4
-     */
-    public boolean hasRecipeRemainders() {
-        return base.value().getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder());
-    }
+//    /**
+//     * This will not account for the actual items used in the recipe, but only the default recipe
+//     * itself. Items with durability or with a lot of tags will probably not work correctly.
+//     *
+//     * @return will return {@code true} if any of the default ingredients have a recipe remainder.
+//     * @since 1.8.4
+//     */
+//    public boolean hasRecipeRemainders() {
+//        base.isCraftable()
+//        return base.value().getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder());
+//    }
+//
+//    /**
+//     * @return a list of all possible recipe remainders.
+//     * @since 1.8.4
+//     */
+//    public List<List<ItemStackHelper>> getRecipeRemainders() {
+//        return base.value().getIngredients().stream()
+//                .filter(ingredient -> ingredient.getMatchingStacks().length > 0 && ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
+//                .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).collect(Collectors.toList()))
+//                .collect(Collectors.toList());
+//    }
 
-    /**
-     * @return a list of all possible recipe remainders.
-     * @since 1.8.4
-     */
-    public List<List<ItemStackHelper>> getRecipeRemainders() {
-        return base.value().getIngredients().stream()
-                .filter(ingredient -> ingredient.getMatchingStacks().length > 0 && ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
-                .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).collect(Collectors.toList()))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * @return the type of this recipe.
-     * @since 1.8.4
-     */
-    @DocletReplaceReturn("RecipeTypeId")
-    public String getType() {
-        return Registries.RECIPE_TYPE.getId(base.value().getType()).toString();
-    }
+//    /**
+//     * @return the type of this recipe.
+//     * @since 1.8.4
+//     */
+//    @DocletReplaceReturn("RecipeTypeId")
+//    public String getType() {
+//        return Registries.RECIPE_TYPE.getId(base.value().getType()).toString();
+//    }
 
     /**
      * @return {@code true} if the recipe can be crafted with the current inventory, {@code false}
@@ -119,9 +128,12 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public boolean canCraft() {
-        RecipeMatcher matcher = new RecipeMatcher();
-        MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
-        return matcher.match(base.value(), null);
+        RecipeFinder recipeFinder = new RecipeFinder();
+        mc.player.getInventory().populateRecipeFinder(recipeFinder);
+        if (mc.currentScreen instanceof RecipeBookScreen<?> screen) {
+            screen.getScreenHandler().populateRecipeFinder(recipeFinder);
+        }
+        return base.isCraftable(recipeFinder);
     }
 
     /**
@@ -139,9 +151,12 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public int getCraftableAmount() {
-        RecipeMatcher matcher = new RecipeMatcher();
-        MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
-        return matcher.countCrafts(base, null);
+        RecipeFinder recipeFinder = new RecipeFinder();
+        mc.player.getInventory().populateRecipeFinder(recipeFinder);
+        if (mc.currentScreen instanceof RecipeBookScreen<?> screen) {
+            screen.getScreenHandler().populateRecipeFinder(recipeFinder);
+        }
+        return recipeFinder.recipeMatcher.countCrafts(base.craftingRequirements().get(), Integer.MAX_VALUE, null);
     }
 
     @Override

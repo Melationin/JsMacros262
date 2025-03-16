@@ -161,7 +161,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantments() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).streamEntries()
             .filter(enchantment -> enchantment.value().isAcceptableItem(base))
             .map(EnchantmentHelper::new).toList();
     }
@@ -171,7 +171,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.IN_ENCHANTING_TABLE)
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getOptional(EnchantmentTags.IN_ENCHANTING_TABLE)
             .map(registryEntries -> registryEntries.stream()
                 .filter(enchantment -> enchantment.value().isAcceptableItem(base))
                 .map(EnchantmentHelper::new).toList())
@@ -246,7 +246,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public double getAttackDamage() {
         assert mc.player != null;
         AttributeModifiersComponent lv = base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-        return lv.applyOperations(mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+        return lv.applyOperations(mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
     }
 
     /**
@@ -339,7 +339,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.2
      */
     public boolean isTool() {
-        return base.getItem() instanceof ToolItem;
+        return base.getItem() instanceof MiningToolItem;
     }
 
     /**
@@ -347,7 +347,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.2
      */
     public boolean isWearable() {
-        return base.getItem() instanceof Equipment && ((Equipment) base.getItem()).getSlotType().isArmorSlot();
+        return base.getComponents().get(DataComponentTypes.EQUIPPABLE) != null;
     }
 
     /**
@@ -440,7 +440,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.6.5
      */
     public boolean isOnCooldown() {
-        return MinecraftClient.getInstance().player.getItemCooldownManager().isCoolingDown(base.getItem());
+        return MinecraftClient.getInstance().player.getItemCooldownManager().isCoolingDown(base);
     }
 
     /**
@@ -448,7 +448,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.6.5
      */
     public float getCooldownProgress() {
-        return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem(), mc.getRenderTickCounter().getTickDelta(false));
+        return mc.player.getItemCooldownManager().getCooldownProgress(base, mc.getRenderTickCounter().getTickDelta(false));
     }
 
     /**

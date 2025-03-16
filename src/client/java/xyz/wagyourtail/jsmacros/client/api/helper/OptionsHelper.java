@@ -11,6 +11,7 @@ import net.minecraft.client.util.Window;
 import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.network.message.ChatVisibility;
 import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
+import net.minecraft.particle.ParticlesMode;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.sound.SoundCategory;
@@ -454,7 +455,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleCape(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.CAPE, val);
+            base.setPlayerModelPart(PlayerModelPart.CAPE, val);
             return this;
         }
 
@@ -464,7 +465,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleJacket(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.JACKET, val);
+            base.setPlayerModelPart(PlayerModelPart.JACKET, val);
             return this;
         }
 
@@ -474,7 +475,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftSleeve(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
+            base.setPlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
             return this;
         }
 
@@ -484,7 +485,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightSleeve(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
+            base.setPlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
             return this;
         }
 
@@ -494,7 +495,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftPants(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
+            base.setPlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
             return this;
         }
 
@@ -504,7 +505,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightPants(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
+            base.setPlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
             return this;
         }
 
@@ -514,7 +515,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleHat(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.HAT, val);
+            base.setPlayerModelPart(PlayerModelPart.HAT, val);
             return this;
         }
 

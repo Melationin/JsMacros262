@@ -54,7 +54,6 @@ public class TextInput extends Button {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
             int pos = textRenderer.trimToWidth(content, (int) (mouseX - getX() - 2)).length();
             updateSelStart(pos);
@@ -195,15 +194,6 @@ public class TextInput extends Button {
             updateSelEnd(arrowCursor);
         }
         return false;
-    }
-
-    @Override
-    public boolean clicked(double mouseX, double mouseY) {
-        boolean bl = super.clicked(mouseX, mouseY);
-        if (this.isFocused() ^ bl) {
-            this.setFocused(true);
-        }
-        return bl;
     }
 
     public void setSelected(boolean sel) {

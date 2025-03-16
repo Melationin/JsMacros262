@@ -86,7 +86,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        return addEnchantment(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Identifier.of(id)).orElseThrow(), level);
+        return addEnchantment(mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
+                .getEntry(Identifier.of(id)).orElseThrow(), level);
     }
 
     /**

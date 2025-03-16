@@ -57,11 +57,6 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     @Override
-    public Stream<Identifier> getRecipeIds() {
-        return source.getRecipeIds();
-    }
-
-    @Override
     public CompletableFuture<Suggestions> getCompletions(CommandContext<?> context) {
         return source.getCompletions(context);
     }
@@ -88,7 +83,7 @@ public class FakeServerCommandSource extends ServerCommandSource {
 
     @Override
     public void sendFeedback(Supplier<Text> feedbackSupplier, boolean broadcastToOps) {
-        MinecraftClient.getInstance().player.sendMessage(feedbackSupplier.get());
+        MinecraftClient.getInstance().player.sendMessage(feedbackSupplier.get(), false);
     }
 
 }

@@ -256,17 +256,23 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         matrixStack.push();
         if (boundEntity != null && boundEntity.isAlive()) {
             Pos3D entityPos = boundEntity.getPos().add(boundOffset);
-            pos.x += (entityPos.x - pos.x) * delta;
-            pos.y += (entityPos.y - pos.y) * delta;
-            pos.z += (entityPos.z - pos.z) * delta;
+            if (entityPos.toVector(pos).getMagnitudeSq() <= 3) {
+                pos.x += (entityPos.x - pos.x) * delta;
+                pos.y += (entityPos.y - pos.y) * delta;
+                pos.z += (entityPos.z - pos.z) * delta;
+            } else {
+                pos.x += entityPos.x;
+                pos.y += entityPos.y;
+                pos.z += entityPos.z;
+            }
         }
 
         matrixStack.translate(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
             Vector3f rot = toEulerDegrees(MinecraftClient.getInstance().gameRenderer.getCamera().getRotation());
-            rotations.x = -rot.x();
-            rotations.y = 180 + rot.y();
+            rotations.x = rot.x();
+            rotations.y = rot.y();
             rotations.z = 0;
         }
         if (rotateCenter) {

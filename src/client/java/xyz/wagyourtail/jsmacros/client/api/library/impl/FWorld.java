@@ -566,11 +566,22 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         if (world == null) return null;
         TargetPredicate target = TargetPredicate.createNonAttackable();
-        target.setPredicate((e) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
+        target.setPredicate((e, w) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
         List<LivingEntity> entities = (List) StreamSupport.stream(world.getEntities().spliterator(), false).filter(e -> e instanceof LivingEntity).collect(Collectors.toList());
-        LivingEntity e = world.getClosestEntity(entities, target, null, x1, y1, z1);
-        if (e != null) {
-            return EntityHelper.create(e);
+        LivingEntity closest = null;
+        double distance = -1;
+        PlayerEntity tester = mc.player;
+        for (LivingEntity e : entities) {
+            if (target.test(null, tester, e)) {
+                double d = e.squaredDistanceTo(tester);
+                if (distance == -1 || d < distance) {
+                    closest = e;
+                    distance = d;
+                }
+            }
+        }
+        if (closest != null) {
+            return EntityHelper.create(closest);
         }
         return null;
     }
@@ -598,7 +609,7 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
         if (world == null || player == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(player.getBlockPos()).value());
+        Identifier id = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(world.getBiome(player.getBlockPos()).value());
         return id == null ? null : id.toString();
     }
 
@@ -886,7 +897,7 @@ public class FWorld extends BaseLibrary {
     public String getBiomeAt(int x, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, 10, z)).value());
+        Identifier id = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, 10, z)).value());
         return id == null ? null : id.toString();
     }
 
@@ -902,7 +913,7 @@ public class FWorld extends BaseLibrary {
     public String getBiomeAt(int x, int y, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, y, z)).value());
+        Identifier id = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, y, z)).value());
         return id == null ? null : id.toString();
     }
 
@@ -960,7 +971,7 @@ public class FWorld extends BaseLibrary {
      * @param deltaY the y variation of the particle
      * @param deltaZ the z variation of the particle
      * @param speed  the speed of the particle
-     * @param count  the amount of particles to spawn
+     * @param count  the number of particles to spawn
      * @param force  whether to show the particle if it's more than 32 blocks away
      * @since 1.8.4
      */
@@ -971,7 +982,7 @@ public class FWorld extends BaseLibrary {
         ParticleEffect particle = (ParticleEffect) Registries.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
         particle = particle != null ? particle : ParticleTypes.CLOUD;
 
-        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
+        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, true, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
         mc.execute(() -> player.networkHandler.onParticle(packet));
     }
 

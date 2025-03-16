@@ -29,7 +29,7 @@ public class TextOverlay extends OverlayContainer {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
         int x = this.centered ? Math.max(this.x + 3, this.x + 3 + (this.width - 6) / 2 - this.textRenderer.getWidth(this.text) / 2) : this.x + 3;
-        drawContext.drawTextWrapped(textRenderer, this.text, x, this.y + 5, width - 6, 0xFFFFFF);
+        drawContext.drawWrappedText(textRenderer, this.text, x, this.y + 5, width - 6, 0xFFFFFF, false);
         super.render(drawContext, mouseX, mouseY, delta);
     }
 

@@ -368,7 +368,7 @@ public class FPlayer extends BaseLibrary {
      */
     public PlayerInput getCurrentPlayerInput() {
         assert mc.player != null;
-        return new PlayerInput(mc.player.input.movementForward, mc.player.input.movementSideways, mc.player.getYaw(), mc.player.getPitch(), mc.player.input.jumping, mc.player.input.sneaking, mc.player.isSprinting());
+        return new PlayerInput(mc.player.input.movementForward, mc.player.input.movementSideways, mc.player.getYaw(), mc.player.getPitch(), mc.player.input.playerInput.jump(), mc.player.input.playerInput.sneak(), mc.player.isSprinting());
     }
 
     /**

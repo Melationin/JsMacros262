@@ -14,6 +14,11 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
         super(inventory);
     }
 
+    @Override
+    public ItemStackHelper getOutput() {
+        return new ItemStackHelper(inventory.getScreenHandler().getOutputSlot().getStack());
+    }
+
     /**
      * @param x the x position of the input from 0 to 1, going left to right
      * @param y the y position of the input from 0 to 1, going top to bottom
@@ -22,6 +27,21 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
      */
     public ItemStackHelper getInput(int x, int y) {
         return getSlot(x + y * 2 + 1);
+    }
+
+    @Override
+    public int getCraftingWidth() {
+        return 0;
+    }
+
+    @Override
+    public int getCraftingHeight() {
+        return 0;
+    }
+
+    @Override
+    public int getCraftingSlotCount() {
+        return 0;
     }
 
     /**

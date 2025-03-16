@@ -44,7 +44,8 @@ public class CustomImage {
         this.graphics = image.createGraphics();
         this.name = name;
         this.texture = createTexture(image);
-        identifier = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture(PREFIX + name, texture);
+        identifier = Identifier.of(PREFIX + name);
+        MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, texture);
         update();
         currentId++;
         IMAGES.put(identifier.toString(), this);
@@ -130,7 +131,7 @@ public class CustomImage {
         NativeImage ni = texture.getImage();
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
-                ni.setColor(x, y, nativeARGBFlip(image.getRGB(x, y)));
+                ni.setColorArgb(x, y, image.getRGB(x, y));
             }
         }
         texture.upload();

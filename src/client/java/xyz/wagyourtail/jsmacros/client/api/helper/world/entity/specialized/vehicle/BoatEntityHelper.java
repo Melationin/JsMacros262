@@ -1,8 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.vehicle;
 
+import net.minecraft.entity.vehicle.AbstractBoatEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.ChestBoatEntity;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinBoatEntity;
@@ -12,7 +15,7 @@ import xyz.wagyourtail.jsmacros.client.mixin.access.MixinBoatEntity;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class BoatEntityHelper extends EntityHelper<BoatEntity> {
+public class BoatEntityHelper extends EntityHelper<AbstractBoatEntity> {
 
     public BoatEntityHelper(BoatEntity base) {
         super(base);
@@ -27,20 +30,11 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
     }
 
     /**
-     * @return the boat's plank type.
-     * @since 1.8.4
+     * @return the item that the boat is spawned from
+     * @since 2.0.0
      */
-    public BlockHelper getBoatBlockType() {
-        return new BlockHelper(base.getVariant().getBaseBlock());
-    }
-
-    /**
-     * @return the name of the boat's material.
-     * @since 1.8.4
-     */
-    @DocletReplaceReturn("BoatType")
-    public String getBoatType() {
-        return base.getVariant().getName();
+    public ItemStackHelper getBoatItem() {
+        return new ItemStackHelper(base.getPickBlockStack());
     }
 
     /**

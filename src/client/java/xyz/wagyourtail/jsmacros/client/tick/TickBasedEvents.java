@@ -62,7 +62,7 @@ public class TickBasedEvents {
         }
 
         if (mc.player != null) {
-            boolean state = mc.player.isFallFlying();
+            boolean state = mc.player.isGliding();
             if (previousFallFlyState ^ state) {
                 new EventFallFlying(state).trigger();
                 previousFallFlyState = state;

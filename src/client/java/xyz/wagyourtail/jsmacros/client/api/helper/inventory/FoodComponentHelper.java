@@ -43,27 +43,9 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
         return base.canAlwaysEat();
     }
 
-    /**
-     * @return {@code true} if the food can be eaten faster than usual, {@code false} otherwise.
-     * @since 1.8.4
-     */
-    public boolean isFastFood() {
-        return base.eatSeconds() < 1.6F;
-    }
-
-    /**
-     * @return a map of status effects and their respective probabilities.
-     * @since 1.8.4
-     */
-    public Map<StatusEffectHelper, Float> getStatusEffects() {
-        Object2FloatArrayMap<StatusEffectHelper> effects = new Object2FloatArrayMap<>();
-        base.effects().forEach(e -> effects.put(new StatusEffectHelper(e.effect()), e.probability()));
-        return effects;
-    }
-
     @Override
     public String toString() {
-        return String.format("FoodComponentHelper:{\"hunger\": %d, \"saturation\": %f, \"alwaysEdible\": %b, \"fastFood\": %b}", getHunger(), getSaturation(), isAlwaysEdible(), isFastFood());
+        return String.format("FoodComponentHelper:{\"hunger\": %d, \"saturation\": %f, \"alwaysEdible\": %b}", getHunger(), getSaturation(), isAlwaysEdible());
     }
 
 }

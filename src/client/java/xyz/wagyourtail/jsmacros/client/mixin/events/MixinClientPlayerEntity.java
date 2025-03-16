@@ -109,10 +109,18 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         if (moveInput == null) {
             return;
         }
+        this.input.playerInput = new net.minecraft.util.PlayerInput(
+                moveInput.movementForward > 0,
+                moveInput.movementForward < 0,
+                moveInput.movementSideways > 0,
+                moveInput.movementSideways < 0,
+                moveInput.jumping,
+                moveInput.sneaking,
+                moveInput.sprinting
+        );
+
         this.input.movementForward = moveInput.movementForward;
         this.input.movementSideways = moveInput.movementSideways;
-        this.input.jumping = moveInput.jumping;
-        this.input.sneaking = moveInput.sneaking;
         this.client.options.sprintKey.setPressed(moveInput.sprinting);
         this.setYaw(moveInput.yaw);
         this.setPitch(moveInput.pitch);
