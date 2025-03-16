@@ -18,9 +18,6 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     private boolean searching;
 
     @Shadow
-    protected abstract void refreshResults(boolean resetCurrentPage);
-
-    @Shadow
     private ClientRecipeBook recipeBook;
 
     @Override
@@ -31,11 +28,6 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     @Override
     public boolean jsmacros_isSearching() {
         return searching;
-    }
-
-    @Override
-    public void jsmacros_refreshResultList() {
-        refreshResults(false);
     }
 
     @Override

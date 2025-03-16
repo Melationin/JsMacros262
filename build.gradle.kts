@@ -155,7 +155,7 @@ dependencies {
 
     compileOnly(libs.mixin)
     compileOnly(libs.mixin.extra)
-    compileOnly(libs.asm)
+    implementation(libs.asm)
 
     implementation(libs.prism4j)
     coreImplementation(libs.joor)

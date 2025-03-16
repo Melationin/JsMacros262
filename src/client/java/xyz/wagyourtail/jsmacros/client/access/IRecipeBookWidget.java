@@ -9,8 +9,6 @@ public interface IRecipeBookWidget {
 
     boolean jsmacros_isSearching();
 
-    void jsmacros_refreshResultList();
-
     ClientRecipeBook jsmacros_getRecipeBook();
 
 }

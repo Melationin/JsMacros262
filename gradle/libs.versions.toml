@@ -14,11 +14,12 @@ asm = "9.7.1"
 prism4j = "2.0.0"
 joor = "0.9.15"
 nv_websocket = "2.14"
-fapi = "0.100.1+1.21"
-modmenu = "11.0.0-beta.1"
 junit = "5.8.1"
 jb_annotations = "20.1.0"
 javassist = "3.30.2-GA"
+
+fapi = "0.118.5+1.21.4"
+modmenu = "13.0.3"
 
 shadow = "8.3.6"
 

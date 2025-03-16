@@ -3,12 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.vehi
 import net.minecraft.entity.vehicle.AbstractBoatEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.ChestBoatEntity;
-import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.mixin.access.MixinBoatEntity;
 
 /**
  * @author Etheradon
@@ -70,7 +66,7 @@ public class BoatEntityHelper extends EntityHelper<AbstractBoatEntity> {
     }
 
     private BoatEntity.Location getLocation() {
-        return ((MixinBoatEntity) base).getLocation();
+        return base.location;
     }
 
 }
