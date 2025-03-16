@@ -27,12 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
 
       - name: Get Artifact Id
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         id: artifact_id
         env:
           branch: '${{ inputs.branch }}'
@@ -56,7 +56,7 @@ jobs:
           ./gradlew build
 
       - name: Upload To Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.artifact_id.outputs.result }}
           path: |
@@ -69,7 +69,7 @@ jobs:
       - build
     steps:
       - name: Get Artifact Id
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         id: artifact_id
         env:
           branch: '${{ inputs.branch }}'
@@ -101,7 +101,7 @@ jobs:
             return fs.readdirSync("./dist/").filter(e => e.endsWith("fabric.jar"))[0] || false;
 
       - name: Check For Forge Jar
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         id: forge_release
         with:
           result-encoding: string
@@ -206,7 +206,7 @@ jobs:
             return process.env.branch.replace(/\//g, '_')      
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ steps.artifact_id.outputs.result }}
 
