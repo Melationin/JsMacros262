@@ -400,7 +400,7 @@ public class ClassBuilder<T> {
                     .append("\")).")
                     .append(voidReturn ? "accept" : "apply")
                     .append("(")
-                    .append("this, new Object[]{");
+                    .append("$0, new Object[]{");
             int i = 0;
             for (CtClass param : params) {
                 if (!param.isPrimitive()) {
@@ -552,7 +552,7 @@ public class ClassBuilder<T> {
                     .append("\")).")
                     .append("apply")
                     .append("(")
-                    .append("this, new Object[]{");
+                    .append("$0, new Object[]{");
             int i = 0;
             for (CtClass param : params) {
                 if (!param.isPrimitive()) {
@@ -837,7 +837,7 @@ public class ClassBuilder<T> {
                     .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
                     .append(guestName).append(": ").append(guestCount)
                     .append("\")).").append("apply").append("(")
-                    .append("this, new Object[]{")
+                    .append("$0, new Object[]{")
                     .append(argsAsObjects)
                     .append("}));\n");
             methodWrappers.put(guestName + ": " + (guestCount++), code);
