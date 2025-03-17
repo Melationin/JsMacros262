@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import java.util.*;
 
 public class CoreConfigV2 {
-
+    
     private transient Core<?, ?> runner;
 
     @Option(translationKey = "jsmacros.maxlocktime", group = "jsmacros.settings.general")

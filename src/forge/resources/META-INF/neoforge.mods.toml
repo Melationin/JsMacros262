@@ -3,6 +3,15 @@ loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/wagyourtail/jsmacros"
 license = "MPL-2.0"
 
+[[mixins]]
+config="jsmacros-common.mixins.json"
+
+[[mixins]]
+config="jsmacros-client.mixins.json"
+
+[[mixins]]
+config="jsmacros-forge.mixins.json"
+
 [[mods]]
 modId = "jsmacros"
 version = "${version}"

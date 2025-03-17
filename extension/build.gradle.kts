@@ -4,7 +4,6 @@ plugins {
 }
 
 val archives_base_name: String by project.properties
-val java_version: String by project.properties
 
 repositories {
     mavenCentral()
@@ -35,20 +34,11 @@ subprojects {
     }
 
     java {
-        sourceCompatibility = JavaVersion.values()[java_version.toInt() - 1]
-        targetCompatibility = JavaVersion.values()[java_version.toInt() - 1]
+        sourceCompatibility = JavaVersion.values()[rootProject.libs.versions.java.get().toInt() - 1]
+        targetCompatibility = JavaVersion.values()[rootProject.libs.versions.java.get().toInt() - 1]
 
         toolchain {
-            languageVersion = JavaLanguageVersion.of(java_version.toInt())
-        }
-    }
-
-    tasks.withType(JavaCompile::class).configureEach {
-        options.encoding = "UTF-8"
-
-        var javaVersion = java_version.toInt()
-        if (JavaVersion.current().isJava9Compatible()) {
-            options.release.set(javaVersion)
+            languageVersion = JavaLanguageVersion.of(rootProject.libs.versions.java.get().toInt())
         }
     }
 

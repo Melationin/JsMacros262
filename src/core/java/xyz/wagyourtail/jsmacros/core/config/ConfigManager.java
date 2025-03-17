@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.common.io.Files;
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import org.slf4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -16,7 +18,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConfigManager {
-    protected final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    protected final static Gson gson = new GsonBuilder()
+        .registerTypeAdapter(File.class, new TypeAdapter<File>() {
+            @Override
+            public void write(JsonWriter jsonWriter, File file) throws IOException {
+                jsonWriter.value(file.getPath());
+            }
+
+            @Override
+            public File read(JsonReader jsonReader) throws IOException {
+                return new File(jsonReader.nextString());
+            }
+        }).setPrettyPrinting().create();
     private final Core<?, ?> runner;
     public final Map<String, Class<?>> optionClasses = new LinkedHashMap<>();
     public final Map<Class<?>, Object> options = new LinkedHashMap<>();
@@ -80,6 +93,7 @@ public class ConfigManager {
             options.put(clazz, option);
             try {
                 Field f = option.getClass().getDeclaredField("runner");
+                f.setAccessible(true);
                 f.set(option, runner);
             } catch (NoSuchFieldException ignored) {}
         } catch (NoSuchMethodException ignored) {
@@ -141,6 +155,7 @@ public class ConfigManager {
                     }
                     try {
                         Field f = instance.getClass().getDeclaredField("runner");
+                        f.setAccessible(true);
                         f.set(instance, runner);
                     } catch (NoSuchFieldException ignored) {}
                 }

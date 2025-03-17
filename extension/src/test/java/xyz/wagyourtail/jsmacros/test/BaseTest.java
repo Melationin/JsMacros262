@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.test;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
@@ -11,7 +13,7 @@ import xyz.wagyourtail.jsmacros.test.stubs.ProfileStub;
 
 public abstract class BaseTest {
 
-    private final Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
+    private static final Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
 
     public abstract String getLang();
 
@@ -25,6 +27,12 @@ public abstract class BaseTest {
         EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, timeout);
         ev.awaitLock(() -> {});
         return event;
+    }
+
+    @BeforeAll
+    public static void init() throws InterruptedException {
+        core.extensions.loadExtensions();
+        Thread.sleep(5000);
     }
 
 }

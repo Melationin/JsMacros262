@@ -39,7 +39,7 @@ public class ProfileStub extends BaseProfile {
 
     @Override
     public void logError(Throwable ex) {
-        BaseWrappedException e = CoreInstanceCreator.core.wrapException(ex);
+        BaseWrappedException<?> e = CoreInstanceCreator.core.wrapException(ex);
         LOGGER.error(e.message, ex);
     }
 

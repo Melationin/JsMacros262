@@ -31,8 +31,8 @@ public class JsTest extends BaseTest {
                 event.putString("test", JSON.stringify(order));
             }).run();
             order.push(0);
-            event.putString("test", JSON.stringify(order));
             JavaWrapper.deferCurrentTask(-2) // change priority of this thread from 5 -> 3
+            event.putString("test", JSON.stringify(order));
         """;
 
     @Test

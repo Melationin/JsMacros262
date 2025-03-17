@@ -29,24 +29,28 @@ public class PyTest extends BaseTest {
             
             def a():
                 order.append(1)
+                print(1)
                 event.putString("test", json.dumps(order))
             
             JavaWrapper.methodToJavaAsync(5, a).run()
             
             def b():
                 order.append(2)
+                print(2)
                 event.putString("test", json.dumps(order))
             
             JavaWrapper.methodToJavaAsync(5, b).run()
             
             def c():
                 order.append(3)
+                print(3)
                 event.putString("test", json.dumps(order))
             
             JavaWrapper.methodToJavaAsync(6, c).run()
             order.append(0)
-            event.putString("test", json.dumps(order))
+            print(0)
             JavaWrapper.deferCurrentTask(-2) # change priority of this thread from 5 -> 3
+            event.putString("test", json.dumps(order))
             """;
 
     @Test

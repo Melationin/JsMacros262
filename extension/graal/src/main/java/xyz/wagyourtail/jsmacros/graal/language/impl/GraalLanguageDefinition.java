@@ -140,6 +140,8 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
             } else {
                 con.eval(lang, script);
             }
+        } catch (Throwable e) {
+            throw e;
         } finally {
             try {
                 con.leave();
