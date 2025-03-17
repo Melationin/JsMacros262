@@ -59,8 +59,6 @@ sourceSets.main {
     runtimeClasspath += core.output + core.runtimeClasspath
 }
 
-unimined.useGlobalCache = false
-
 unimined.minecraft {
     version(libs.versions.minecraft.get())
     side("server")

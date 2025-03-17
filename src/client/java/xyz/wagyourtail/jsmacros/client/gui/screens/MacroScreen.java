@@ -103,12 +103,18 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void setFile(MultiElementContainer<MacroScreen> macro) {
-        File f = new File(JsMacrosClient.clientCore.config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
-        File dir = JsMacrosClient.clientCore.config.macroFolder;
-        if (!f.equals(JsMacrosClient.clientCore.config.macroFolder)) {
-            dir = f.getParentFile();
+        ScriptTrigger m = ((MacroContainer) macro).getRawMacro();
+        final File file;
+        if (m.scriptFile.isAbsolute()) {
+            file = m.scriptFile;
+        } else {
+            file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(m.scriptFile.toPath()).toFile();
         }
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
+        File dir = JsMacrosClient.clientCore.config.macroFolder;
+        if (!file.equals(JsMacrosClient.clientCore.config.macroFolder)) {
+            dir = file.getParentFile();
+        }
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, file, this, ((MacroContainer) macro)::setFile, this::editFile));
     }
 
     public void setEvent(MacroContainer macro) {

@@ -95,7 +95,12 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
                                   Consumer<Throwable> catcher) {
 
-        final File file = new File(this.config.macroFolder, macro.scriptFile);
+        final File file;
+        if (macro.scriptFile.isAbsolute()) {
+            file = macro.scriptFile;
+        } else {
+            file = this.config.macroFolder.toPath().resolve(macro.scriptFile.toPath()).toFile();
+        }
         LanguageExtension l = extensions.getExtensionForFile(file);
         if (l == null) {
             l = extensions.getHighestPriorityExtension();

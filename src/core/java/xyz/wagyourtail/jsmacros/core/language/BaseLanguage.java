@@ -34,7 +34,12 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
 
         final ScriptTrigger staticMacro = macro.copy();
         final Thread ct = Thread.currentThread();
-        final File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
+        final File file;
+        if (macro.scriptFile.isAbsolute()) {
+            file = macro.scriptFile;
+        } else {
+            file = runner.config.macroFolder.toPath().resolve(macro.scriptFile.toPath()).toFile();
+        }
         EventContainer<T> ctx = new EventContainer<>(createContext(event, file));
         runner.threadPool.runTask(() -> {
             Thread t = Thread.currentThread();
@@ -59,7 +64,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                     }
                 } else {
                     macro.enabled = false;
-                    if (staticMacro.scriptFile.isEmpty()) {
+                    if (staticMacro.scriptFile == null) {
                         throw new RuntimeException("No script file was selected for trigger" + staticMacro.event + "!");
                     } else {
                         throw new FileSystemException("file \"" + file.getPath() + "\" does not exist or is a directory!");

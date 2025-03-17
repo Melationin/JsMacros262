@@ -23,6 +23,7 @@ import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public class MacroContainer extends MultiElementContainer<MacroScreen> {
@@ -97,13 +98,26 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             }));
         }
 
-        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./" + macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
+
+        final String fileName;
+        if (macro.scriptFile.isAbsolute()) {
+            fileName = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(macro.scriptFile.toPath()).toString();
+        } else {
+            fileName = macro.scriptFile.toPath().toString();
+        }
+        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./" + fileName.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 
         editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("selectServer.edit"), (btn) -> {
-            if (!macro.scriptFile.equals("")) {
-                parent.editFile(new File(JsMacrosClient.clientCore.config.macroFolder, macro.scriptFile));
+            if (macro.scriptFile != null) {
+                final File file;
+                if (macro.scriptFile.isAbsolute()) {
+                    file = macro.scriptFile;
+                } else {
+                    file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(macro.scriptFile.toPath()).toFile();
+                }
+                parent.editFile(file);
             }
         }));
 
@@ -121,8 +135,14 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setFile(File f) {
-        macro.scriptFile = JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
-        fileBtn.setMessage(Text.literal("./" + macro.scriptFile.replaceAll("\\\\", "/")));
+        macro.scriptFile = f;
+        final String fileName;
+        if (macro.scriptFile.isAbsolute()) {
+            fileName = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(macro.scriptFile.toPath()).toString();
+        } else {
+            fileName = macro.scriptFile.toPath().toString();
+        }
+        fileBtn.setMessage(Text.literal("./" + fileName.replaceAll("\\\\", "/")));
     }
 
     @Override

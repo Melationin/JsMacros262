@@ -30,6 +30,7 @@ public class ConfigManager {
                 return new File(jsonReader.nextString());
             }
         }).setPrettyPrinting().create();
+
     private final Core<?, ?> runner;
     public final Map<String, Class<?>> optionClasses = new LinkedHashMap<>();
     public final Map<Class<?>, Object> options = new LinkedHashMap<>();

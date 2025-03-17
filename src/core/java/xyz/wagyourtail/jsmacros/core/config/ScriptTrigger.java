@@ -10,19 +10,19 @@ public class ScriptTrigger {
     public TriggerType triggerType;
     @SerializedName(value = "event", alternate = "eventkey")
     public String event;
-    public String scriptFile;
+    public File scriptFile;
     public boolean enabled;
     public boolean joined;
 
     public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled, boolean joined) {
-        this(triggerType, event, scriptFile.getPath(), enabled, joined);
+        this(triggerType, event, scriptFile.getAbsolutePath(), enabled, joined);
     }
 
     @Deprecated
     public ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled, boolean joined) {
         this.triggerType = triggerType;
         this.event = event;
-        this.scriptFile = scriptFile;
+        this.scriptFile = new File(scriptFile);
         this.enabled = enabled;
         this.joined = joined;
     }
@@ -74,7 +74,7 @@ public class ScriptTrigger {
      * @return
      * @since 1.2.7
      */
-    public String getScriptFile() {
+    public File getScriptFile() {
         return scriptFile;
     }
 

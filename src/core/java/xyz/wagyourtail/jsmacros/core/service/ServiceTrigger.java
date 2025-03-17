@@ -16,7 +16,7 @@ public class ServiceTrigger {
     }
 
     public ScriptTrigger toScriptTrigger() {
-        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), file, enabled, false);
+        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), file.getAbsolutePath(), enabled, false);
     }
 
     @Override
