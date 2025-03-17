@@ -396,6 +396,7 @@ val createDist by tasks.registering(Copy::class) {
 
     from(File(rootProject.layout.buildDirectory.get().asFile, "docs"))
     from(File(rootProject.layout.buildDirectory.get().asFile, "libs"))
+    from(project(":extension:graal:python").tasks.jar.get().outputs)
     into(File(rootProject.rootDir, "dist"))
 }
 
