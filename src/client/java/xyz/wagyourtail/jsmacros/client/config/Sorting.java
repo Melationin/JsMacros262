@@ -138,8 +138,8 @@ public class Sorting {
 
         @Override
         public int compare(String a, String b) {
-            String fileA = runner.services.getTrigger(a).file.getAbsolutePath();
-            String fileB = runner.services.getTrigger(b).file.getAbsolutePath();
+            String fileA = runner.services.getTrigger(a).file.toString();
+            String fileB = runner.services.getTrigger(b).file.toString();
             int comp = fileA.compareTo(fileB);
             return comp != 0 ? comp : a.compareTo(b);
         }

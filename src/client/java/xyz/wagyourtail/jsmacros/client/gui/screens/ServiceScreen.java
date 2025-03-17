@@ -8,9 +8,12 @@ import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +53,18 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void setFile(MultiElementContainer<MacroScreen> macro) {
-        File f = ((ServiceContainer) macro).getTrigger().file;
-        File dir = JsMacrosClient.clientCore.config.macroFolder;
-        if (!f.equals(JsMacrosClient.clientCore.config.macroFolder)) {
-            dir = f.getParentFile();
+        ServiceTrigger m = ((ServiceContainer) macro).getTrigger();
+        final File file;
+        if (m.file.isAbsolute()) {
+            file = m.file.toFile();
+        } else {
+            file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(m.file).toFile();
         }
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((ServiceContainer) macro)::setFile, this::editFile));
+        File dir = JsMacrosClient.clientCore.config.macroFolder;
+        if (!file.equals(JsMacrosClient.clientCore.config.macroFolder)) {
+            dir = file.getParentFile();
+        }
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, file, this, ((ServiceContainer) macro)::setFile, this::editFile));
     }
 
     @Override

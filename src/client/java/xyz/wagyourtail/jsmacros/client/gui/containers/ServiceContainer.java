@@ -95,7 +95,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setFile(File file) {
-        getTrigger().file = JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toFile();
+        getTrigger().file = JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath());
         JsMacrosClient.clientCore.services.disableReload(service);
         fileBtn.setMessage(Text.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")));
     }

@@ -41,7 +41,7 @@ public class ServiceManager {
      * @return false if service with that name is already registered
      */
     public synchronized boolean registerService(String name, String pathToFile) {
-        return registerService(name, new ServiceTrigger(runner.config.macroFolder.getAbsoluteFile().toPath().resolve(pathToFile).toFile(), true));
+        return registerService(name, new ServiceTrigger(runner.config.macroFolder.getAbsoluteFile().toPath().resolve(pathToFile), true));
     }
 
     /**
@@ -51,7 +51,7 @@ public class ServiceManager {
      * @return false if service with that name is already registered
      */
     public synchronized boolean registerService(String name, String pathToFile, boolean enabled) {
-        return registerService(name, new ServiceTrigger(runner.config.macroFolder.getAbsoluteFile().toPath().resolve(pathToFile).toFile(), enabled));
+        return registerService(name, new ServiceTrigger(runner.config.macroFolder.getAbsoluteFile().toPath().resolve(pathToFile), enabled));
     }
 
     /**
@@ -430,7 +430,7 @@ public class ServiceManager {
             return;
         }
         for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> service : registeredServices.entrySet()) {
-            File file = service.getValue().getT().file;
+            File file = runner.config.macroFolder.toPath().resolve(service.getValue().getT().file).toFile();
             String name = service.getKey();
             // Only restart enabled and running services, i.e. services that are supposed to be running
             // If the service is not running because it crashed, try to restart it

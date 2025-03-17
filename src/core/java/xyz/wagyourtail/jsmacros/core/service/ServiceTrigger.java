@@ -4,19 +4,20 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class ServiceTrigger {
-    public File file;
+    public Path file;
     public boolean enabled;
 
-    public ServiceTrigger(File file, boolean enabled) {
+    public ServiceTrigger(Path file, boolean enabled) {
         this.file = file;
         this.enabled = enabled;
     }
 
     public ScriptTrigger toScriptTrigger() {
-        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), file.getAbsolutePath(), enabled, false);
+        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), file, enabled, false);
     }
 
     @Override

@@ -13,6 +13,8 @@ import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
 
+import java.nio.file.Path;
+
 public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
 
     public ServiceListTopbar(ServiceScreen parent, int x, int y, int width, int height, TextRenderer textRenderer) {
@@ -48,7 +50,7 @@ public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
 
         addDrawableChild(new Button(x + w - 1, y + 1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("+"), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, Text.translatable("jsmacros.servicename"), "", getFirstOverlayParent(), (name) -> {
-                if (JsMacrosClient.clientCore.services.registerService(name, new ServiceTrigger(JsMacrosClient.clientCore.config.macroFolder, false))) {
+                if (JsMacrosClient.clientCore.services.registerService(name, new ServiceTrigger(Path.of(".").normalize(), false))) {
                     parent.addService(name);
                 }
             }));
