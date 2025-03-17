@@ -136,7 +136,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
 
     public void setFile(File f) {
         macro.scriptFile = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(f.toPath());
-        final String fileName = "./" + macro.scriptFile.toString();
+        final String fileName = macro.scriptFile.toString();
         fileBtn.setMessage(Text.literal("./" + fileName.replaceAll("\\\\", "/")));
     }
 

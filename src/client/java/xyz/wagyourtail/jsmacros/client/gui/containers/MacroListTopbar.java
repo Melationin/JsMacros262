@@ -50,7 +50,7 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         }));
 
         addDrawableChild(new Button(x + w - 1, y + 1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("+"), (btn) -> {
-            ScriptTrigger macro = new ScriptTrigger(deftype, "", Path.of("."), false, false);
+            ScriptTrigger macro = new ScriptTrigger(deftype, "", Path.of(".").normalize(), false, false);
             JsMacrosClient.clientCore.eventRegistry.addScriptTrigger(macro);
             parent.addMacro(macro);
         }));
