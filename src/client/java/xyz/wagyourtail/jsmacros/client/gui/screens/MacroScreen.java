@@ -106,9 +106,9 @@ public class MacroScreen extends BaseScreen {
         ScriptTrigger m = ((MacroContainer) macro).getRawMacro();
         final File file;
         if (m.scriptFile.isAbsolute()) {
-            file = m.scriptFile;
+            file = m.scriptFile.toFile();
         } else {
-            file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(m.scriptFile.toPath()).toFile();
+            file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(m.scriptFile).toFile();
         }
         File dir = JsMacrosClient.clientCore.config.macroFolder;
         if (!file.equals(JsMacrosClient.clientCore.config.macroFolder)) {
@@ -123,7 +123,7 @@ public class MacroScreen extends BaseScreen {
 
     public void runFile() {
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, JsMacrosClient.clientCore.config.macroFolder, null, this, (file) -> {
-            JsMacrosClient.clientCore.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true, false), null);
+            JsMacrosClient.clientCore.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file.toPath(), true, false), null);
         }, this::editFile));
     }
 

@@ -97,9 +97,9 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
         final File file;
         if (macro.scriptFile.isAbsolute()) {
-            file = macro.scriptFile;
+            file = macro.scriptFile.toFile();
         } else {
-            file = this.config.macroFolder.toPath().resolve(macro.scriptFile.toPath()).toFile();
+            file = this.config.macroFolder.toPath().resolve(macro.scriptFile).toFile();
         }
         LanguageExtension l = extensions.getExtensionForFile(file);
         if (l == null) {

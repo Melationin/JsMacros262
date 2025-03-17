@@ -36,9 +36,9 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         final Thread ct = Thread.currentThread();
         final File file;
         if (macro.scriptFile.isAbsolute()) {
-            file = macro.scriptFile;
+            file = macro.scriptFile.toFile();
         } else {
-            file = runner.config.macroFolder.toPath().resolve(macro.scriptFile.toPath()).toFile();
+            file = runner.config.macroFolder.toPath().resolve(macro.scriptFile).toFile();
         }
         EventContainer<T> ctx = new EventContainer<>(createContext(event, file));
         runner.threadPool.runTask(() -> {

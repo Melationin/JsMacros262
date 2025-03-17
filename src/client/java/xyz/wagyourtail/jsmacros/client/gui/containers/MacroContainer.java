@@ -101,9 +101,9 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
 
         final String fileName;
         if (macro.scriptFile.isAbsolute()) {
-            fileName = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(macro.scriptFile.toPath()).toString();
+            fileName = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(macro.scriptFile).toString();
         } else {
-            fileName = macro.scriptFile.toPath().toString();
+            fileName = macro.scriptFile.toString();
         }
         fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./" + fileName.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
@@ -113,9 +113,9 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             if (macro.scriptFile != null) {
                 final File file;
                 if (macro.scriptFile.isAbsolute()) {
-                    file = macro.scriptFile;
+                    file = macro.scriptFile.toFile();
                 } else {
-                    file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(macro.scriptFile.toPath()).toFile();
+                    file = JsMacrosClient.clientCore.config.macroFolder.toPath().resolve(macro.scriptFile).toFile();
                 }
                 parent.editFile(file);
             }
@@ -135,13 +135,8 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setFile(File f) {
-        macro.scriptFile = f;
-        final String fileName;
-        if (macro.scriptFile.isAbsolute()) {
-            fileName = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(macro.scriptFile.toPath()).toString();
-        } else {
-            fileName = macro.scriptFile.toPath().toString();
-        }
+        macro.scriptFile = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(f.toPath());
+        final String fileName = "./" + macro.scriptFile.toString();
         fileBtn.setMessage(Text.literal("./" + fileName.replaceAll("\\\\", "/")));
     }
 

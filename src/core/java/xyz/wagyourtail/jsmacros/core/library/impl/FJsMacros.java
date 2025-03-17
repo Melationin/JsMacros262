@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -105,9 +106,9 @@ public class FJsMacros extends PerExecLibrary {
      */
     public EventContainer<?> runScript(String file, @Nullable BaseEvent fakeEvent, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), fakeEvent, () -> callback.accept(null), callback);
+            return runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Path.of(file), true, false), fakeEvent, () -> callback.accept(null), callback);
         } else {
-            return runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), fakeEvent, null, null);
+            return runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Path.of(file), true, false), fakeEvent, null, null);
         }
     }
 
@@ -173,7 +174,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.7.0
      */
     public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String file) {
-        return new WrappedScript<>(runner, (e) -> (EventContainer<BaseScriptContext<?>>) runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), e, null, null), false);
+        return new WrappedScript<>(runner, (e) -> (EventContainer<BaseScriptContext<?>>) runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Path.of(file), true, false), e, null, null), false);
     }
 
     /**
@@ -212,7 +213,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.7.0
      */
     public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String file) {
-        return new WrappedScript<>(runner, (e) -> (EventContainer<BaseScriptContext<?>>) runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), e, null, null), true);
+        return new WrappedScript<>(runner, (e) -> (EventContainer<BaseScriptContext<?>>) runner.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Path.of(file), true, false), e, null, null), true);
     }
 
     /**

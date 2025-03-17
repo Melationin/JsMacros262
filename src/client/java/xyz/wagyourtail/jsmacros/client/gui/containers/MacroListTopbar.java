@@ -12,6 +12,8 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
+import java.nio.file.Path;
+
 public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
     public ScriptTrigger.TriggerType deftype;
     private Button type;
@@ -48,7 +50,7 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         }));
 
         addDrawableChild(new Button(x + w - 1, y + 1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("+"), (btn) -> {
-            ScriptTrigger macro = new ScriptTrigger(deftype, "", JsMacrosClient.clientCore.config.macroFolder, false, false);
+            ScriptTrigger macro = new ScriptTrigger(deftype, "", Path.of("."), false, false);
             JsMacrosClient.clientCore.eventRegistry.addScriptTrigger(macro);
             parent.addMacro(macro);
         }));

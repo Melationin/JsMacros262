@@ -31,7 +31,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
 
     public ScriptCodeCompiler(String language, EditorScreen screen, File scriptFile) {
         super(language, screen);
-        scriptTrigger = new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "CodeCompile", scriptFile, true, true);
+        scriptTrigger = new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "CodeCompile", scriptFile.toPath(), true, true);
     }
 
     @Override
