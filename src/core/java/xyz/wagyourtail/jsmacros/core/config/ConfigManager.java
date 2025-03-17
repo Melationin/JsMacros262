@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,6 +30,19 @@ public class ConfigManager {
             public File read(JsonReader jsonReader) throws IOException {
                 return new File(jsonReader.nextString());
             }
+        })
+        .registerTypeAdapter(Path.class, new TypeAdapter<Path>() {
+
+            @Override
+            public void write(JsonWriter jsonWriter, Path path) throws IOException {
+                jsonWriter.value(path.toString());
+            }
+
+            @Override
+            public Path read(JsonReader jsonReader) throws IOException {
+                return Path.of(jsonReader.nextString());
+            }
+
         }).setPrettyPrinting().create();
 
     private final Core<?, ?> runner;
