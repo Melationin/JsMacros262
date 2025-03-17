@@ -31,7 +31,7 @@ public class ConfigManager {
                 return new File(jsonReader.nextString());
             }
         })
-        .registerTypeAdapter(Path.class, new TypeAdapter<Path>() {
+        .registerTypeHierarchyAdapter(Path.class, new TypeAdapter<Path>() {
 
             @Override
             public void write(JsonWriter jsonWriter, Path path) throws IOException {
