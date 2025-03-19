@@ -6,10 +6,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.client.access.IEntity;
+import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 
 @Mixin(Entity.class)
-public abstract class MixinEntity implements IEntity {
+public abstract class MixinEntity implements IMixinEntity {
 
     @Unique
     private int jsmacros$glowingColor = -1;

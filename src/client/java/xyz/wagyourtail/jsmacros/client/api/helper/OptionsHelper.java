@@ -352,6 +352,20 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         return this;
     }
 
+
+    /**
+     * sends the synced options to the server.
+     * this may be necessary for certain things like the skin layers and (serverside) language to update.
+     * <br>
+     * normally this is called when the options screen is closed, but obviously, we don't open a screen, thus
+     * this must get called manually.
+     *
+     * @since 2.0.0
+     */
+    public void sendSyncedOptions() {
+        base.sendClientSettings();
+    }
+
     private MixinSimpleOption getBase(SimpleOption<?> option) {
         return (MixinSimpleOption) (Object) option;
     }

@@ -1,6 +1,4 @@
 
-val graal_version: String by project.properties
-
 dependencies {
     jsmacrosExtensionInclude(graalLibs.graal.sdk)
     jsmacrosExtensionInclude(graalLibs.truffle)
