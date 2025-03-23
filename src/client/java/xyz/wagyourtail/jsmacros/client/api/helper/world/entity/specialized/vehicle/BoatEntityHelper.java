@@ -13,7 +13,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 @SuppressWarnings("unused")
 public class BoatEntityHelper extends EntityHelper<AbstractBoatEntity> {
 
-    public BoatEntityHelper(BoatEntity base) {
+    public BoatEntityHelper(AbstractBoatEntity base) {
         super(base);
     }
 

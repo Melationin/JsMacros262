@@ -332,7 +332,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.9.1
      */
     @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, filterer: EventFilterers[E], callback: MethodWrapper<Events[E], EventContainer>")
+    @DocletReplaceParams("event: E, filterer: EventFilterer, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, EventFilterer filterer, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         return on(event, filterer, false, callback);
     }
@@ -347,7 +347,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.9.1
      */
     @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, filterer: EventFilterers[E], joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
+    @DocletReplaceParams("event: E, filterer: EventFilterer, joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, EventFilterer filterer, boolean joined, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) {
             return null;
@@ -632,7 +632,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.5.0 [citation needed]
      */
     @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
+    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean> | null")
     @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
     public EventAndContext<?> waitForEvent(String event, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
@@ -646,7 +646,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.9.0
      */
     @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean>")
+    @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean> | null")
     @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
     public EventAndContext<?> waitForEvent(String event, boolean join, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, join, filter, null);
@@ -663,7 +663,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.5.0
      */
     @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
+    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean> | null, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject> | null")
     @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
     public EventAndContext<?> waitForEvent(String event, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter, @Nullable MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         return waitForEvent(event, false, filter, runBeforeWaiting);
@@ -682,7 +682,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.9.0
      */
     @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
+    @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean> | null, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject> | null")
     @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
     public EventAndContext<?> waitForEvent(String event, boolean join, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter, @Nullable MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values

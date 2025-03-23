@@ -577,6 +577,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             } catch (Throwable e) {
                 JsMacrosClient.clientCore.profile.logError(e);
             }
+            ClickableWidgetHelper.clickedOn(this);
         }).position(x, y).size(width, height).build();
         b.set(new ClickableWidgetHelper<>(button, zIndex));
         synchronized (elements) {
@@ -673,6 +674,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             } catch (Exception e) {
                 JsMacrosClient.clientCore.profile.logError(e);
             }
+            ClickableWidgetHelper.clickedOn(this);
         });
         ref.set(new LockButtonWidgetHelper(lockButton, zIndex));
         synchronized (elements) {
@@ -720,6 +722,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             } catch (Exception e) {
                 JsMacrosClient.clientCore.profile.logError(e);
             }
+            ClickableWidgetHelper.clickedOn(this);
         });
         ref.set(new CyclingButtonWidgetHelper<>(cyclingButton, zIndex));
         synchronized (elements) {

@@ -1,9 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.mixin.events;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.block.entity.HangingSignBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
+import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -29,9 +32,9 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventRiding;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventSignEdit;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mixin(ClientPlayerEntity.class)
 abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
@@ -68,7 +71,10 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
     public void onOpenEditSignScreen(SignBlockEntity sign, boolean front, CallbackInfo ci) {
-        List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
+        List<String> lines = Arrays.stream(sign.getText(front)
+                .getMessages(client.shouldFilterText()))
+                .map(Text::getString)
+                .collect(Collectors.toList());
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ(), front);
         event.trigger();
         lines = event.signText;
@@ -93,12 +99,19 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             }
         } //else
         if (cancel) {
-            final SignEditScreen signScreen = new SignEditScreen(sign, front, true);
+            // we're checking the type of block entity to choose the correct screen here.
+            AbstractSignEditScreen signScreen;
+            if (sign instanceof HangingSignBlockEntity hs) {
+                signScreen = new HangingSignEditScreen(hs, front, client.shouldFilterText());
+            } else {
+                signScreen = new SignEditScreen(sign, front, client.shouldFilterText());
+            }
             client.setScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 //noinspection DataFlowIssue
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
             }
+            ((ISignEditScreen) signScreen).jsmacros_fixSelection();
             ci.cancel();
         }
     }
@@ -121,6 +134,21 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
         this.input.movementForward = moveInput.movementForward;
         this.input.movementSideways = moveInput.movementSideways;
+        if (moveInput.jumping) {
+            this.input.jump();
+        }
+        if (moveInput.sneaking) {
+            net.minecraft.util.PlayerInput playerInput = this.input.playerInput;
+            this.input.playerInput = new net.minecraft.util.PlayerInput (
+                    playerInput.forward(),
+                    playerInput.backward(),
+                    playerInput.left(),
+                    playerInput.right(),
+                    playerInput.sneak(),
+                    true,
+                    playerInput.sprint()
+            );
+        }
         this.client.options.sprintKey.setPressed(moveInput.sprinting);
         this.setYaw(moveInput.yaw);
         this.setPitch(moveInput.pitch);
