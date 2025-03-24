@@ -33,6 +33,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
         Builder build = Context.newBuilder()
                 .engine(engine)
                 .allowAllAccess(true)
+                .allowNativeAccess(true)
                 .allowExperimentalOptions(true);
 
         for (Map.Entry<String, String> e : extraJsOptions.entrySet()) {
