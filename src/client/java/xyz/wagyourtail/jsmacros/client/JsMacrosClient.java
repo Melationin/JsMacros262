@@ -41,6 +41,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class JsMacrosClient extends JsMacros {
@@ -52,7 +53,7 @@ public class JsMacrosClient extends JsMacros {
     public static void onInitializeClient() {
         try {
             clientCore.config.addOptions("client", ClientConfigV2.class);
-        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException | IOException e) {
             e.printStackTrace();
         }
 

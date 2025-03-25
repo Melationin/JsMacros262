@@ -102,6 +102,9 @@ public class ConfigManager {
                 LOGGER.error("Failed to load option " + optionClass.getKey(), e);
                 options.put(optionClass.getValue(), optionClass.getValue().getConstructor().newInstance());
             }
+            if (options.get(optionClass.getValue()) == null) {
+                options.put(optionClass.getValue(), optionClass.getValue().getConstructor().newInstance());
+            }
             try {
                 Field f = optionClass.getValue().getDeclaredField("runner");
                 f.setAccessible(true);
@@ -130,7 +133,7 @@ public class ConfigManager {
         return (T) options.get(optionClass);
     }
 
-    public synchronized void addOptions(String key, Class<?> optionClass) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public synchronized void addOptions(String key, Class<?> optionClass) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, IOException {
         if (optionClasses.containsKey(key)) {
             throw new IllegalStateException("Key \"" + key + "\" already in config manager!");
         }
@@ -138,6 +141,7 @@ public class ConfigManager {
         try {
             convertOrLoadConfig(key, optionClass);
         } catch (Exception ex) {
+            backupConfig();
             LOGGER.error("Failed to load option " + key, ex);
             options.put(optionClass, optionClass.getConstructor().newInstance());
             saveConfig();
