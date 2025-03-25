@@ -81,7 +81,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.reloadconfig"), (btn) -> {
             try {
                 JsMacrosClient.clientCore.config.loadConfig();
-            } catch (IllegalAccessException | InstantiationException | IOException e) {
+            } catch (IllegalAccessException | InstantiationException | IOException | InvocationTargetException | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
             JsMacrosClient.clientCore.profile.loadOrCreateProfile(JsMacrosClient.clientCore.config.getOptions(CoreConfigV2.class).defaultProfile);

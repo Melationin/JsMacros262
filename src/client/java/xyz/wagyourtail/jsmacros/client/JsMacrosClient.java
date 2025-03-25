@@ -41,6 +41,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 public class JsMacrosClient extends JsMacros {
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
@@ -51,7 +52,7 @@ public class JsMacrosClient extends JsMacros {
     public static void onInitializeClient() {
         try {
             clientCore.config.addOptions("client", ClientConfigV2.class);
-        } catch (IllegalAccessException | InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
 

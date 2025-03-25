@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.graal;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import xyz.wagyourtail.jsmacros.core.config.Option;
@@ -29,11 +30,16 @@ public class GraalConfig {
 
     @Deprecated
     public void fromV2(JsonObject v2) {
-        JsonElement v1 = v2.get("client");
+        JsonObject v1 = v2.getAsJsonObject("js");
         if (v1 != null && v1.isJsonObject()) {
-            fromV1(v1.getAsJsonObject());
+            JsonObject options = v1.getAsJsonObject("extraGraalOptions");
+            if (options != null) {
+                for (Map.Entry<String, JsonElement> el : options.entrySet()) {
+                    extraGraalOptions.put(el.getKey(), el.getValue().getAsString());
+                }
+            }
         }
-        v2.remove("client");
+        v2.remove("js");
     }
 
 }
