@@ -135,6 +135,15 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     }
 
     /**
+     * pretty print text version
+     *
+     * @since 2.0.0
+     */
+    public TextHelper asText() {
+        return TextHelper.wrap(NbtHelper.toPrettyPrintedText(base));
+    }
+
+    /**
      * @since 1.9.0
      */
     @Nullable

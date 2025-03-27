@@ -497,4 +497,20 @@ public class FClient extends PerExecLibrary {
         packet.apply(mc.getNetworkHandler());
     }
 
+    /**
+     * moved from FUtils
+     * @since 2.0.0
+     */
+    public String getClipboard() {
+        return mc.keyboard.getClipboard();
+    }
+
+    /**
+     * moved from FUtils
+     * @since 2.0.0
+     */
+    public void setClipboard(String text) {
+        mc.keyboard.setClipboard(text);
+    }
+
 }
