@@ -18,7 +18,7 @@ include("site")
 
 include("extension")
 for (file in file("extension").listFiles() ?: emptyArray()) {
-    if (!file.isDirectory || file.name in listOf("build", "src")) continue
+    if (!file.isDirectory || file.name in listOf("build", "src", ".gradle", "gradle")) continue
     include("extension:${file.name}")
 
     if (file.resolve("subprojects.txt").exists()) {
@@ -32,7 +32,7 @@ for (file in file("extension").listFiles() ?: emptyArray()) {
 dependencyResolutionManagement {
     versionCatalogs {
         for (file in file("extension").listFiles() ?: emptyArray()) {
-            if (!file.isDirectory || file.name in listOf("build", "src")) continue
+            if (!file.isDirectory || file.name in listOf("build", "src", ".gradle", "gradle")) continue
             val extensionName = file.name
             val libPath = "extension/$extensionName/gradle/$extensionName.versions.toml"
 

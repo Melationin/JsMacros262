@@ -192,7 +192,7 @@ dependencies {
 
 
     for (file in file("extension").listFiles() ?: emptyArray()) {
-        if (!file.isDirectory || file.name in listOf("build", "src")) continue
+        if (!file.isDirectory || file.name in listOf("build", "src", ".gradle", "gradle")) continue
 
         fabricRuntimeOnly(project(":extension:${file.name}"))
         forgeRuntimeOnly(project(":extension:${file.name}"))

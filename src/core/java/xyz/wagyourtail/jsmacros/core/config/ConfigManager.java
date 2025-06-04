@@ -85,7 +85,11 @@ public class ConfigManager {
         }
     }
 
-    public synchronized void reloadRawConfigFromFile() throws IOException {
+    public synchronized void reloadRawConfigFromFile() throws IOException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+        if (!configFile.exists()) {
+            loadDefaults();
+            return;
+        }
         try (FileReader reader = new FileReader(configFile)) {
             rawOptions = new JsonParser().parse(reader).getAsJsonObject();
             JsonElement version = rawOptions.get("version");
@@ -167,9 +171,7 @@ public class ConfigManager {
 
     public synchronized void loadConfig() throws IllegalAccessException, InstantiationException, IOException, InvocationTargetException, NoSuchMethodException {
         options.clear();
-        if (rawOptions == null) {
-            reloadRawConfigFromFile();
-        }
+        reloadRawConfigFromFile();
         try {
             convertOrLoadConfigs();
         } catch (InvocationTargetException | NoSuchMethodException e) {
@@ -191,7 +193,7 @@ public class ConfigManager {
         for (Map.Entry<String, Class<?>> optionClass : optionClasses.entrySet()) {
             options.put(optionClass.getValue(), optionClass.getValue().getConstructor().newInstance());
             rawOptions = new JsonObject();
-            rawOptions.addProperty("version", 2);
+            rawOptions.addProperty("version", 3);
         }
     }
 
