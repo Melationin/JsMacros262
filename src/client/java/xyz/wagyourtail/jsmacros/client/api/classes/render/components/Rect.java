@@ -1,8 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -313,33 +312,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        setupMatrix(matrices, x1, y1, 1, rotation, getWidth(), getHeight(), rotateCenter);
-
-        Tessellator tess = Tessellator.getInstance();
-
-        float fa = ((color >> 24) & 0xFF) / 255F;
-        float fr = ((color >> 16) & 0xFF) / 255F;
-        float fg = ((color >> 8) & 0xFF) / 255F;
-        float fb = (color & 0xFF) / 255F;
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
-        //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).color(fr, fg, fb, fa); // Top-left
-        buf.vertex(matrix, x2, y2, 0).color(fr, fg, fb, fa); // Top-right
-        buf.vertex(matrix, x1, y1, 0).color(fr, fg, fb, fa); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).color(fr, fg, fb, fa); // Bottom-right
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.disableBlend();
-
-        matrices.pop();
+        // TODO: I cba to update rendering code
     }
 
     public Rect setParent(IDraw2D<?> parent) {

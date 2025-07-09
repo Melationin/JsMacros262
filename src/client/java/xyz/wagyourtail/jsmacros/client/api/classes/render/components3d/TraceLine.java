@@ -109,22 +109,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
     }
 
     public void render(DrawContext drawContext, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        RenderSystem.disableDepthTest();
-
-        int a = (color >> 24) & 0xFF;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-        Tessellator tess = Tessellator.getInstance();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
-        RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex((float) screenPos.x, (float) screenPos.y, -4.0f).color(r, g, b, a);
-        buf.vertex(model, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.enableDepthTest();
+        // TODO: I cba to update rendering code
     }
 
     public static class Builder {

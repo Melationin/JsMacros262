@@ -302,12 +302,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         }
         matrixStack.pop();
 
-        if (!cull) {
-            RenderSystem.enableDepthTest();
-        }
-        if (renderBack) {
-            RenderSystem.enableCull();
-        }
+        // TODO: I cba to update rendering code
     }
 
     private static Vector3f toEulerDegrees(Quaternionf quaternion) {
@@ -370,16 +365,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
     }
 
     private void renderElement3D(DrawContext drawContext, RenderElement element) {
-        if (renderBack) {
-            RenderSystem.disableCull();
-        } else {
-            RenderSystem.enableCull();
-        }
-        if (!cull) {
-            RenderSystem.disableDepthTest();
-        } else {
-            RenderSystem.enableDepthTest();
-        }
+        // TODO: I cba to update rendering code
         MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         matrixStack.translate(0, 0, zIndexScale * element.getZIndex());

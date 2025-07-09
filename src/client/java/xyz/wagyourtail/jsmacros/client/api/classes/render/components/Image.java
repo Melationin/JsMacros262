@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
+import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -305,37 +305,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderTexture(0, imageid);
-        Tessellator tess = Tessellator.getInstance();
-
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
-
-        float x1 = x;
-        float y1 = y;
-        float x2 = x + width;
-        float y2 = y + height;
-
-        float u1 = imageX / (float) textureWidth;
-        float v1 = imageY / (float) textureHeight;
-        float u2 = (imageX + regionWidth) / (float) textureWidth;
-        float v2 = (imageY + regionHeight) / (float) textureHeight;
-
-        //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color); // Top-left
-        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color); // Top-right
-        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color); // Bottom-right
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        matrices.pop();
-        RenderSystem.disableBlend();
+        // TODO: I cba to update rendering code
     }
 
     public Image setParent(IDraw2D<?> parent) {

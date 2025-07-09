@@ -1,8 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -275,38 +274,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        setupMatrix(matrices, x1, y1, 1, rotation, getScaledWidth(), getScaledHeight(), rotateCenter);
-
-        Tessellator tess = Tessellator.getInstance();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
-        //draw a line with the given width using triangle strips
-
-        float halfWidth = width / 2;
-        float dx = x2 - x1;
-        float dy = y2 - y1;
-        float length = (float) Math.sqrt(dx * dx + dy * dy);
-        dx /= length;
-        dy /= length;
-        float px = -dy * halfWidth;
-        float py = dx * halfWidth;
-
-        buf.vertex(matrix, x1 + px, y1 + py, 0).color(color);
-        buf.vertex(matrix, x2 + px, y2 + py, 0).color(color);
-        buf.vertex(matrix, x1 - px, y1 - py, 0).color(color);
-        buf.vertex(matrix, x2 - px, y2 - py, 0).color(color);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.disableBlend();
-
-        matrices.pop();
+        // TODO: I cba to update rendering code
     }
 
     public Line setParent(IDraw2D<?> parent) {

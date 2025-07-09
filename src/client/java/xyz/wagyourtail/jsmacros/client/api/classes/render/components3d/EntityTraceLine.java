@@ -61,7 +61,7 @@ public class EntityTraceLine extends TraceLine {
             return;
         }
 
-        Vec3d vec = (entity.prevX == 0.0 && entity.prevY == 0.0 && entity.prevZ == 0.0)
+        Vec3d vec = (entity.lastX == 0.0 && entity.lastY == 0.0 && entity.lastZ == 0.0)
                 ? entity.getPos()
                 : entity.getLerpedPos(tickDelta);
         pos.x = vec.x;

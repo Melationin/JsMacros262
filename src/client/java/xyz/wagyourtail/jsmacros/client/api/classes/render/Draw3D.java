@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -695,42 +693,7 @@ public class Draw3D implements Registrable<Draw3D> {
 
     @DocletIgnore
     public void render(DrawContext drawContext, float tickDelta) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-
-        MatrixStack matrixStack = drawContext.getMatrices();
-        matrixStack.push();
-        //setup
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
-        Vec3d camPos = mc.gameRenderer.getCamera().getPos();
-        matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
-
-        EntityTraceLine.dirty = false;
-
-
-        synchronized (elements) {
-            //sort elements by type (should be O(n) after first time)
-            Collections.sort(elements);
-
-            //TODO: pull setup out of render as they should be sorted by type
-            for (RenderElement3D element : elements) {
-                element.render(drawContext, tickDelta);
-            }
-        }
-
-        //reset
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
-
-        matrixStack.pop();
-
-        if (EntityTraceLine.dirty) {
-            synchronized (elements) {
-                elements.removeIf(e -> e instanceof EntityTraceLine etl && etl.shouldRemove);
-            }
-        }
-
+        // TODO: I cba to update rendering code
     }
 
 }

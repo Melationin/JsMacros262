@@ -96,27 +96,7 @@ public class Line3D implements RenderElement3D<Line3D> {
     @Override
     @DocletIgnore
     public void render(DrawContext drawContext, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        final boolean cull = !this.cull;
-        if (cull) {
-            RenderSystem.disableDepthTest();
-        }
-
-        int a = (color >> 24) & 0xFF;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-        Tessellator tess = Tessellator.getInstance();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
-        RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a);
-        buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        if (cull) {
-            RenderSystem.enableDepthTest();
-        }
+        // TODO: I cba to update rendering code
     }
 
     /**
