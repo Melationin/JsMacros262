@@ -117,7 +117,7 @@ public class ClientProfile extends BaseProfile {
     protected boolean loadProfile(String profileName) {
         boolean val = super.loadProfile(profileName);
         final Minecraft mc = Minecraft.getInstance();
-        if (mc.gui.screen() instanceof MacroScreen) {
+        if (mc.gui != null && mc.gui.screen() instanceof MacroScreen) {
             mc.execute(() -> ((MacroScreen) mc.gui.screen()).reload());
         }
         return val;

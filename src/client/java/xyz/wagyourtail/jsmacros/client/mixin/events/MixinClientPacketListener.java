@@ -92,7 +92,7 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
         new EventPlayerLeave(uUID, playerListEntry).trigger();
     }
 
-    @ModifyArg(method = "setTitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;setTitle(Lnet/minecraft/network/chat/Component;)V"))
+    @ModifyArg(method = "setTitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setTitle(Lnet/minecraft/network/chat/Component;)V"))
     public Component onTitle(Component title) {
         EventTitle et = new EventTitle("TITLE", title);
         et.trigger();
@@ -103,7 +103,7 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
         }
     }
 
-    @ModifyArg(method = "setSubtitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;setSubtitle(Lnet/minecraft/network/chat/Component;)V"))
+    @ModifyArg(method = "setSubtitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setSubtitle(Lnet/minecraft/network/chat/Component;)V"))
     public Component onSubtitle(Component title) {
         EventTitle et = new EventTitle("SUBTITLE", title);
         et.trigger();
@@ -114,7 +114,7 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
         }
     }
 
-    @ModifyArg(method = "setActionBarText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V"))
+    @ModifyArg(method = "setActionBarText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V"))
     public Component onOverlayMessage(Component title) {
         EventTitle et = new EventTitle("ACTIONBAR", title);
         et.trigger();

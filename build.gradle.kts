@@ -81,6 +81,8 @@ unimined.minecraft(fabric) {
     combineWith(":main")
     side("joined")
 
+    runs.off = false
+
     fabric {
         loader(libs.versions.fabric.loader.get())
         accessWidener(file("src/main/resources/jsmacros.accesswidener"))

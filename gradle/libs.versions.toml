@@ -8,7 +8,7 @@ fabric_loader = "0.19.3"
 mixin = "0.8.7"
 mixin_extra = "0.3.2"
 
-asm = "9.8"
+asm = "9.10.1"
 prism4j = "2.0.0"
 joor = "0.9.15"
 nv_websocket = "2.14"
