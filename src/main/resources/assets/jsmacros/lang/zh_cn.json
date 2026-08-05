@@ -70,6 +70,8 @@
   "jsmacros.maxlocktime": "最大加入锁定时间",
   "jsmacros.reloadconfig": "重载配置",
   "jsmacros.services": "服务",
+  "jsmacros.commands": "命令",
+  "jsmacros.commandname": "命令名",
   "jsmacros.service": "服务",
   "jsmacros.showservices": "显示服务",
   "jsmacros.servicename": "服务名",

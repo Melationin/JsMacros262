@@ -35,6 +35,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventQuitGame;
 import xyz.wagyourtail.jsmacros.client.api.helper.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.ClientProfile;
+import xyz.wagyourtail.jsmacros.client.config.CommandScriptsConfig;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
@@ -56,6 +57,7 @@ public class JsMacrosClient extends JsMacros {
     public static void onInitializeClient() {
         try {
             clientCore.config.addOptions("client", ClientConfigV2.class);
+            clientCore.config.addOptions("commandscripts", CommandScriptsConfig.class);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException | IOException e) {
             e.printStackTrace();
         }

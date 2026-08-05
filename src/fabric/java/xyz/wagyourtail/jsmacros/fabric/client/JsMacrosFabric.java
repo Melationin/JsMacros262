@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandBuilderFabric;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandManagerFabric;
+import xyz.wagyourtail.jsmacros.fabric.client.commands.JsCommand;
 
 public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
 
@@ -19,6 +20,7 @@ public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(TickBasedEvents::onTick);
         KeyMappingHelper.registerKeyMapping(JsMacrosClient.keyBinding);
         CommandBuilderFabric.registerEvent();
+        JsCommand.register();
     }
 
     @Override

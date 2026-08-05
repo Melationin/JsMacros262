@@ -38,6 +38,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSendPacket;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventTitle;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventClickSlot;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventContainerUpdate;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventCommand;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemPickup;
@@ -224,6 +225,7 @@ public class ClientProfile extends BaseProfile {
         runner.eventRegistry.addEvent(EventChunkLoad.class);
         runner.eventRegistry.addEvent(EventChunkUnload.class);
         runner.eventRegistry.addEvent(EventContainerUpdate.class);
+        runner.eventRegistry.addEvent(EventCommand.class);
         runner.eventRegistry.addEvent(EventClickSlot.class);
         runner.eventRegistry.addEvent(EventDamage.class);
         runner.eventRegistry.addEvent(EventHeal.class);

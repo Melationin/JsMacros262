@@ -38,6 +38,7 @@ public class MacroScreen extends BaseScreen {
     protected Button keyScreen;
     protected Button eventScreen;
     protected Button serviceScreen;
+    protected Button commandScreen;
     protected Button runningBtn;
     protected Button aboutBtn;
 
@@ -67,6 +68,13 @@ public class MacroScreen extends BaseScreen {
             assert minecraft != null;
             if (minecraft.gui.screen().getClass() != ServiceScreen.class) {
                 minecraft.setScreenAndShow(new ServiceScreen(this));
+            }
+        }));
+
+        commandScreen = this.addDrawableChild(new Button(3 * this.width / 6 + 3, 0, this.width / 6 - 1, 20, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.commands"), btn -> {
+            assert minecraft != null;
+            if (minecraft.gui.screen().getClass() != CommandScriptsScreen.class) {
+                minecraft.setScreenAndShow(new CommandScriptsScreen(this));
             }
         }));
 
@@ -215,8 +223,7 @@ public class MacroScreen extends BaseScreen {
         drawContext.fill(this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
         drawContext.fill(this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
         drawContext.fill(0, 20, width, 22, 0xFFFFFFFF);
-        drawContext.centeredText(this.font, JsMacrosClient.clientCore.profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0xFF7F7F7F);
-        
+
         super.extractRenderState(drawContext, mouseX, mouseY, delta);
     }
 
