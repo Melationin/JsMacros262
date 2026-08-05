@@ -7,8 +7,8 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
-import xyz.wagyourtail.jsmacros.core.library.Library;
-import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.graal.language.impl.GraalLanguageDefinition;
 import xyz.wagyourtail.jsmacros.graal.language.impl.GraalScriptContext;
 import xyz.wagyourtail.jsmacros.graal.language.impl.WrappedThread;
@@ -40,12 +40,15 @@ import xyz.wagyourtail.jsmacros.graal.language.impl.WrappedThread;
  * @author Wagyourtail
  * @since 1.2.5, re-named from {@code consumer} in 1.4.0
  */
-@Library(value = "JavaWrapper", languages = GraalLanguageDefinition.class)
+@Library("JavaWrapper")
 @SuppressWarnings("unused")
-public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext> implements IFWrapper<Value> {
+public class FWrapper extends PerExecLibrary implements IFWrapper<Value> {
 
-    public FWrapper(GraalScriptContext ctx, Class<? extends BaseLanguage<Context, GraalScriptContext>> language) {
-        super(ctx, language);
+    private final GraalScriptContext ctx;
+
+    public FWrapper(GraalScriptContext ctx) {
+        super(ctx);
+        this.ctx = ctx;
     }
 
     /**

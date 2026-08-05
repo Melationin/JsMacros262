@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper;
 
 import net.minecraft.world.item.DyeColor;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 /**
  * @author Etheradon

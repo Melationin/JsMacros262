@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper.screen;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 @SuppressWarnings("unused")
 public class ChatHudLineHelper extends BaseHelper<GuiMessage> {

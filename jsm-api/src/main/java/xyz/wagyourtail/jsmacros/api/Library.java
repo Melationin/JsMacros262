@@ -1,6 +1,4 @@
-package xyz.wagyourtail.jsmacros.core.library;
-
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+package xyz.wagyourtail.jsmacros.api;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Base Function interface.
+ * The script-visible name of a {@link BaseLibrary}.
  *
  * @author Wagyourtail
  */
@@ -18,7 +16,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Library {
     String value();
-
-    Class<? extends BaseLanguage<?, ?>>[] languages() default {};
 
 }

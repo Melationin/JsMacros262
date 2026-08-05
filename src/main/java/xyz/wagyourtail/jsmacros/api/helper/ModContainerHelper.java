@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.helper;
 
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.Block;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -41,7 +41,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

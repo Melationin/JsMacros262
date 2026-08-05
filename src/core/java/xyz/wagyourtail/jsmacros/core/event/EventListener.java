@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;

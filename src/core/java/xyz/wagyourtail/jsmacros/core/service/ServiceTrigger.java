@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.Event;
 
 import java.nio.file.Path;
 import java.util.Objects;

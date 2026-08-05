@@ -281,23 +281,23 @@ public class ClientProfile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FUtils.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
 
-        runner.registerHelper(AdvancementNode.class, AdvancementHelper.class);
-        runner.registerHelper(AdvancementTree.class, AdvancementManagerHelper.class);
-        runner.registerHelper(AdvancementProgress.class, AdvancementProgressHelper.class);
-        runner.registerHelper(BlockPredicate.class, BlockPredicateHelper.class);
-//        runner.registerHelper(CommandContext.class, CommandContextHelper.class);
-        runner.registerHelper(CommandNode.class, CommandNodeHelper.class);
-        runner.registerHelper(DyeColor.class, DyeColorHelper.class);
-        runner.registerHelper(ChatFormatting.class, FormattingHelper.class);
-        runner.registerHelper(MultiPlayerGameMode.class, InteractionManagerHelper.class);
+        runner.registerHelper0(AdvancementNode.class, AdvancementHelper.class);
+        runner.registerHelper0(AdvancementTree.class, AdvancementManagerHelper.class);
+        runner.registerHelper0(AdvancementProgress.class, AdvancementProgressHelper.class);
+        runner.registerHelper0(BlockPredicate.class, BlockPredicateHelper.class);
+//        runner.registerHelper0(CommandContext.class, CommandContextHelper.class);
+        runner.registerHelper0(CommandNode.class, CommandNodeHelper.class);
+        runner.registerHelper0(DyeColor.class, DyeColorHelper.class);
+        runner.registerHelper0(ChatFormatting.class, FormattingHelper.class);
+        runner.registerHelper0(MultiPlayerGameMode.class, InteractionManagerHelper.class);
         runner.helperRegistry.registerType(Tag.class, NBTElementHelper::wrap);
-        runner.registerHelper(NumericTag.class, NBTElementHelper.NBTNumberHelper.class);
-        runner.registerHelper(CompoundTag.class, NBTElementHelper.NBTCompoundHelper.class);
-        runner.registerHelper(CollectionTag.class, (Class) NBTElementHelper.NBTListHelper.class);
-        runner.registerHelper(NbtPredicate.class, NbtPredicateHelper.class);
-        runner.registerHelper(Options.class, OptionsHelper.class);
-        runner.registerHelper(FriendlyByteBuf.class, PacketByteBufferHelper.class);
-        runner.registerHelper(StatePropertiesPredicate.class, StatePredicateHelper.class);
+        runner.registerHelper0(NumericTag.class, NBTElementHelper.NBTNumberHelper.class);
+        runner.registerHelper0(CompoundTag.class, NBTElementHelper.NBTCompoundHelper.class);
+        runner.registerHelper0(CollectionTag.class, (Class) NBTElementHelper.NBTListHelper.class);
+        runner.registerHelper0(NbtPredicate.class, NbtPredicateHelper.class);
+        runner.registerHelper0(Options.class, OptionsHelper.class);
+        runner.registerHelper0(FriendlyByteBuf.class, PacketByteBufferHelper.class);
+        runner.registerHelper0(StatePropertiesPredicate.class, StatePredicateHelper.class);
         // TODO: complete list
 
     }

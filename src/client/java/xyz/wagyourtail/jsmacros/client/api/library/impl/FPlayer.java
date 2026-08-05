@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
@@ -30,8 +32,8 @@ import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ import java.util.function.Consumer;
  */
 @Library("Player")
 @SuppressWarnings("unused")
-public class FPlayer extends BaseLibrary {
+public class FPlayer extends CoreBaseLibrary {
     private static final Minecraft mc = Minecraft.getInstance();
 
     public FPlayer(Core<?, ?> runner) {

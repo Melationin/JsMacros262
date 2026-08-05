@@ -1,5 +1,13 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
+import xyz.wagyourtail.jsmacros.core.event.CoreBaseEvent;
+
+import xyz.wagyourtail.jsmacros.api.EventFilterer;
+
+import xyz.wagyourtail.jsmacros.api.Event;
+
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -139,7 +147,7 @@ public abstract class BaseEventRegistry {
     }
 
 
-    public synchronized void addEvent(Class<? extends BaseEvent> clazz) {
+    public synchronized void addEvent(Class<? extends xyz.wagyourtail.jsmacros.api.BaseEvent> clazz) {
         if (clazz.isAnnotationPresent(Event.class)) {
             Event e = clazz.getAnnotation(Event.class);
             if (!e.oldName().isEmpty()) {

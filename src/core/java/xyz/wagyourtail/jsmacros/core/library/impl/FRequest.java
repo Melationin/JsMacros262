@@ -1,9 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.HTTPRequest;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.HTTPRequest.Response;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.Websocket;
@@ -21,7 +23,7 @@ import java.util.Map;
  * @since 1.1.8
  */
 @Library("Request")
-public class FRequest extends BaseLibrary {
+public class FRequest extends CoreBaseLibrary {
 
     public FRequest(Core<?, ?> runner) {
         super(runner);

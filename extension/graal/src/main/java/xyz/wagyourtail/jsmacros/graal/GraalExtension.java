@@ -7,10 +7,10 @@ import org.graalvm.polyglot.SourceSection;
 import org.graalvm.polyglot.Value;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
-import xyz.wagyourtail.jsmacros.core.extensions.LibraryExtension;
+import xyz.wagyourtail.jsmacros.api.LibraryExtension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
 import xyz.wagyourtail.jsmacros.graal.language.impl.GraalLanguageDefinition;
 import xyz.wagyourtail.jsmacros.graal.language.impl.GuestExceptionSimplifier;
 import xyz.wagyourtail.jsmacros.graal.library.impl.FWrapper;
@@ -30,9 +30,9 @@ public class GraalExtension implements LanguageExtension, LibraryExtension {
     }
 
     @Override
-    public void init(Core<?, ?> runner) {
+    public void init(xyz.wagyourtail.jsmacros.api.Core runner) {
         try {
-            runner.config.addOptions("graal", GraalConfig.class);
+            runner.getConfig().addOptions("graal", GraalConfig.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

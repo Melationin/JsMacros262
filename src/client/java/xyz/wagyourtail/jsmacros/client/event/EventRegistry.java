@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.Event;
 import xyz.wagyourtail.jsmacros.core.event.EventListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 

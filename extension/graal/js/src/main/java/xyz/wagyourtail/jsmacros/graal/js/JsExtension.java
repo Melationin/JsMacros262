@@ -1,8 +1,7 @@
 package xyz.wagyourtail.jsmacros.graal.js;
 
 import org.graalvm.polyglot.Context;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.extensions.Extension;
+import xyz.wagyourtail.jsmacros.api.Extension;
 
 public class JsExtension implements Extension {
 
@@ -12,7 +11,7 @@ public class JsExtension implements Extension {
     }
 
     @Override
-    public void init(Core<?, ?> runner) {
+    public void init(xyz.wagyourtail.jsmacros.api.Core runner) {
         Thread t = new Thread(() -> {
             Context.Builder build = Context.newBuilder("js");
             Context con = build.build();

@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinClientAdvancements;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -4,8 +4,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.Event;
 
 /**
  * @author Wagyourtail

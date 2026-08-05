@@ -12,8 +12,8 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.Prism;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.TextStyleCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.Event;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

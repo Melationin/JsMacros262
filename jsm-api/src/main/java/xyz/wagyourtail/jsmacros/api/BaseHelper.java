@@ -1,5 +1,11 @@
-package xyz.wagyourtail.jsmacros.core.helpers;
+package xyz.wagyourtail.jsmacros.api;
 
+/**
+ * Base class for helper wrappers. A helper wraps objects of a base type, making their
+ * methods available to scripts in a script-friendly way.
+ *
+ * @author Wagyourtail
+ */
 public abstract class BaseHelper<T> {
     protected T base;
 

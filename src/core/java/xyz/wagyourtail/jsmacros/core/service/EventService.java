@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
+import xyz.wagyourtail.jsmacros.core.event.CoreBaseEvent;
+
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.classes.Registrable;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.Event;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.Map;
@@ -17,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings("unused")
 @Event("Service")
-public class EventService extends BaseEvent {
+public class EventService extends CoreBaseEvent {
     public final String serviceName;
 
     /**

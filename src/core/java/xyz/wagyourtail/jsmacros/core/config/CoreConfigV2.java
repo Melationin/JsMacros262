@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.core.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.Event;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 

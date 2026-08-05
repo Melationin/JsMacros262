@@ -1,13 +1,20 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+import xyz.wagyourtail.jsmacros.api.LibraryExtension;
+
+import xyz.wagyourtail.jsmacros.api.Extension;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -146,7 +153,7 @@ public class ExtensionLoader {
         }
 
         // add internal extensions
-        Set<URL> internalExtensions = Extension.getDependenciesInternal(ExtensionLoader.class, "jsmacros.extension.json");
+        Set<URL> internalExtensions = getDependenciesInternal(ExtensionLoader.class, "jsmacros.extension.json");
         for (URL lib : internalExtensions) {
             System.out.println("Adding internal extension: " + lib);
             // copy resource to dependencies folder
@@ -171,11 +178,16 @@ public class ExtensionLoader {
         // load extension deps
         for (Extension extension : extensions) {
             try {
-                Set<URL> deps = extension.getDependencies();
+                Set<String> deps = extension.getDependencies();
                 if (deps.isEmpty()) {
                     System.out.println("No dependencies for extension: " + extension.getClass().getName());
                 }
-                for (URL lib : deps) {
+                for (String dep : deps) {
+                    URL lib = extension.getClass().getResource("/" + dep);
+                    if (lib == null) {
+                        System.err.println("[JsMacrosExtensionManager] Could not find dependency: " + dep);
+                        continue;
+                    }
                     // copy resource to dependencies folder
                     Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
                     try (InputStream stream = lib.openStream()) {
@@ -215,6 +227,53 @@ public class ExtensionLoader {
             loadExtensions();
         }
         return languageExtensions.stream().anyMatch(e -> e.isGuestObject(obj));
+    }
+
+    /**
+     * Parses a {@code dependencies} JSON resource (jsmacros.extension.json or
+     * jsmacros.ext.<name>.json) into a set of jar-internal URLs.
+     */
+    public static Set<URL> getDependenciesInternal(Class<?> clazz, String fname) {
+        try (InputStream stream = clazz.getResourceAsStream("/" + fname)) {
+            if (stream == null) {
+                return new HashSet<>();
+            }
+            JsonElement json = new JsonParser().parse(new InputStreamReader(stream));
+            JsonElement dependencies = json.getAsJsonObject().get("dependencies");
+            if (dependencies == null) {
+                return new HashSet<>();
+            }
+            String[] dependenciesArray;
+            if (dependencies.isJsonPrimitive()) {
+                String dependenciesString = dependencies.getAsString();
+                if (dependenciesString.equals("${dependencies}")) {
+                    return new HashSet<>();
+                }
+                dependenciesArray = dependenciesString.split(" ");
+                for (int i = 0; i < dependenciesArray.length; i++) {
+                    dependenciesArray[i] = "META-INF/jsmacrosdeps/" + dependenciesArray[i].trim();
+                }
+            } else if (dependencies.isJsonArray()) {
+                dependenciesArray = new String[dependencies.getAsJsonArray().size()];
+                for (int i = 0; i < dependenciesArray.length; i++) {
+                    dependenciesArray[i] = dependencies.getAsJsonArray().get(i).getAsString();
+                }
+            } else {
+                throw new RuntimeException("Invalid dependencies format");
+            }
+            Set<URL> dependenciesSet = new HashSet<>();
+            for (String dependency : dependenciesArray) {
+                URL resource = clazz.getResource("/" + dependency);
+                if (resource != null) {
+                    dependenciesSet.add(resource);
+                } else {
+                    System.err.println("[JsMacrosExtensionManager] Could not find dependency: " + dependency);
+                }
+            }
+            return dependenciesSet;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

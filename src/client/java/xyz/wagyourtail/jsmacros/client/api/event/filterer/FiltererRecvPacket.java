@@ -4,8 +4,8 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventRecvPacket;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.EventFilterer;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.EventFilterer;
 
 /**
  * @author aMelonRind

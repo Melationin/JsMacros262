@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper;
 import net.minecraft.advancements.predicates.NbtPredicate;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 /**
  * @since 1.9.1

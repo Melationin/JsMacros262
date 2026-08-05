@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.FluidStateHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 /**
  * @since 1.9.1

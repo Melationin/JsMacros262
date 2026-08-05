@@ -1,17 +1,14 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.extensions.Extension;
-import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
-import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
-import xyz.wagyourtail.jsmacros.core.library.PerLanguageLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,45 +17,24 @@ import java.util.List;
  * @author Wagyourtail
  * @since 1.6.5
  */
-public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
+public class LibraryBuilder extends ClassBuilder<CoreBaseLibrary> {
     final Core<?, ?> runner;
-    final boolean languages;
     final boolean perExec;
     boolean hasConstructorSet = false;
 
     public LibraryBuilder(Core<?, ?> runner, String name, boolean perExec, String... allowedLangs) throws NotFoundException, CannotCompileException {
-        super(name, (Class<BaseLibrary>) (perExec ? (allowedLangs.length > 0 ? PerExecLanguageLibrary.class : PerExecLibrary.class) : (allowedLangs.length > 0 ?
-                PerLanguageLibrary.class : BaseLibrary.class)));
+        super(name, (Class<CoreBaseLibrary>) (perExec ? PerExecLibrary.class : CoreBaseLibrary.class));
         this.runner = runner;
-        AnnotationBuilder b = this.addAnnotation(Library.class).putString("value", name);
-        List<Class<?>> allowed = new ArrayList<>();
-        for (int i = 0; i < allowedLangs.length; i++) {
-            Extension ext = runner.extensions.getExtensionForName(allowedLangs[i]);
-            if (ext instanceof LanguageExtension l) {
-                allowed.add(l.getLanguage(runner).getClass());
-            } else {
-                throw new IllegalArgumentException("Language not found: " + allowedLangs[i]);
-            }
-        }
-        AnnotationBuilder.AnnotationArrayBuilder ab = b.putArray("allowedLanguages");
-        for (Class<?> c : allowed) {
-            ab.putClass(c);
-        }
-        ab.finish();
-        b.finish();
+        this.addAnnotation(Library.class).putString("value", name);
         this.perExec = perExec;
-        languages = allowedLangs.length > 0;
     }
 
     /**
-     * constructor, if perExec run every context, if per language run once for each lang;
-     * params are context and language class.
+     * constructor, if perExec run every context; param is context.
      * if not per exec, param will be skipped.
      * ie:
      * BaseLibrary: no params
      * PerExecLibrary: context
-     * PerExecLanguageLibrary: context, language
-     * PerLanguageLibrary: language
      * <p>
      * Don't do other constructors...
      *
@@ -71,16 +47,13 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
         if (perExec) {
             params.add(BaseScriptContext.class);
         }
-        if (languages) {
-            params.add(BaseLanguage.class);
-        }
         ConstructorBuilder cb = addConstructor(params.toArray(new Class<?>[0]));
         cb.makePublic();
         return cb;
     }
 
     @Override
-    public Class<? extends BaseLibrary> finishBuildAndFreeze() throws CannotCompileException, NotFoundException {
+    public Class<? extends CoreBaseLibrary> finishBuildAndFreeze() throws CannotCompileException, NotFoundException {
         if (!hasConstructorSet) {
             ConstructorBuilder cb = addConstructor();
             StringBuilder body = new StringBuilder("{super(");
@@ -93,7 +66,7 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
             body.append(");}");
             cb.body(body.toString());
         }
-        Class<? extends BaseLibrary> clazz = super.finishBuildAndFreeze();
+        Class<? extends CoreBaseLibrary> clazz = super.finishBuildAndFreeze();
         runner.libraryRegistry.addLibrary(clazz);
         return clazz;
     }

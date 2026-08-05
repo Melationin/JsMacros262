@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.core.language;
 
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.extensions.Extension;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.Extension;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.service.EventService;
 
 import java.io.File;

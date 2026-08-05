@@ -31,7 +31,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinBlockPredicatesChecker;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;

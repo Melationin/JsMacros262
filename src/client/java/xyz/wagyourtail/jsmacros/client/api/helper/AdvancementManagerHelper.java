@@ -10,7 +10,7 @@ import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinAdvancementTree;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinClientAdvancements;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 import java.util.Map;

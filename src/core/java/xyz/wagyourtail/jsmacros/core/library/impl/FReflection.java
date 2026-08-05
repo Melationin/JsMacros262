@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import com.google.common.collect.ImmutableList;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
@@ -9,8 +11,8 @@ import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.LibraryBuilder;
@@ -358,7 +360,7 @@ public class FReflection extends PerExecLibrary {
      * @since 1.8.4
      */
     public void createLibrary(String className, String javaCode) {
-        runner.libraryRegistry.addLibrary((Class<? extends BaseLibrary>) compileJavaClass(className, javaCode));
+        runner.libraryRegistry.addLibrary((Class<? extends PerExecLibrary>) compileJavaClass(className, javaCode));
     }
 
     /**

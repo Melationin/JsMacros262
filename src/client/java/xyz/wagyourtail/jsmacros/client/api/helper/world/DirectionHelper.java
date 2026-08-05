@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper.world;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import xyz.wagyourtail.jsmacros.api.math.Pos3D;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 /**
  * @author Etheradon

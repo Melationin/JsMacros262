@@ -12,7 +12,7 @@ import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.Map;
 import java.util.stream.Collectors;

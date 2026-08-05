@@ -3,10 +3,10 @@ package xyz.wagyourtail.jsmacros.api.library;
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.Core;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.SplittableRandom;
 @SuppressWarnings("unused")
 public class FJavaUtils extends BaseLibrary {
 
-    public FJavaUtils(Core<?, ?> runner) {
+    public FJavaUtils(xyz.wagyourtail.jsmacros.core.Core<?, ?> runner) {
         super(runner);
     }
 
@@ -100,7 +100,7 @@ public class FJavaUtils extends BaseLibrary {
     @Nullable
     public Object getHelperFromRaw(@NotNull Object raw) {
         Objects.requireNonNull(raw, "Object cannot be null.");
-        return runner.helperRegistry.wrap(raw);
+        return ((xyz.wagyourtail.jsmacros.core.Core) runner).helperRegistry.wrap(raw);
     }
 
     /**

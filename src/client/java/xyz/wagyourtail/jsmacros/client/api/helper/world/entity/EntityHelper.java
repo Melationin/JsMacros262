@@ -173,7 +173,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.proje
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.vehicle.BoatEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.vehicle.FurnaceMinecartEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.vehicle.TntMinecartEntityHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.Arrays;
 import java.util.List;

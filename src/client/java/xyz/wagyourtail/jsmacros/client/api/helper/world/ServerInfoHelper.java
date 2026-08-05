@@ -4,7 +4,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import xyz.wagyourtail.jsmacros.client.api.helper.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

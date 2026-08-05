@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "jsmacros-addon-template",
+  "version": "${version}",
+  "name": "JsMacros Addon Template",
+  "description": "Example JsMacros API extension: NBT IO library + custom event via mixin.",
+  "authors": ["example"],
+  "license": "MPL-2.0",
+  "environment": "client",
+  "entrypoints": {
+    "jsmacros": [
+      "com.example.addon.TemplateAddon"
+    ]
+  },
+  "mixins": [
+    "addon-template.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "26.2",
+    "jsmacros": ">=2.0.0"
+  }
+}

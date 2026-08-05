@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+import xyz.wagyourtail.jsmacros.api.Extension;
+
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;

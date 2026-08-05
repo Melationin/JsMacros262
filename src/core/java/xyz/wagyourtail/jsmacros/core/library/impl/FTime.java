@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 /**

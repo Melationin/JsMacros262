@@ -1,5 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
+import xyz.wagyourtail.jsmacros.api.Library;
+
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 

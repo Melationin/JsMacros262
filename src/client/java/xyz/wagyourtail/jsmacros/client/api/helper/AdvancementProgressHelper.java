@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.CriterionProgress;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinAdvancementProgress;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 import java.util.Map;

@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.util.FormattingUtil;
 import xyz.wagyourtail.jsmacros.client.api.helper.screen.ScoreboardObjectiveHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.PlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

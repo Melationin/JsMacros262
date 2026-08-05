@@ -1,9 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Library("GlobalVars")
 @SuppressWarnings("unused")
-public class FGlobalVars extends BaseLibrary {
+public class FGlobalVars extends CoreBaseLibrary {
     public Map<String, Object> globalRaw = new ConcurrentHashMap<>();
 
     public FGlobalVars(Core<?, ?> runner) {

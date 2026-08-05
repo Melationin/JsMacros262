@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -10,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +29,7 @@ import java.util.Set;
  */
 @Library("KeyBind")
 @SuppressWarnings("unused")
-public class FKeyBind extends BaseLibrary {
+public class FKeyBind extends CoreBaseLibrary {
     private static final Minecraft mc = Minecraft.getInstance();
 
     public FKeyBind(Core<?, ?> runner) {

@@ -4,9 +4,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.Core;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 import xyz.wagyourtail.jsmacros.util.NameUtil;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class FUtils extends BaseLibrary {
 
-    public FUtils(Core<?, ?> runner) {
+    public FUtils(xyz.wagyourtail.jsmacros.core.Core<?, ?> runner) {
         super(runner);
     }
 //

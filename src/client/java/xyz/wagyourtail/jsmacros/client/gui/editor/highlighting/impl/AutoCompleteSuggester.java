@@ -55,12 +55,6 @@ public class AutoCompleteSuggester {
         registry.perExec.forEach((k, v) -> {
             libs.put(k.value(), v);
         });
-        registry.perLanguage.getOrDefault(lang, new HashMap<>()).forEach((k, v) -> {
-            libs.put(k.value(), v.getClass());
-        });
-        registry.perExecLanguage.getOrDefault(lang, new HashMap<>()).forEach((k, v) -> {
-            libs.put(k.value(), v);
-        });
         libs.forEach((k, v) -> {
             for (Method m : v.getDeclaredMethods()) {
                 if (!Modifier.isPublic(m.getModifiers()) || Modifier.isStatic(m.getModifiers())) {

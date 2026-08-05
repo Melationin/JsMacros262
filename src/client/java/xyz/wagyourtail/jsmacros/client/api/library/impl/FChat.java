@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.Minecraft;
@@ -25,8 +27,8 @@ import xyz.wagyourtail.jsmacros.client.api.helper.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
@@ -41,7 +43,7 @@ import java.util.regex.Pattern;
  */
 @Library("Chat")
 @SuppressWarnings("unused")
-public class FChat extends BaseLibrary {
+public class FChat extends CoreBaseLibrary {
     private static final Minecraft mc = Minecraft.getInstance();
     private static final Grammar<Tag> nbtParser = SnbtGrammar.createParser(NbtOps.INSTANCE);
 

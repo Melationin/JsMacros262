@@ -15,6 +15,7 @@ plugins {
 }
 
 include("site")
+include("jsm-api")
 
 include("extension")
 for (file in file("extension").listFiles() ?: emptyArray()) {

@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ConfigManager {
+public class ConfigManager implements xyz.wagyourtail.jsmacros.api.Config {
     protected final static Gson gson = new GsonBuilder()
         .registerTypeAdapter(File.class, new TypeAdapter<File>() {
             @Override

@@ -119,6 +119,10 @@ dependencies {
     val fabricInclude by configurations.getting
     val fabricRuntimeOnly by configurations.getting
 
+    implementation(project(":jsm-api"))
+    fabricInclude(project(":jsm-api"))
+    fabricRuntimeOnly(project(":jsm-api"))
+
     compileOnly(libs.mixin)
     compileOnly(libs.mixin.extra)
     implementation(libs.asm)

@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 public interface IEventListener {

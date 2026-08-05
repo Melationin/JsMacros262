@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
@@ -15,8 +17,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Library("Hud")
 @SuppressWarnings("unused")
-public class FHud extends BaseLibrary {
+public class FHud extends CoreBaseLibrary {
 
     private static final Minecraft mc = Minecraft.getInstance();
     /**

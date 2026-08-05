@@ -1,12 +1,17 @@
-package xyz.wagyourtail.jsmacros.core.event;
+package xyz.wagyourtail.jsmacros.api;
 
-import xyz.wagyourtail.jsmacros.core.Core;
-
+/**
+ * Base class for events. Events are triggered via {@link #trigger()}, which runs all
+ * scripts listening for this event. Extension events can be triggered from library
+ * methods or mixins.
+ *
+ * @author Wagyourtail
+ */
 public class BaseEvent {
-    public final Core<?, ?> runner;
+    public final Core runner;
     protected boolean cancelled;
 
-    public BaseEvent(Core<?, ?> runner) {
+    public BaseEvent(Core runner) {
         this.runner = runner;
     }
 
@@ -19,7 +24,7 @@ public class BaseEvent {
     }
 
     /**
-     * Cancel the event
+     * Cancel the event.
      */
     public final void cancel() {
         if (cancellable()) {
@@ -37,8 +42,11 @@ public class BaseEvent {
         return this.getClass().getAnnotation(Event.class).value();
     }
 
+    /**
+     * Fires this event, running all scripts listening for it.
+     */
     public void trigger() {
-        runner.profile.triggerEvent(this);
+        runner.triggerEvent(this);
     }
 
 }

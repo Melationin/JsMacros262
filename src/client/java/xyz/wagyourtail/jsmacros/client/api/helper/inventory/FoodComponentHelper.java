@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.inventory;
 
 import net.minecraft.world.food.FoodProperties;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 /**
  * @author Etheradon

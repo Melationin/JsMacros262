@@ -1,15 +1,13 @@
-package xyz.wagyourtail.jsmacros.core.event;
-
-import xyz.wagyourtail.doclet.DocletReplaceParams;
+package xyz.wagyourtail.jsmacros.api;
 
 /**
+ * Optional event filter, checked before dispatching an event to a script.
+ *
  * @author aMelonRind
  * @since 1.9.1
  */
 public interface EventFilterer {
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    @DocletReplaceParams("event: keyof Events")
     boolean canFilter(String event);
 
     boolean test(BaseEvent event);

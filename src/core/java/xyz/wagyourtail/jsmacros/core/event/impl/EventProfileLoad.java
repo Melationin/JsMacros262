@@ -1,15 +1,17 @@
 package xyz.wagyourtail.jsmacros.core.event.impl;
 
+import xyz.wagyourtail.jsmacros.core.event.CoreBaseEvent;
+
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
 @Event(value = "ProfileLoad", oldName = "PROFILE_LOAD")
-public class EventProfileLoad extends BaseEvent {
+public class EventProfileLoad extends CoreBaseEvent {
     public final String profileName;
 
     public EventProfileLoad(BaseProfile profile, String profileName) {

@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.event.impl;
 
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.EventFilterer;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.EventFilterer;
 
 /**
  * @author aMelonRind

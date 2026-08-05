@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helper;
 
 import com.mojang.brigadier.tree.CommandNode;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 
 public class CommandNodeHelper extends BaseHelper<CommandNode> {
     public final CommandNode<?> fabric;

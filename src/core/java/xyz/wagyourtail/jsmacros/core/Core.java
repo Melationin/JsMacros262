@@ -6,12 +6,12 @@ import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.api.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
 import xyz.wagyourtail.jsmacros.core.helper.ClassWrapperTree;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+import xyz.wagyourtail.jsmacros.api.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -30,7 +30,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
+public class Core<T extends BaseProfile, U extends BaseEventRegistry> implements xyz.wagyourtail.jsmacros.api.Core {
     private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
 
     private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
@@ -153,7 +153,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
 
-    public <E, R extends BaseHelper<E>> void registerHelper(Class<E> type, Class<R> wrapper) {
+    public <E, R extends BaseHelper<E>> void registerHelper0(Class<E> type, Class<R> wrapper) {
         try {
             MethodHandle mh = lookup.findConstructor(wrapper, MethodType.methodType(void.class, type));
             MethodHandle exact = MethodHandles.explicitCastArguments(mh, MethodType.methodType(BaseHelper.class, Object.class));
@@ -167,6 +167,38 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // ----- api.Core bridge methods -----
+
+    @Override
+    public void addLibrary(Class<? extends xyz.wagyourtail.jsmacros.api.BaseLibrary> library) {
+        libraryRegistry.addLibrary(library);
+    }
+
+    @Override
+    public void addEvent(Class<? extends xyz.wagyourtail.jsmacros.api.BaseEvent> event) {
+        eventRegistry.addEvent(event);
+    }
+
+    @Override
+    public void registerHelper(Class<?> base, Class<? extends xyz.wagyourtail.jsmacros.api.BaseHelper<?>> helper) {
+        registerHelper0((Class) base, (Class) helper);
+    }
+
+    @Override
+    public void triggerEvent(xyz.wagyourtail.jsmacros.api.BaseEvent event) {
+        profile.triggerEvent(event);
+    }
+
+    @Override
+    public xyz.wagyourtail.jsmacros.api.Config getConfig() {
+        return config;
+    }
+
+    @Override
+    public String getMacroFolder() {
+        return config.macroFolder.getAbsolutePath();
     }
 
 }

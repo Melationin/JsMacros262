@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandBuilderFabric;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandManagerFabric;
 import xyz.wagyourtail.jsmacros.fabric.client.commands.JsCommand;
+import xyz.wagyourtail.jsmacros.fabric.client.extensions.FabricExtensionLoader;
 
 public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
 
@@ -21,6 +22,7 @@ public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
         KeyMappingHelper.registerKeyMapping(JsMacrosClient.keyBinding);
         CommandBuilderFabric.registerEvent();
         JsCommand.register();
+        FabricExtensionLoader.register();
     }
 
     @Override

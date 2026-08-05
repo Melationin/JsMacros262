@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.CoreBaseLibrary;
+
 import net.minecraft.world.phys.Vec3;
 import xyz.wagyourtail.jsmacros.api.math.Pos2D;
 import xyz.wagyourtail.jsmacros.api.math.Pos3D;
@@ -8,8 +10,8 @@ import xyz.wagyourtail.jsmacros.api.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.api.Library;
 
 /**
  * position helper classes
@@ -18,7 +20,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
  */
 @Library("PositionCommon")
 @SuppressWarnings("unused")
-public class FPositionCommon extends BaseLibrary {
+public class FPositionCommon extends CoreBaseLibrary {
 
     public FPositionCommon(Core<?, ?> runner) {
         super(runner);
