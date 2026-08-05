@@ -175,19 +175,21 @@ public class ExtensionLoader {
 
         System.out.println("Loaded " + extensions.size() + " extensions");
 
-        // load extension deps
+        // load extension deps (both from the extension's jsmacros.ext.<name>.json and
+        // from an explicit Extension#getDependencies override)
         for (Extension extension : extensions) {
             try {
-                Set<String> deps = extension.getDependencies();
+                Set<URL> deps = new HashSet<>(getDependenciesInternal(extension.getClass(), "jsmacros.ext." + extension.getExtensionName() + ".json"));
+                for (String dep : extension.getDependencies()) {
+                    URL lib = extension.getClass().getResource("/" + dep);
+                    if (lib != null) {
+                        deps.add(lib);
+                    }
+                }
                 if (deps.isEmpty()) {
                     System.out.println("No dependencies for extension: " + extension.getClass().getName());
                 }
-                for (String dep : deps) {
-                    URL lib = extension.getClass().getResource("/" + dep);
-                    if (lib == null) {
-                        System.err.println("[JsMacrosExtensionManager] Could not find dependency: " + dep);
-                        continue;
-                    }
+                for (URL lib : deps) {
                     // copy resource to dependencies folder
                     Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
                     try (InputStream stream = lib.openStream()) {
