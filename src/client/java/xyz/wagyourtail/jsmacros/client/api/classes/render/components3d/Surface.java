@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import org.joml.Quaternionf;
@@ -251,7 +250,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
 
     @Override
     @DocletIgnore
-    public void render(PoseStack matrices, MultiBufferSource consumers, float tickDelta) {
+    public void render(PoseStack matrices, float tickDelta) {
         // TODO: I cba to update rendering code
     }
 

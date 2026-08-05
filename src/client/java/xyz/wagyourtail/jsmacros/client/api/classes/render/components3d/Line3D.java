@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.gizmos.GizmoProperties;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.gizmos.LineGizmo;
@@ -93,7 +92,7 @@ public class Line3D implements RenderElement3D<Line3D> {
 
     @Override
     @DocletIgnore
-    public void render(PoseStack matrixStack, MultiBufferSource consumers, float tickDelta) {
+    public void render(PoseStack matrixStack, float tickDelta) {
         GizmoProperties gizmo = Gizmos.addGizmo(new LineGizmo(
                 pos.getStart().toMojangDoubleVector(),
                 pos.getEnd().toMojangDoubleVector(),

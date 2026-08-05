@@ -43,6 +43,7 @@ import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
@@ -868,8 +869,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.2.1
      */
     public Map<String, BossBarHelper> getBossBars() {
-        assert mc.gui != null;
-        Map<UUID, LerpingBossEvent> bars = ImmutableMap.copyOf(mc.gui.getBossOverlay().events);
+        Map<UUID, LerpingBossEvent> bars = ImmutableMap.copyOf(BossBarConsumer.INSTANCE.getEvents());
         Map<String, BossBarHelper> out = new HashMap<>();
         for (Map.Entry<UUID, LerpingBossEvent> e : ImmutableList.copyOf(bars.entrySet())) {
             out.put(e.getKey().toString(), new BossBarHelper(e.getValue()));
@@ -954,7 +954,7 @@ public class FWorld extends BaseLibrary {
      */
     @Nullable
     public TextHelper getTabListHeader() {
-        return TextHelper.wrap(((IPlayerListHud) mc.gui.getTabList()).jsmacros_getHeader());
+        return TextHelper.wrap(((IPlayerListHud) mc.gui.hud.getTabList()).jsmacros_getHeader());
     }
 
     /**
@@ -963,7 +963,7 @@ public class FWorld extends BaseLibrary {
      */
     @Nullable
     public TextHelper getTabListFooter() {
-        return TextHelper.wrap(((IPlayerListHud) mc.gui.getTabList()).jsmacros_getFooter());
+        return TextHelper.wrap(((IPlayerListHud) mc.gui.hud.getTabList()).jsmacros_getFooter());
     }
 
     /**

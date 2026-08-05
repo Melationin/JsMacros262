@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import net.minecraft.ChatFormatting;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ClickEvent;
@@ -12,7 +12,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.ChatFormatting;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.jsmacros.client.util.FormattingUtil;
 import xyz.wagyourtail.jsmacros.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.FormattingHelper;
@@ -80,7 +82,7 @@ public class TextBuilder {
      * @since 1.3.0
      */
     public TextBuilder withColor(int color) {
-        self.withStyle(style -> style.withColor(ChatFormatting.getById(color)));
+        self.withStyle(style -> style.withColor(FormattingUtil.getById(color)));
         return this;
     }
 

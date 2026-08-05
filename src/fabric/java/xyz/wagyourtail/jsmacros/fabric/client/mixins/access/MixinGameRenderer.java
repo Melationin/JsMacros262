@@ -21,7 +21,7 @@ public class MixinGameRenderer {
     @Redirect(method = "extractGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;extractRenderStateWithTooltipAndSubtitles(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V"))
     private void onRender(Screen instance, GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float delta) {
         instance.extractRenderStateWithTooltipAndSubtitles(drawContext, mouseX, mouseY, delta);
-        if (!(minecraft.screen instanceof ScriptScreen)) {
+        if (!(minecraft.gui.screen() instanceof ScriptScreen)) {
             ((IScreenInternal) instance).jsmacros_render(drawContext, mouseX, mouseY, delta);
         }
     }

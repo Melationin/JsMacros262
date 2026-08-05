@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.gizmos.CuboidGizmo;
 import net.minecraft.gizmos.GizmoProperties;
 import net.minecraft.gizmos.GizmoStyle;
@@ -171,7 +170,7 @@ public class Box implements RenderElement3D<Box> {
 
     @Override
     @DocletIgnore
-    public void render(PoseStack matrixStack, MultiBufferSource consumers, float tickDelta) {
+    public void render(PoseStack matrixStack, float tickDelta) {
         GizmoProperties gizmo = Gizmos.addGizmo(new CuboidGizmo(
                 new AABB(pos.getStart().toMojangDoubleVector(), pos.getEnd().toMojangDoubleVector()),
                 new GizmoStyle(color, 2.5f, fill ? fillColor : 0),

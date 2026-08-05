@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.movement;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,7 +46,7 @@ public class MovementDummy extends LivingEntity {
     }
 
     public MovementDummy(Level world, Vec3 pos, Vec3 velocity, AABB hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
-        super(EntityType.PLAYER, world);
+        super(EntityTypes.PLAYER, world);
         this.setPos(pos.x(), pos.y(), pos.z());
         this.setDeltaMovement(velocity);
         this.setBoundingBox(hitBox);

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +53,7 @@ public class EntityTraceLine extends TraceLine {
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource consumers, float tickDelta) {
+    public void render(PoseStack matrixStack, float tickDelta) {
         if (shouldRemove || entity == null || entity.isRemoved() || entity.level() != mc.level) {
             shouldRemove = true;
             dirty = true;
@@ -63,7 +62,7 @@ public class EntityTraceLine extends TraceLine {
 
         Vec3 vec = entity.getPosition(tickDelta);
         setPos(vec.x, vec.y + yOffset, vec.z);
-        super.render(matrixStack, consumers, tickDelta);
+        super.render(matrixStack, tickDelta);
     }
 
     public static class Builder {

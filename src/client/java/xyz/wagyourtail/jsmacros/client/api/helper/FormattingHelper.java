@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helper;
 
 import net.minecraft.ChatFormatting;
+import xyz.wagyourtail.jsmacros.client.util.FormattingUtil;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -19,7 +20,8 @@ public class FormattingHelper extends BaseHelper<ChatFormatting> {
      * @since 1.8.4
      */
     public int getColorValue() {
-        return base.getColor();
+        Integer color = FormattingUtil.getColor(base);
+        return color == null ? -1 : color;
     }
 
     /**
@@ -27,7 +29,7 @@ public class FormattingHelper extends BaseHelper<ChatFormatting> {
      * @since 1.8.4
      */
     public int getColorIndex() {
-        return base.getId();
+        return FormattingUtil.getId(base);
     }
 
     /**
@@ -35,7 +37,7 @@ public class FormattingHelper extends BaseHelper<ChatFormatting> {
      * @since 1.8.4
      */
     public String getName() {
-        return base.getName();
+        return FormattingUtil.getName(base);
     }
 
     /**
@@ -45,7 +47,7 @@ public class FormattingHelper extends BaseHelper<ChatFormatting> {
      * @since 1.8.4
      */
     public char getCode() {
-        return base.getChar();
+        return FormattingUtil.getChar(base);
     }
 
     /**
@@ -53,7 +55,7 @@ public class FormattingHelper extends BaseHelper<ChatFormatting> {
      * @since 1.8.4
      */
     public boolean isColor() {
-        return base.isColor();
+        return FormattingUtil.isColor(base);
     }
 
     /**
@@ -61,7 +63,7 @@ public class FormattingHelper extends BaseHelper<ChatFormatting> {
      * @since 1.8.4
      */
     public boolean isModifier() {
-        return base.isFormat();
+        return FormattingUtil.isFormat(base);
     }
 
     @Override

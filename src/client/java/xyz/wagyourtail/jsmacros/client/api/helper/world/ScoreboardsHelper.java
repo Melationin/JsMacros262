@@ -9,6 +9,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helper.FormattingHelper;
+import xyz.wagyourtail.jsmacros.client.util.FormattingUtil;
 import xyz.wagyourtail.jsmacros.client.api.helper.screen.ScoreboardObjectiveHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -105,7 +106,11 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      */
     public int getTeamColor(PlayerEntityHelper<Player> player) {
         ChatFormatting team = getPlayerTeamColor(player.getRaw());
-        return team == null || team.getColor() == null ? -1 : team.getColor();
+        if (team == null) {
+            return -1;
+        }
+        Integer color = FormattingUtil.getColor(team);
+        return color == null ? -1 : color;
     }
 
     /**
@@ -114,7 +119,11 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      */
     public int getTeamColor() {
         ChatFormatting team = getPlayerTeamColor(Minecraft.getInstance().player);
-        return team != null && team.getColor() != null ? team.getColor() : -1;
+        if (team == null) {
+            return -1;
+        }
+        Integer color = FormattingUtil.getColor(team);
+        return color == null ? -1 : color;
     }
 
     /**
@@ -126,7 +135,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     @Nullable
     public String getTeamColorName(PlayerEntityHelper<Player> player) {
         ChatFormatting team = getPlayerTeamColor(player.getRaw());
-        return team == null ? null : team.getName();
+        return team == null ? null : FormattingUtil.getName(team);
     }
 
     /**
@@ -136,7 +145,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     @Nullable
     public String getTeamColorName() {
         ChatFormatting team = getPlayerTeamColor(Minecraft.getInstance().player);
-        return team == null ? null : team.getName();
+        return team == null ? null : FormattingUtil.getName(team);
     }
 
     /**
@@ -181,7 +190,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      */
     protected int getPlayerTeamColorIndex(Player entity) {
         ChatFormatting color = getPlayerTeamColor(entity);
-        return color == null ? -1 : color.getId();
+        return color == null ? -1 : FormattingUtil.getId(color);
     }
 
     /**
@@ -195,7 +204,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
         if (t == null) {
             return null;
         }
-        return t.getColor();
+        return t.getColor().map(c -> ChatFormatting.values()[c.ordinal()]).orElse(null);
     }
 
     /**

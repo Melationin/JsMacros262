@@ -120,7 +120,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      */
     protected void key(Key keyBind, boolean keyState) {
-        if (Minecraft.getInstance().screen != null) return;
+        if (Minecraft.getInstance().gui.screen() != null) return;
         KeyMapping.set(keyBind, keyState);
         if (keyState) {
             KeyMapping.click(keyBind);
@@ -145,7 +145,7 @@ public class FKeyBind extends BaseLibrary {
      */
     @DocletReplaceParams("keyBind: Bind, keyState: boolean")
     public void keyBind(String keyBind, boolean keyState) {
-        if (Minecraft.getInstance().screen != null) return;
+        if (Minecraft.getInstance().gui.screen() != null) return;
         for (KeyMapping key : mc.options.keyMappings) {
             if (key.getName().equals(keyBind)) {
                 key.setDown(keyState);
@@ -193,7 +193,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      */
     protected void key(KeyMapping keyBind, boolean keyState) {
-        if (Minecraft.getInstance().screen != null) return;
+        if (Minecraft.getInstance().gui.screen() != null) return;
         keyBind.setDown(keyState);
         if (keyState) {
             KeyMapping.click(InputConstants.getKey(keyBind.saveString()));

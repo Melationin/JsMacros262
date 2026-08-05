@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
@@ -281,27 +279,7 @@ public class Text implements RenderElement, Alignable<Text> {
         Matrix3x2fStack matrices = drawContext.pose();
         matrices.pushMatrix();
         setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
-        Matrix4f matrix4f;
-        try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-            FloatBuffer buf = memoryStack.mallocFloat(16);
-            matrices.get4x4(buf);
-            buf.rewind();
-            matrix4f = new Matrix4f().set(buf);
-        }
-        MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
-        mc.font.drawInBatch(
-            text,
-            x,
-            y,
-            color,
-            shadow,
-            matrix4f,
-            buffer,
-            Font.DisplayMode.NORMAL,
-            0,
-            0xFFF000F0
-        );
-        buffer.endBatch();
+        drawContext.text(mc.font, text, 0, 0, color, shadow);
         matrices.popMatrix();
     }
 

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.util.FormattingUtil;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class StyleHelper extends BaseHelper<Style> {
      */
     @Nullable
     public FormattingHelper getFormatting() {
-        ChatFormatting f = ChatFormatting.getByName(base.getColor().serialize());
+        ChatFormatting f = FormattingUtil.getByName(base.getColor().serialize());
         return f == null ? null : new FormattingHelper(f);
     }
 
@@ -53,8 +54,8 @@ public class StyleHelper extends BaseHelper<Style> {
         if (base.getColor() == null) {
             return -1;
         }
-        ChatFormatting f = ChatFormatting.getByName(base.getColor().serialize());
-        return f == null ? -1 : f.getId();
+        ChatFormatting f = FormattingUtil.getByName(base.getColor().serialize());
+        return f == null ? -1 : FormattingUtil.getId(f);
     }
 
     /**
@@ -65,8 +66,12 @@ public class StyleHelper extends BaseHelper<Style> {
         if (base.getColor() == null) {
             return -1;
         }
-        ChatFormatting f = ChatFormatting.getByName(base.getColor().serialize());
-        return f == null || f.getColor() == null ? -1 : f.getColor();
+        ChatFormatting f = FormattingUtil.getByName(base.getColor().serialize());
+        if (f == null) {
+            return -1;
+        }
+        Integer color = FormattingUtil.getColor(f);
+        return color == null ? -1 : color;
     }
 
     /**

@@ -6,10 +6,8 @@ import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.mojang.blaze3d.framegraph.FramePass;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LevelTargetBundle;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.chunk.ChunkSectionsToRender;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
@@ -53,18 +51,14 @@ public class MixinLevelRenderer {
             profiler.push("jsmacros_d3d");
 
             try {
-                MultiBufferSource.BufferSource consumers = Minecraft.getInstance().renderBuffers().bufferSource();
-
                 float tickDelta = deltaTracker.getGameTimeDeltaPartialTick(true);
 
                 PoseStack matrixStack = new PoseStack();
 
                 for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
 
-                    d.render(matrixStack, consumers, tickDelta);
+                    d.render(matrixStack, tickDelta);
                 }
-
-                consumers.endBatch();
 
             } catch (Throwable e) {
                 e.printStackTrace();

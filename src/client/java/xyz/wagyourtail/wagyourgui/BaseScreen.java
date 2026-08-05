@@ -175,13 +175,13 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
             openParent();
         } else {
             setFocused(null);
-            minecraft.setScreen(null);
+            minecraft.setScreenAndShow(null);
         }
     }
 
     public void openParent() {
         assert minecraft != null;
-        minecraft.setScreen(parent);
+        minecraft.setScreenAndShow(parent);
     }
 
 }

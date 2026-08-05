@@ -127,7 +127,7 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
 
     @Inject(at = @At("TAIL"), method = "handleBossUpdate")
     public void onBossBar(ClientboundBossEventPacket packet, CallbackInfo info) {
-        packet.dispatch(new BossBarConsumer());
+        packet.dispatch(BossBarConsumer.INSTANCE);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"), method = "handleTakeItemEntity")
@@ -197,8 +197,8 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
     @Inject(method = "handleSetCursorItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V"))
     public void onHeldSlotUpdate(ClientboundSetCursorItemPacket packet, CallbackInfo ci) {
         AbstractContainerScreen<?> screen;
-        if (this.minecraft.screen instanceof AbstractContainerScreen<?>) {
-            screen = (AbstractContainerScreen<?>) this.minecraft.screen;
+        if (this.minecraft.gui.screen() instanceof AbstractContainerScreen<?>) {
+            screen = (AbstractContainerScreen<?>) this.minecraft.gui.screen();
         } else {
             screen = new InventoryScreen(this.minecraft.player);
         }
@@ -223,9 +223,9 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
         if (packet.getContainerId() == 0) {
             new EventSlotUpdate(new InventoryScreen(this.minecraft.player), "INVENTORY", packet.getSlot(), this.minecraft.player.containerMenu.getSlot(packet.getSlot()).getItem(), packet.getItem()).trigger();
             return;
-        } else if (this.minecraft.screen instanceof AbstractContainerScreen<?>) {
-            if (packet.getContainerId() == ((AbstractContainerScreen<?>) this.minecraft.screen).getMenu().containerId) {
-                new EventSlotUpdate((AbstractContainerScreen<?>) this.minecraft.screen, "CONTAINER", packet.getSlot(), this.minecraft.player.containerMenu.getSlot(packet.getSlot()).getItem(), packet.getItem()).trigger();
+        } else if (this.minecraft.gui.screen() instanceof AbstractContainerScreen<?>) {
+            if (packet.getContainerId() == ((AbstractContainerScreen<?>) this.minecraft.gui.screen()).getMenu().containerId) {
+                new EventSlotUpdate((AbstractContainerScreen<?>) this.minecraft.gui.screen(), "CONTAINER", packet.getSlot(), this.minecraft.player.containerMenu.getSlot(packet.getSlot()).getItem(), packet.getItem()).trigger();
                 return;
             }
         }
@@ -238,8 +238,8 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
             assert minecraft.player != null;
             new EventContainerUpdate(new InventoryScreen(minecraft.player)).trigger();
         } else {
-            if (this.minecraft.screen instanceof AbstractContainerScreen<?>) {
-                new EventContainerUpdate((AbstractContainerScreen<?>) this.minecraft.screen).trigger();
+            if (this.minecraft.gui.screen() instanceof AbstractContainerScreen<?>) {
+                new EventContainerUpdate((AbstractContainerScreen<?>) this.minecraft.gui.screen()).trigger();
             }
         }
     }
