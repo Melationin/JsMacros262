@@ -45,7 +45,15 @@ public class LibraryRegistry {
 
         for (Map.Entry<Library, Class<? extends CoreBaseLibrary>> lib : perExec.entrySet()) {
             try {
-                libs.put(lib.getKey().value(), lib.getValue().getConstructor(BaseScriptContext.class).newInstance(context));
+                // prefer a constructor taking the concrete context type (e.g. GraalScriptContext),
+                // fall back to the generic BaseScriptContext constructor
+                Constructor<? extends CoreBaseLibrary> ctor;
+                try {
+                    ctor = lib.getValue().getConstructor(context.getClass());
+                } catch (NoSuchMethodException e) {
+                    ctor = lib.getValue().getConstructor(BaseScriptContext.class);
+                }
+                libs.put(lib.getKey().value(), ctor.newInstance(context));
             } catch (IllegalAccessException | InstantiationException | NoSuchMethodException |
                      InvocationTargetException e) {
                 throw new RuntimeException("Failed to instantiate library, ", e);
