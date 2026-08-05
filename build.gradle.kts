@@ -83,6 +83,13 @@ unimined.minecraft(fabric) {
 
     runs.off = false
 
+    runs.config("client") {
+        javaLauncher.set(project.extensions.getByType(JavaToolchainService::class.java).launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(26))
+            vendor.set(JvmVendorSpec.AZUL)
+        })
+    }
+
     fabric {
         loader(libs.versions.fabric.loader.get())
         accessWidener(file("src/main/resources/jsmacros.accesswidener"))
