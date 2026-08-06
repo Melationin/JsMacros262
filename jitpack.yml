@@ -1,6 +1,11 @@
 # JitPack build config: publish only the jsm-api artifact.
-# Gradle 8.14.4 needs JDK 21 as the daemon JVM (compile toolchains auto-download).
-jdk: 21
+# Install JDK 21 explicitly (the `jdk:` field installs to a location Gradle's
+# toolchain detection cannot find, and foojay auto-provisioning is blocked in
+# the JitPack sandbox). install-jdk.sh sets JAVA_HOME, which Gradle toolchain
+# detection picks up automatically.
+before_install:
+  - wget -q https://github.com/sormuras/bach/raw/master/install-jdk.sh
+  - source install-jdk.sh --feature 21
 
 # Only build the api module; the full mod build (unimined/MC deps, docs) is not
 # needed for the maven artifact and would be slow/fragile on JitPack.

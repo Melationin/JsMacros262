@@ -33,7 +33,9 @@ doc/
 *.log
 *.log.gz
 
+# jvm crash dumps (can exceed GitHub's 100MB limit)
+
+*.hprof
 
 docs/web/[0-9]*
-/addon-template/
 /addon-template/
