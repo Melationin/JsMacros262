@@ -35,10 +35,10 @@ jobs:
           mkdir -p dist
           zip -r "./dist/${{ steps.fname.outputs.result }}-source.zip" .
 
-      - name: Set up JDK 21
+      - name: Set up JDK 21 (Temurin)
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '21'
           cache: 'gradle'
 
