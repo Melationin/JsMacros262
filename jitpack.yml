@@ -11,8 +11,11 @@ before_install:
 # sdk use sets JAVA_HOME in this shell; re-export explicitly as a fallback in
 # case JitPack runs each command in its own shell, and print the version for
 # diagnostics.
+# publishToMavenLocal (not assemble): JitPack publishes by locating pom.xml
+# in build/ or ~/.m2, and assemble produces no pom, so no artifacts get
+# published otherwise ("No build artifacts found").
 install:
   - export JAVA_HOME="$HOME/.sdkman/candidates/java/21.0.4-tem"
   - export PATH="$JAVA_HOME/bin:$PATH"
   - java -version
-  - ./gradlew :jsm-api:assemble
+  - ./gradlew :jsm-api:publishToMavenLocal
