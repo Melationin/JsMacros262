@@ -72,4 +72,7 @@ tasks.register<Javadoc>("genTSDoc") {
     (options as CoreJavadocOptions).addStringOption("name", base.archivesName.get())
     // skip globals so this header can be merged with the main mod's JsMacros-*.d.ts
     (options as CoreJavadocOptions).addBooleanOption("no-globals", true)
+    // only expand classes in this addon's own packages into the Packages tree;
+    // other types (MC, mod APIs) are rendered as commented-out any
+    (options as CoreJavadocOptions).addStringOption("include", "com.example.addon")
 }

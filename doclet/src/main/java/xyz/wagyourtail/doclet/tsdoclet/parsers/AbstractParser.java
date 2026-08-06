@@ -17,6 +17,8 @@ import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
+import xyz.wagyourtail.doclet.options.IncludePrefix;
+import xyz.wagyourtail.doclet.options.NoGlobals;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
 import xyz.wagyourtail.doclet.tsdoclet.PackageTree;
 
@@ -389,6 +391,14 @@ public abstract class AbstractParser {
                 // check BaseEvent
                 if (res.equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) {
                     return "Events.BaseEvent";
+                }
+
+                // in -no-globals (addon) mode, only expand types inside the addon's
+                // own package prefix (-include) into the Packages tree; everything
+                // else is commented out to keep the header small (java.lang base
+                // types are exempt, they are handled below)
+                if (NoGlobals.noGlobals && !res.startsWith("java.lang") && !IncludePrefix.isIncluded(res)) {
+                    return "/* " + res.replaceAll("/\\* ", "").replaceAll(" \\*/(?: any)?", "") + " */ any";
                 }
 
                 // register this type to the package tree for further type generation

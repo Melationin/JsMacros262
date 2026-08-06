@@ -8,6 +8,7 @@ import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.options.FileName;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
+import xyz.wagyourtail.doclet.options.IncludePrefix;
 import xyz.wagyourtail.doclet.options.NoGlobals;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
@@ -72,6 +73,7 @@ public class Main implements Doclet {
                 new OutputDirectory(),
                 new FileName(),
                 new NoGlobals(),
+                new IncludePrefix(),
                 new IgnoredItem("-doctitle", 1),
                 new IgnoredItem("-notimestamp", 0),
                 new IgnoredItem("-windowtitle", 1)
