@@ -45,8 +45,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
-          java-version: 25
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Grant Execute Permission
         run: chmod +x gradlew
