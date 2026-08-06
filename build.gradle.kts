@@ -88,6 +88,11 @@ unimined.minecraft(fabric) {
             languageVersion.set(JavaLanguageVersion.of(26))
             vendor.set(JvmVendorSpec.AZUL)
         })
+
+        // JVMCI is incompatible with graal-sdk 24.0.1 on JDK 25 (LibGraal crash:
+        // NoSuchFieldError IS_BUILDING_NATIVE_IMAGE); disable it so the JS engine
+        // runs in interpreted mode, like on a plain JDK.
+        jvmArgs("-XX:-EnableJVMCI")
     }
 
     fabric {

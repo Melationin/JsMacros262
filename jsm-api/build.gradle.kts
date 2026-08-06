@@ -19,9 +19,18 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
+// force :doclet to be configured before this project, so its sourceSets are
+// available when the jar task below is configured
+evaluationDependsOn(":doclet")
+
 tasks.jar {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
+
+    // Bundle the TS/Py/Web doclet classes into the api artifact, so addons can
+    // run genTSDoc using only the api dependency (JitPack publishes a single
+    // root-module artifact, there is no separate doclet artifact).
+    from(project(":doclet").sourceSets.main.get().output)
 }
 
 publishing {

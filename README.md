@@ -154,6 +154,8 @@ if (event.command === "foo") {
 
 **本分支新增**：第三方可以开发**独立 Addon**，为脚本提供新的库类、事件、helper 和配置。Addon 是标准 Fabric mod，编译时**只依赖 `jsmacrosplus-api`**（独立构件，纯 JDK，无 MC/fabric 依赖）。
 
+> 📘 **Addon 开发详细指南**：[docs/扩展开发指南.md](docs/扩展开发指南.md)（环境搭建、API 详解、事件/库/Helper/Config、Mixin、genTSDoc、发布 JitPack、FAQ）
+
 ### 架构
 
 ```

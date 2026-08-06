@@ -51,21 +51,14 @@ tasks.processResources {
 
 // ---------------------------------------------------------------------------
 // TypeScript API docs (.d.ts) for this addon's @Library / @Event classes.
-// Build the doclet first in the JsMacros repo with:
-//     ./gradlew :doclet:publishToMavenLocal
-// Then run:  ./gradlew genTSDoc
-// Output:    build/typescript/headers/<name>-<version>.d.ts
+// The doclet classes are bundled in the jsmacrosplus-api artifact, so the
+// compile classpath is used directly as the docletpath - no extra dependency.
+// Run:  ./gradlew genTSDoc
+// Output: build/typescript/headers/<name>-<version>.d.ts
 // ---------------------------------------------------------------------------
-val tsdoclet by configurations.creating
-
-dependencies {
-    tsdoclet("xyz.wagyourtail.jsmacros:jsmacrosplus-doclet:2.0.1")
-}
-
 tasks.register<Javadoc>("genTSDoc") {
     group = "documentation"
     description = "Generates TypeScript API declarations (.d.ts) for this addon's @Library/@Event classes"
-    dependsOn(tsdoclet)
 
     source = sourceSets.main.get().allJava
     classpath = sourceSets.main.get().compileClasspath
@@ -73,7 +66,7 @@ tasks.register<Javadoc>("genTSDoc") {
     setDestinationDir(layout.buildDirectory.dir("typescript/headers").get().asFile)
 
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
-    options.docletpath(*tsdoclet.files.toTypedArray())
+    options.docletpath(*sourceSets.main.get().compileClasspath.files.toTypedArray())
     (options as CoreJavadocOptions).addStringOption("v", project.version.toString())
     // name the header after this addon instead of "JsMacros"
     (options as CoreJavadocOptions).addStringOption("name", base.archivesName.get())
