@@ -86,16 +86,28 @@ public class PackageTree {
     }
 
     public String genTSTree() {
-        prepareTSTree();
-        return genTSTreeIntern().replaceAll("\\bPackages\\.", "");
+        return genTSTree(Set.of());
     }
 
-    private String genTSTreeIntern() {
+    /**
+     * Generates the TS tree, skipping whole top-level packages contained in
+     * {@code skipTopLevel} (used with -no-globals so addon headers don't
+     * redeclare packages already covered by the main mod's header).
+     */
+    public String genTSTree(Set<String> skipTopLevel) {
+        prepareTSTree();
+        return genTSTreeIntern(skipTopLevel, true).replaceAll("\\bPackages\\.", "");
+    }
+
+    private String genTSTreeIntern(Set<String> skipTopLevel, boolean isRoot) {
         if (classes.isEmpty() && children.size() == 1) {
             PackageTree onlyChild = children.values().iterator().next();
+            if (isRoot && skipTopLevel.contains(onlyChild.pkgName)) {
+                return "";
+            }
             if (!tsReservedWords.contains(onlyChild.pkgName)) {
                 onlyChild.pkgName = pkgName + "." + onlyChild.pkgName;
-                return onlyChild.genTSTreeIntern();
+                return onlyChild.genTSTreeIntern(skipTopLevel, false);
             }
         }
 
@@ -115,10 +127,13 @@ public class PackageTree {
             se.append("\n\n").append(StringHelpers.tabIn(ent.getValue()));
         }
         for (PackageTree value : children.values()) {
+            if (isRoot && skipTopLevel.contains(value.pkgName)) {
+                continue;
+            }
             if (tsReservedWords.contains(value.pkgName)) {
                 exports.append("_").append(value.pkgName).append(" as ").append(value.pkgName).append(",\n");
-                se.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
-            } else sn.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
+                se.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern(skipTopLevel, false)));
+            } else sn.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern(skipTopLevel, false)));
         }
 
         if (!exports.isEmpty()) {

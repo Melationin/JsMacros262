@@ -156,6 +156,11 @@ public class Main implements Doclet {
                 classes.addClass(e);
                 System.out.println(e);
             }
+            // in -no-globals (addon) mode, also declare BaseHelper subclasses so
+            // wrapper types used by library methods get real TS declarations
+            if (NoGlobals.noGlobals && isBaseHelper(e)) {
+                classes.addClass(e);
+            }
         }
 
         try {
@@ -227,10 +232,15 @@ public class Main implements Doclet {
                 outputTS.append("\n\n").append(lib.genTSInterface());
             }
 
-            // Packages tree + type aliases are skipped with -no-globals: they are
-            // already declared in the main mod's header, redeclaring them would
-            // cause duplicate identifiers when the addon header is merged with it
-            if (!NoGlobals.noGlobals) {
+            // With -no-globals, only emit the Packages tree for the addon's own
+            // classes (and any third-party types they reference), skipping the
+            // top-level packages already declared by the main mod's header.
+            if (NoGlobals.noGlobals) {
+                String tree = classes.genTSTree(Set.of("java", "net.minecraft", "xyz.wagyourtail"));
+                if (!tree.isBlank()) {
+                    outputTS.append("\n\ndeclare ").append(tree).append("\n");
+                }
+            } else {
                 outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
                 // short alias of jsmacros types, for jsdoc / type casting / type annotation and more
@@ -284,6 +294,17 @@ public class Main implements Doclet {
         }
 
         return true;
+    }
+
+    private static boolean isBaseHelper(TypeElement e) {
+        for (TypeMirror sup = e.getSuperclass(); sup.getKind() == TypeKind.DECLARED; ) {
+            TypeElement supEl = (TypeElement) ((DeclaredType) sup).asElement();
+            if (supEl.getQualifiedName().contentEquals("xyz.wagyourtail.jsmacros.api.BaseHelper")) {
+                return true;
+            }
+            sup = supEl.getSuperclass();
+        }
+        return false;
     }
 
     public static Object getAnnotationValue(AnnotationMirror annotation) {
