@@ -39,7 +39,7 @@ unimined.minecraft {
 dependencies {
     // JsMacrosPlus API - the only JsMacrosPlus dependency an addon needs at compile time.
     // Build it first in the JsMacrosPlus repo with: ./gradlew :jsm-api:publishToMavenLocal
-    implementation("xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0")
+    implementation("xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1")
 }
 
 // expand ${version} in fabric.mod.json (same as the main mod's build)
@@ -59,7 +59,7 @@ tasks.processResources {
 val tsdoclet by configurations.creating
 
 dependencies {
-    tsdoclet("xyz.wagyourtail.jsmacros:jsmacrosplus-doclet:2.0.0")
+    tsdoclet("xyz.wagyourtail.jsmacros:jsmacrosplus-doclet:2.0.1")
 }
 
 tasks.register<Javadoc>("genTSDoc") {
