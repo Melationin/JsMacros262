@@ -3,7 +3,6 @@ import xyz.wagyourtail.unimined.internal.minecraft.task.RemapJarTaskImpl
 plugins {
     id("xyz.wagyourtail.unimined") version "1.4.2-SNAPSHOT"
     alias(libs.plugins.shadow)
-    `maven-publish`
 }
 
 val archives_base_name: String by project.properties
@@ -223,16 +222,6 @@ val remapFabricJar by tasks.getting(RemapJarTaskImpl::class) {
 
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
-}
-
-// Publish the remapped fabric jar as the root module artifact (used by JitPack;
-// JitPack overrides group/version, the publication just needs to exist).
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifact(tasks.getByName("remapFabricJar"))
-        }
-    }
 }
 
 val generatePyDoc by tasks.registering(Javadoc::class) {

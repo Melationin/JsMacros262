@@ -1,12 +1,8 @@
-# JitPack build config: publish the full fabric mod jar (root module) and the
-# jsm-api artifact (submodule). Gradle 8.14.4 needs JDK 21 as the daemon JVM
-# (compile toolchains auto-download via foojay).
+# JitPack build config: publish only the jsm-api artifact.
+# Gradle 8.14.4 needs JDK 21 as the daemon JVM (compile toolchains auto-download).
 jdk: 21
 
-# Build the full mod (remapFabricJar -> build/libs/jsmacrosplus-*.jar) plus the
-# api module, and install all maven-publish publications to the local maven
-# repo where JitPack picks them up. Artifact coordinates on jitpack.io:
-#   com.github.Melationin:JsMacros262:<tag>          (full fabric mod jar)
-#   com.github.Melationin:JsMacros262:jsm-api:<tag>  (api artifact)
+# Only build the api module; the full mod build (unimined/MC deps, docs) is not
+# needed for the maven artifact and would be slow/fragile on JitPack.
 install:
-  - ./gradlew remapFabricJar :jsm-api:assemble publishToMavenLocal
+  - ./gradlew :jsm-api:assemble
