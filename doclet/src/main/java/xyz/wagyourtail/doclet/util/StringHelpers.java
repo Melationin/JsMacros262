@@ -1,4 +1,4 @@
-package xyz.wagyourtail;
+package xyz.wagyourtail.doclet.util;
 
 @SuppressWarnings("unused")
 public class StringHelpers {

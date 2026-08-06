@@ -11,7 +11,7 @@ import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SinceTree;
 import org.jetbrains.annotations.NotNull;
-import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.util.StringHelpers;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;

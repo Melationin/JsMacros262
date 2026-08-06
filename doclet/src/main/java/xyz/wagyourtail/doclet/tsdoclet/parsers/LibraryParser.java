@@ -1,6 +1,6 @@
 package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
-import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.util.StringHelpers;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;

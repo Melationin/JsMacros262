@@ -8,8 +8,8 @@ import com.sun.source.doctree.ParamTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SinceTree;
 import com.sun.source.util.DocTreePath;
-import xyz.wagyourtail.Pair;
-import xyz.wagyourtail.XMLBuilder;
+import xyz.wagyourtail.doclet.util.Pair;
+import xyz.wagyourtail.doclet.util.XMLBuilder;
 import xyz.wagyourtail.doclet.webdoclet.Main;
 import xyz.wagyourtail.doclet.webdoclet.options.Links;
 

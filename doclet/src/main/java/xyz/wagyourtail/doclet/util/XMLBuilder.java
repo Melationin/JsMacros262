@@ -1,4 +1,4 @@
-package xyz.wagyourtail;
+package xyz.wagyourtail.doclet.util;
 
 import java.util.Arrays;
 import java.util.HashMap;

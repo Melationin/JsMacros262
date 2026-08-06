@@ -1,6 +1,6 @@
 package xyz.wagyourtail.doclet.tsdoclet;
 
-import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.util.StringHelpers;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.AbstractParser;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 
