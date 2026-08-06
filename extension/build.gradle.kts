@@ -72,6 +72,13 @@ subprojects {
         testImplementation(parent!!.sourceSets.test.get().output)
     }
 
+    // run tests interpreted on plain-JDK-like JVMs: -XX:-EnableJVMCI makes
+    // LibGraal (graal-sdk) fall back gracefully instead of crashing on
+    // JVMCI-version mismatch (graal 24.0.1 vs GraalVM JDK 25)
+    tasks.test {
+        jvmArgs("-XX:-EnableJVMCI")
+    }
+
     afterEvaluate {
         var includeFiles = files(jsmacrosExtensionInclude) - files(parent!!.configurations.findByName("jsmacrosExtensionInclude") ?: emptySet<File>()).filter{ it.name.endsWith(".jar") }
 
