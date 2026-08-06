@@ -144,7 +144,11 @@ public class PackageTree {
     }
 
     public List<ClassParser> getWagClasses() {
-        return children.get("xyz").children.get("wagyourtail").streamAllClasses().toList();
+        PackageTree xyz = children.get("xyz");
+        if (xyz == null) return List.of();
+        PackageTree wagyourtail = xyz.children.get("wagyourtail");
+        if (wagyourtail == null) return List.of();
+        return wagyourtail.streamAllClasses().toList();
     }
 
     private Stream<ClassParser> streamAllClasses() {

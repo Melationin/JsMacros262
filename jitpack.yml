@@ -1,3 +1,12 @@
-before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
-  - source install-jdk.sh --feature 17
+# JitPack build config: publish the full fabric mod jar (root module) and the
+# jsm-api artifact (submodule). Gradle 8.14.4 needs JDK 21 as the daemon JVM
+# (compile toolchains auto-download via foojay).
+jdk: 21
+
+# Build the full mod (remapFabricJar -> build/libs/jsmacrosplus-*.jar) plus the
+# api module, and install all maven-publish publications to the local maven
+# repo where JitPack picks them up. Artifact coordinates on jitpack.io:
+#   com.github.Melationin:JsMacros262:<tag>          (full fabric mod jar)
+#   com.github.Melationin:JsMacros262:jsm-api:<tag>  (api artifact)
+install:
+  - ./gradlew remapFabricJar :jsm-api:assemble publishToMavenLocal

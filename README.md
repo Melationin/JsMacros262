@@ -1,6 +1,6 @@
-# JsMacros 26.2
+# JsMacrosPlus 26.2
 
-基于 [JsMacros](https://github.com/wagyourtail/JsMacros) 的 **Minecraft 26.2 (Fabric)** 移植分支，并在其上扩展了**客户端命令脚本**与**独立 API 扩展（Addon）**体系。
+基于 [JsMacros](https://github.com/wagyourtail/JsMacros) 的 **Minecraft 26.2 (Fabric)** 移植分支（即 **JsMacrosPlus**），并在其上扩展了**客户端命令脚本**与**独立 API 扩展（Addon）**体系。
 
 通过脚本与游戏深度交互：聊天、世界、实体、渲染、事件……脚本语言支持 **JavaScript / TypeScript / Python**。
 
@@ -38,7 +38,7 @@
 - **渲染**：2D HUD 覆盖层、3D 世界渲染（Gizmos / FrameGraph，26.2 渲染管线）
 - **客户端命令**：脚本可注册/注销自定义客户端命令（`CommandBuilder`）
 - **命令脚本**（本分支新增）：`/js <command> [args...]` 一键触发绑定脚本
-- **扩展系统**（本分支新增）：独立 Addon jar 提供库类 / 事件 / helper / 配置，**只依赖 jsmacros-api 编译**
+- **扩展系统**（本分支新增）：独立 Addon jar 提供库类 / 事件 / helper / 配置，**只依赖 jsmacrosplus-api 编译**
 
 ---
 
@@ -57,7 +57,7 @@
 
 ## 安装
 
-1. 下载 `jsmacros-26.2-2.0.0-fabric.jar`
+1. 下载 `jsmacrosplus-26.2-2.0.0-fabric.jar`
 2. 放入游戏 `mods/` 文件夹
 3. 启动游戏（需要 Java 25/26 运行时）
 
@@ -152,7 +152,7 @@ if (event.command === "foo") {
 
 ## 扩展系统（Addon）
 
-**本分支新增**：第三方可以开发**独立 Addon**，为脚本提供新的库类、事件、helper 和配置。Addon 是标准 Fabric mod，编译时**只依赖 `jsmacros-api`**（独立构件，纯 JDK，无 MC/fabric 依赖）。
+**本分支新增**：第三方可以开发**独立 Addon**，为脚本提供新的库类、事件、helper 和配置。Addon 是标准 Fabric mod，编译时**只依赖 `jsmacrosplus-api`**（独立构件，纯 JDK，无 MC/fabric 依赖）。
 
 ### 架构
 
@@ -163,10 +163,10 @@ if (event.command === "foo") {
 │  │ 库类 @Library │  │ 事件 @Event  │  │ mixin (MC hook)│  │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘   │
 │         │                 │                  │           │
-│  fabric.mod.json entrypoints: "jsmacros"     │           │
+│  fabric.mod.json entrypoints: "jsmacrosplus" │           │
 └─────────┼─────────────────┼──────────────────┼───────────┘
           ▼                 ▼                  ▼
-    jsmacros (主 mod)  ── FabricLoader.getEntrypointContainers("jsmacros")
+    jsmacrosplus (主 mod)  ── FabricLoader.getEntrypointContainers("jsmacrosplus")
           │                 │                  │
           ▼                 ▼                  ▼
     Core.addLibrary   Core.addEvent    事件触发 → 脚本
@@ -176,7 +176,7 @@ if (event.command === "foo") {
 
 | 方式 | 位置 | 机制 |
 |---|---|---|
-| **Fabric mod（推荐）** | `mods/` 文件夹 | `fabric.mod.json` 声明 `"jsmacros"` entrypoint，jsmacros 启动时发现并初始化 |
+| **Fabric mod（推荐）** | `mods/` 文件夹 | `fabric.mod.json` 声明 `"jsmacrosplus"` entrypoint，jsmacrosplus 启动时发现并初始化 |
 | **传统扩展** | `config/jsMacros/Extensions/` | `META-INF/services/xyz.wagyourtail.jsmacros.api.Extension` 声明实现类 |
 
 ### Addon 能做什么
@@ -192,22 +192,22 @@ if (event.command === "foo") {
 
 ### 快速开始（参考模板 `addon-template/`）
 
-**1. 获取 jsmacros-api**（仓库内构建并安装到本地 maven）：
+**1. 获取 jsmacrosplus-api**（仓库内构建并安装到本地 maven）：
 
 ```bash
 cd JsMacros2622
 ./gradlew :jsm-api:publishToMavenLocal
 ```
 
-**2. 创建 Addon 工程**（模板：`addon-template/`，依赖 `xyz.wagyourtail.jsmacros:jsmacros-api:2.0.0`）：
+**2. 创建 Addon 工程**（模板：`addon-template/`，依赖 `xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0`）：
 
 ```jsonc
 // fabric.mod.json
 {
   "id": "my-addon",
   "environment": "client",
-  "entrypoints": { "jsmacros": ["com.example.MyAddon"] },
-  "depends": { "jsmacros": ">=2.0.0", "minecraft": "26.2" }
+  "entrypoints": { "jsmacrosplus": ["com.example.MyAddon"] },
+  "depends": { "jsmacrosplus": ">=2.0.0", "minecraft": "26.2" }
 }
 ```
 
@@ -253,6 +253,8 @@ public class MyEvent extends BaseEvent {
 
 **5. 构建并安装**：`./gradlew build` → `build/libs/*.jar` 放入游戏 `mods/` 文件夹。
 
+**6.（可选）生成 TS API 文档**：`./gradlew genTSDoc` → `build/typescript/headers/jsmacrosplus-addon-template-1.0.0.d.ts`，包含本 addon 的 `@Library` / `@Event` 声明（`-no-globals` 模式，可与主 mod 的 `JsMacros-*.d.ts` 合并使用）。
+
 ### 脚本中使用
 
 ```js
@@ -264,9 +266,9 @@ JsMacros.on("MyEvent", JavaWrapper.methodToJava((e) => {
 
 > 模板 `addon-template/` 附带完整示例：NBT IO 库（`NbtIo.readFile/writeFile`）+ 打开容器事件（mixin 触发）。`./gradlew -p addon-template build` 构建。
 
-### jsmacros-api 构件
+### jsmacrosplus-api 构件
 
-- 坐标：`xyz.wagyourtail.jsmacros:jsmacros-api:2.0.0`
+- 坐标：`xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0`
 - 内容：`Extension` / `LibraryExtension` / `Core`（接口）/ `Config` / `BaseLibrary`+`@Library` / `BaseEvent`+`@Event` / `EventFilterer` / `BaseHelper`
 - 零依赖（纯 JDK），无 MC/fabric 引用 → **无类名映射问题**，Addon 用 loom/unimined 构建 + remap 后与其他 mod 互操作安全
 
@@ -306,24 +308,32 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew build -x test
 # 仅发布 jar（跳过文档等）
 JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew fabricJar
 
-# 发布 jsmacros-api 到本地 maven（Addon 开发用）
+# 发布 jsmacrosplus-api 到本地 maven（Addon 开发用）
 JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew :jsm-api:publishToMavenLocal
+
+# 发布 doclet（TS/Python/Web 文档生成器）到本地 maven（Addon 的 genTSDoc 用）
+JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew :doclet:publishToMavenLocal
 
 # 开发运行（Zulu 26 JVM，自动加载 mods 文件夹与依赖）
 JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew fabricRunClient
 
 # 构建模板 addon
 JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template build
+
+# 模板 addon：生成 TS API 声明（build/typescript/headers/*.d.ts）
+JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 ```
 
 ### 产物
 
 | 文件 | 说明 |
 |---|---|
-| `build/libs/jsmacros-26.2-2.0.0-fabric.jar` | 发布 jar（remap 后，放 mods 使用） |
-| `build/libs/jsmacros-26.2-2.0.0-fabric-dev.jar` | 开发 jar |
-| `jsm-api/build/libs/jsmacros-api-2.0.0.jar` | API 构件 |
-| `addon-template/build/libs/jsmacros-addon-template-1.0.0.jar` | 模板 Addon |
+| `build/libs/jsmacrosplus-26.2-2.0.0-fabric.jar` | 发布 jar（remap 后，放 mods 使用） |
+| `build/libs/jsmacrosplus-26.2-2.0.0-fabric-dev.jar` | 开发 jar |
+| `jsm-api/build/libs/jsmacrosplus-api-2.0.0.jar` | API 构件 |
+| `doclet/build/libs/jsmacrosplus-doclet-2.0.0.jar` | TS/Python/Web 文档生成 doclet |
+| `addon-template/build/libs/jsmacrosplus-addon-template-1.0.0.jar` | 模板 Addon |
+| `addon-template/build/typescript/headers/*.d.ts` | 模板 Addon 的 TS API 声明（`genTSDoc` 产出） |
 
 ---
 
@@ -343,6 +353,7 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template build
 │   ├── fabric/               # Fabric 适配（命令注册、addon 发现）
 │   └── main/                 # 共享（FJavaUtils 等内置库）
 ├── extension/graal/          # Graal 语言扩展（js / python 子工程）
+├── doclet/                   # TS/Python/Web 文档生成 doclet（Addon 的 genTSDoc 复用）
 ├── addon-template/           # ★ Addon 开发模板（NBT IO + mixin 事件示例）
 └── build.gradle.kts          # 构建脚本
 ```
@@ -401,10 +412,10 @@ JsMacros.on("X", JavaWrapper.methodToJava((e) => { ... }));
 - **推荐**：普通 JDK 25/26（Zulu 26 已验证）
 
 ### 6. 如何给脚本加 API？
-开发 Addon（见[扩展系统](#扩展系统addon)），编译只依赖 `jsmacros-api`。
+开发 Addon（见[扩展系统](#扩展系统addon)），编译只依赖 `jsmacrosplus-api`。
 
 ### 7. Addon 里能用 mixin 吗？
-可以。Addon 是标准 Fabric mod，声明 `mixins` 即可；jsmacros 启动时通过 `"jsmacros"` entrypoint 发现并初始化。
+可以。Addon 是标准 Fabric mod，声明 `mixins` 即可；jsmacrosplus 启动时通过 `"jsmacrosplus"` entrypoint 发现并初始化。
 
 ### 8. 构建报错 `generateWebDoc` 失败
 文档任务与代码无关，构建发布 jar 用 `./gradlew fabricJar` 或 `build -x test -x generateWebDoc`。

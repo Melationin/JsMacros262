@@ -66,7 +66,7 @@ public class EditorScreen extends BaseScreen {
             "none"
     );
     public static Style defaultStyle = Style.EMPTY.withFont(
-            new FontDescription.Resource(Identifier.fromNamespaceAndPath("jsmacros", "ubuntumono")));
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("jsmacrosplus", "ubuntumono")));
     protected final File file;
     protected final FileHandler handler;
     public final History history;

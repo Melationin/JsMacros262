@@ -2,7 +2,7 @@
   "providers": [
     {
       "type": "ttf",
-      "file": "jsmacros:notomono-regular.ttf",
+      "file": "jsmacrosplus:notomono-regular.ttf",
       "shift": [
         -0.5,
         1.2

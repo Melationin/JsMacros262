@@ -6,7 +6,7 @@ plugins {
 val mod_version: String by project.properties
 
 base {
-    archivesName = "jsmacros-api"
+    archivesName = "jsmacrosplus-api"
 }
 
 version = mod_version
@@ -30,7 +30,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            artifactId = "jsmacros-api"
+            artifactId = "jsmacrosplus-api"
         }
     }
 }

@@ -9,4 +9,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "jsmacros-addon-template"
+rootProject.name = "jsmacrosplus-addon-template"

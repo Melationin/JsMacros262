@@ -1,8 +1,9 @@
 import xyz.wagyourtail.unimined.internal.minecraft.task.RemapJarTaskImpl
 
 plugins {
-    id("xyz.wagyourtail.unimined")
+    id("xyz.wagyourtail.unimined") version "1.4.2-SNAPSHOT"
     alias(libs.plugins.shadow)
+    `maven-publish`
 }
 
 val archives_base_name: String by project.properties
@@ -63,7 +64,7 @@ unimined.minecraft {
     }
 
     accessWidener {
-        accessWidener(file("src/main/resources/jsmacros.accesswidener"))
+        accessWidener(file("src/main/resources/jsmacrosplus.accesswidener"))
     }
     if (sourceSet == sourceSets.main.get() || sourceSet == client) {
         defaultRemapJar = false
@@ -92,7 +93,7 @@ unimined.minecraft(fabric) {
 
     fabric {
         loader(libs.versions.fabric.loader.get())
-        accessWidener(file("src/main/resources/jsmacros.accesswidener"))
+        accessWidener(file("src/main/resources/jsmacrosplus.accesswidener"))
     }
 }
 
@@ -224,14 +225,25 @@ val remapFabricJar by tasks.getting(RemapJarTaskImpl::class) {
     isReproducibleFileOrder = true
 }
 
+// Publish the remapped fabric jar as the root module artifact (used by JitPack;
+// JitPack overrides group/version, the publication just needs to exist).
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifact(tasks.getByName("remapFabricJar"))
+        }
+    }
+}
+
 val generatePyDoc by tasks.registering(Javadoc::class) {
     group = "documentation"
     description = "Generates the python documentation for the project"
+    dependsOn(":doclet:jar")
 
     source = sourceSets.main.get().allJava + core.allJava
     setDestinationDir(File(rootProject.layout.buildDirectory.get().asFile, "docs/python/JsMacrosAC/"))
     options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
-    options.docletpath(File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar"))
+    options.docletpath(project(":doclet").tasks.jar.get().archiveFile.get().asFile)
     (options as CoreJavadocOptions).addStringOption("v", mod_version)
 
     doFirst {
@@ -251,6 +263,7 @@ val copyPyDoc by tasks.registering(Copy::class) {
 val generateTSDoc by tasks.registering(Javadoc::class) {
     group = "documentation"
     description = "Generates the typescript documentation for the project"
+    dependsOn(":doclet:jar")
 
     source = sourceSets.main.get().allJava + core.allJava
     doFirst {
@@ -258,7 +271,7 @@ val generateTSDoc by tasks.registering(Javadoc::class) {
     }
     setDestinationDir(File(rootProject.layout.buildDirectory.get().asFile, "docs/typescript/headers/"))
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
-    options.docletpath(File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar"))
+    options.docletpath(project(":doclet").tasks.jar.get().archiveFile.get().asFile)
     (options as CoreJavadocOptions).addStringOption("v", mod_version)
 }
 
@@ -274,11 +287,12 @@ val copyTSDoc by tasks.registering(Copy::class) {
 val generateWebDoc by tasks.registering(Javadoc::class) {
     group = "documentation"
     description = "Generates the web documentation for the project"
+    dependsOn(":doclet:jar")
 
     source = sourceSets.main.get().allJava + core.allJava
     setDestinationDir(File(rootProject.layout.buildDirectory.get().asFile, "docs/web/"))
     options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
-    options.docletpath(File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar"))
+    options.docletpath(project(":doclet").tasks.jar.get().archiveFile.get().asFile)
     (options as CoreJavadocOptions).addStringOption("v", mod_version)
     (options as CoreJavadocOptions).addStringOption("mcv", libs.versions.minecraft.get())
     (options as StandardJavadocDocletOptions).links("https://docs.oracle.com/javase/8/docs/api/", "https://www.javadoc.io/doc/org.slf4j/slf4j-api/1.7.30/", "https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/")

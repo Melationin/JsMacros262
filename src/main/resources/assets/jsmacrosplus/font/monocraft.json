@@ -2,7 +2,7 @@
   "providers": [
     {
       "type": "ttf",
-      "file": "jsmacros:monocraft.ttf",
+      "file": "jsmacrosplus:monocraft.ttf",
       "shift": [
         0.3,
         1.5

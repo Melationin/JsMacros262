@@ -4,7 +4,7 @@ import xyz.wagyourtail.jsmacros.api.Core;
 import xyz.wagyourtail.jsmacros.api.Extension;
 
 /**
- * Main class of the addon. Discovered by JsMacros via the {@code "jsmacros"}
+ * Main class of the addon. Discovered by JsMacrosPlus via the {@code "jsmacrosplus"}
  * entrypoint declared in fabric.mod.json.
  * <p>
  * In {@link #init} you can register libraries, events, helpers and configs.

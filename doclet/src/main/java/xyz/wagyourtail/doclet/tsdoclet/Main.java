@@ -6,7 +6,9 @@ import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.options.FileName;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
+import xyz.wagyourtail.doclet.options.NoGlobals;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.AbstractParser;
@@ -68,6 +70,8 @@ public class Main implements Doclet {
         return Set.of(
                 new Version(),
                 new OutputDirectory(),
+                new FileName(),
+                new NoGlobals(),
                 new IgnoredItem("-doctitle", 1),
                 new IgnoredItem("-notimestamp", 0),
                 new IgnoredItem("-windowtitle", 1)
@@ -90,7 +94,7 @@ public class Main implements Doclet {
         Set<LibraryParser> libraryClasses = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.name, b.name));
         Set<EventParser> eventClasses = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getName(), b.getName()));
 
-        outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros-" + Version.version + ".d.ts"));
+        outputTS = new FileHandler(new File(OutputDirectory.outputDir, FileName.fileName + "-" + Version.version + ".d.ts"));
 
         if (!OutputDirectory.outputDir.exists() && !OutputDirectory.outputDir.mkdirs()) {
             reporter.print(Diagnostic.Kind.ERROR, "Failed to create version dir\n");
@@ -156,102 +160,122 @@ public class Main implements Doclet {
 
         try {
             // `\n\` to prevent java compiler from trimming the string
-            outputTS.append(
-                """
-                \n\
-                /**
-                 * The global context  \n\
-                 * If you're trying to access the context in {@link JsMacros.on},  \n\
-                 * use the second param of callback
-                 */
-                declare const context: EventContainer;
-                /**
-                 * Assert and convert event type:
-                 * ```js
-                 * JsMacros.assertEvent(event, 'Service')
-                 * ```
-                 * If the type doesn't convert, that means the event type doesn't have any properties
-                 */
-                declare const event: Events.BaseEvent;
-                declare const file: Packages.java.io.File;
-
-                declare namespace Events {
-
-                    interface BaseEvent extends JavaObject {
-
-                        getEventName(): string;
-
+            if (NoGlobals.noGlobals) {
+                // addon header: only this project's own events, mergeable with the
+                // main mod's header (which declares the globals below)
+                if (!eventClasses.isEmpty()) {
+                    outputTS.append("\n\ndeclare namespace Events {\n");
+                    for (EventParser event : eventClasses) {
+                        outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
                     }
+                    outputTS.append("\n\n}");
+                }
+            } else {
+                outputTS.append(
+                    """
+                    \n\
+                    /**
+                     * The global context  \n\
+                     * If you're trying to access the context in {@link JsMacros.on},  \n\
+                     * use the second param of callback
+                     */
+                    declare const context: EventContainer;
+                    /**
+                     * Assert and convert event type:
+                     * ```js
+                     * JsMacros.assertEvent(event, 'Service')
+                     * ```
+                     * If the type doesn't convert, that means the event type doesn't have any properties
+                     */
+                    declare const event: Events.BaseEvent;
+                    declare const file: Packages.java.io.File;
 
-                    interface Cancellable {
+                    declare namespace Events {
 
-                        cancel(): void;
+                        interface BaseEvent extends JavaObject {
 
-                    }"""
-            );
-            for (EventParser event : eventClasses) {
-                outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
+                            getEventName(): string;
+
+                        }
+
+                        interface Cancellable {
+
+                            cancel(): void;
+
+                        }"""
+                );
+                for (EventParser event : eventClasses) {
+                    outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
+                }
+
+                outputTS.append("\n\n}\n\ninterface EventFilterers {\n");
+                for (String name : filterableEvents.keySet()) {
+                    outputTS.append("\n    ").append(name)
+                            .append(": ").append(filterableEvents.get(name)).append(";");
+                }
+
+                // for type-safe event listener
+                outputTS.append("\n\n}\n\ninterface Events {\n");
+                for (EventParser event : eventClasses) {
+                    outputTS.append("\n    ").append(event.getName())
+                        .append(": Events.").append(event.getName()).append(";");
+                }
+                outputTS.append("\n\n}");
             }
-
-            outputTS.append("\n\n}\n\ninterface EventFilterers {\n");
-            for (String name : filterableEvents.keySet()) {
-                outputTS.append("\n    ").append(name)
-                        .append(": ").append(filterableEvents.get(name)).append(";");
-            }
-
-            // for type-safe event listener
-            outputTS.append("\n\n}\n\ninterface Events {\n");
-            for (EventParser event : eventClasses) {
-                outputTS.append("\n    ").append(event.getName())
-                    .append(": Events.").append(event.getName()).append(";");
-            }
-            outputTS.append("\n\n}");
 
             for (LibraryParser lib : libraryClasses) {
                 outputTS.append("\n\n").append(lib.genTSInterface());
             }
 
-            outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
+            // Packages tree + type aliases are skipped with -no-globals: they are
+            // already declared in the main mod's header, redeclaring them would
+            // cause duplicate identifiers when the addon header is merged with it
+            if (!NoGlobals.noGlobals) {
+                outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
-            // short alias of jsmacros types, for jsdoc / type casting / type annotation and more
-            // also used by some DocletReplace annotations
-            Set<String> duplicateCheck = new HashSet<>();
-            Set<String> sorter = new TreeSet<>();
-            for (ClassParser clz : classes.getWagClasses()) {
-                if (!duplicateCheck.add(clz.getClassName(false))) continue;
-                clz.isPackage = false; // to trick it transfer full type
-                sorter.add("\ntype " + clz.getClassName(true, true) + " = " +
-                    clz.getQualifiedType() + ";");
-                clz.isPackage = true;
+                // short alias of jsmacros types, for jsdoc / type casting / type annotation and more
+                // also used by some DocletReplace annotations
+                Set<String> duplicateCheck = new HashSet<>();
+                Set<String> sorter = new TreeSet<>();
+                for (ClassParser clz : classes.getWagClasses()) {
+                    if (!duplicateCheck.add(clz.getClassName(false))) continue;
+                    clz.isPackage = false; // to trick it transfer full type
+                    sorter.add("\ntype " + clz.getClassName(true, true) + " = " +
+                        clz.getQualifiedType() + ";");
+                    clz.isPackage = true;
+                }
+                outputTS.append(String.join("", sorter));
             }
-            outputTS.append(String.join("", sorter));
 
             // append number enums here because they are very unlikely to change
+            // (skipped with -no-globals, they are already declared in the main header)
             //noinspection SpellCheckingInspection
-            outputTS.append(
-                """
-                \n
-                // Enum types
-                type Bit    = 1 | 0;
-                type Trit   = 2 | Bit;
-                type Dit    = 3 | Trit;
-                type Pentit = 4 | Dit;
-                type Hexit  = 5 | Pentit;
-                type Septit = 6 | Hexit;
-                type Octit  = 7 | Septit;
+            if (!NoGlobals.noGlobals) {
+                outputTS.append(
+                    """
+                    \n
+                    // Enum types
+                    type Bit    = 1 | 0;
+                    type Trit   = 2 | Bit;
+                    type Dit    = 3 | Trit;
+                    type Pentit = 4 | Dit;
+                    type Hexit  = 5 | Pentit;
+                    type Septit = 6 | Hexit;
+                    type Octit  = 7 | Septit;
 
-                type Side = Hexit;
-                type HotbarSlot = Octit | 8;
-                type HotbarSwapSlot = HotbarSlot | OffhandSlot;
-                type ClickSlotButton = HotbarSwapSlot | 9 | 10;
-                type OffhandSlot = 40;
+                    type Side = Hexit;
+                    type HotbarSlot = Octit | 8;
+                    type HotbarSwapSlot = HotbarSlot | OffhandSlot;
+                    type ClickSlotButton = HotbarSwapSlot | 9 | 10;
+                    type OffhandSlot = 40;
 
-                """
-            );
+                    """
+                );
 
-            for (Map.Entry<String, String> ent : enumTypes.entrySet()) {
-                outputTS.append("type ").append(ent.getKey()).append(" = ").append(ent.getValue());
-                if (!ent.getValue().contains("\n")) outputTS.append(";\n");
+                for (Map.Entry<String, String> ent : enumTypes.entrySet()) {
+                    outputTS.append("type ").append(ent.getKey()).append(" = ").append(ent.getValue());
+                    if (!ent.getValue().contains("\n")) outputTS.append(";\n");
+                }
             }
 
         } catch (IOException e) {

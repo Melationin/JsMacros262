@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.api.LibraryExtension;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 
 /**
- * Discovers JsMacros extensions declared as Fabric mods via the {@code "jsmacros"}
+ * Discovers JsMacros extensions declared as Fabric mods via the {@code "jsmacrosplus"}
  * entrypoint (Meteor-addon style). Each extension's {@code init(Core)} is called with
  * error isolation, and library extensions are registered afterwards.
  *
@@ -21,7 +21,7 @@ public class FabricExtensionLoader {
     }
 
     public static void register() {
-        for (EntrypointContainer<Extension> container : FabricLoader.getInstance().getEntrypointContainers("jsmacros", Extension.class)) {
+        for (EntrypointContainer<Extension> container : FabricLoader.getInstance().getEntrypointContainers("jsmacrosplus", Extension.class)) {
             Extension extension = container.getEntrypoint();
             String name = extension.getExtensionName();
             try {

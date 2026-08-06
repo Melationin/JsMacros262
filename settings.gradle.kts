@@ -16,6 +16,7 @@ plugins {
 
 include("site")
 include("jsm-api")
+include("doclet")
 
 include("extension")
 for (file in file("extension").listFiles() ?: emptyArray()) {
@@ -47,4 +48,4 @@ dependencyResolutionManagement {
 }
 
 
-rootProject.name = "jsmacros"
+rootProject.name = "jsmacrosplus"

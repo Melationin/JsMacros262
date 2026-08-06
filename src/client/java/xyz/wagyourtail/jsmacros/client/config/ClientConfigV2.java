@@ -43,7 +43,7 @@ public class ClientConfigV2 {
     public boolean editorSuggestions = true;
 
     @Option(translationKey = "jsmacros.font", group = "jsmacros.settings.editor", options = "getFonts")
-    public String editorFont = "jsmacros:monocraft";
+    public String editorFont = "jsmacrosplus:monocraft";
 
     @Option(translationKey = "jsmacros.useexternaleditor", group = "jsmacros.settings.editor")
     public boolean externalEditor = false;

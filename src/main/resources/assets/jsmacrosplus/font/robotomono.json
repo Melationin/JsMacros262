@@ -2,7 +2,7 @@
   "providers": [
     {
       "type": "ttf",
-      "file": "jsmacros:robotomono-regular.ttf",
+      "file": "jsmacrosplus:robotomono-regular.ttf",
       "shift": [
         -0.7,
         1
