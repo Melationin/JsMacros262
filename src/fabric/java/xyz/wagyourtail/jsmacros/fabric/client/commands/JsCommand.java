@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.fabric.client.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
@@ -39,7 +41,7 @@ public class JsCommand {
         });
     }
 
-    private static int execute(CommandContext<FabricClientCommandSource> ctx, String[] args) {
+    private static int execute(CommandContext<FabricClientCommandSource> ctx, String[] args) throws CommandSyntaxException {
         String command = StringArgumentType.getString(ctx, "command");
         java.nio.file.Path file = CommandScriptManager.getScriptFile(command);
         if (file == null) {
@@ -54,9 +56,26 @@ public class JsCommand {
         return 1;
     }
 
-    private static String[] splitArgs(String raw) {
-        String trimmed = raw.trim();
-        return trimmed.isEmpty() ? new String[0] : trimmed.split("\\s+");
+    /**
+     * Splits the raw greedy string into args, honoring quotes and backslash escapes,
+     * e.g. {@code -p "hello world"} parses to {@code ["-p", "hello world"]}. Both
+     * double and single quotes are supported, matching Minecraft's own command syntax.
+     *
+     * @param raw the raw argument string
+     * @return the parsed args
+     * @throws CommandSyntaxException if a quoted string is left unclosed
+     */
+    private static String[] splitArgs(String raw) throws CommandSyntaxException {
+        StringReader reader = new StringReader(raw);
+        java.util.List<String> args = new java.util.ArrayList<>();
+        while (reader.canRead()) {
+            reader.skipWhitespace();
+            if (!reader.canRead()) {
+                break;
+            }
+            args.add(reader.readString());
+        }
+        return args.toArray(new String[0]);
     }
 
 }
