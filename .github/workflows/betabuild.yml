@@ -1,20 +1,16 @@
-# This is a basic workflow to help you get started with Actions
+# Continuous build on every push. Produces beta jars (version suffixed with
+# -beta-<sha>) as a downloadable artifact.
 
-name: Build Beta
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on: push
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+permissions:
+  contents: read
+
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
       - uses: actions/github-script@v7
@@ -33,29 +29,39 @@ jobs:
       - name: Zip source code
         run: |
           mkdir -p dist
-          zip -r "./dist/${{ steps.fname.outputs.result }}-source.zip" .
+          zip -r "./dist/${{ steps.fname.outputs.result }}-source.zip" . -x ".git/*"
 
-      - name: Set up JDK 25
+      # Gradle 8.14.4 does not support JDK 25/26 as the daemon JVM (its Kotlin
+      # DSL compiler crashes parsing e.g. "25.0.4"), so the daemon runs on 21...
+      - name: Set up JDK 21 (Gradle daemon JVM)
+        id: jdk21
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
-          java-version: '25'
+          distribution: temurin
+          java-version: '21'
           cache: 'gradle'
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+      # ...while the compile toolchain (java = 25 in gradle/libs.versions.toml)
+      # is pre-installed here so Gradle does not need foojay auto-download on CI.
+      - name: Set up JDK 25 (compile toolchain)
+        id: jdk25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
       - name: Run build with Gradle wrapper
+        env:
+          JAVA_HOME: ${{ steps.jdk21.outputs.path }}
         run: |
           chmod +x gradlew
-          ./gradlew build -x test --info --stacktrace
+          ./gradlew remapFabricJar :jsm-api:jar -x test -Porg.gradle.java.installations.paths=${{ steps.jdk25.outputs.path }}
 
-      - name: Bundle mods, documentation and source code
+      - name: Bundle jars and source code
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.fname.outputs.result }}
           path: |
-            ./dist/**/*
-            !./dist/*-sources.jar
-            !./dist/*-dev.jar
-            !./dist/*-dev-shadow.jar
-            !./dist/*-dev-shadow-js.jar
+            ./dist/*-source.zip
+            ./build/libs/*.jar
+            ./jsm-api/build/libs/*.jar
