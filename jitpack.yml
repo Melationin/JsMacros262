@@ -1,18 +1,18 @@
 # JitPack build config: publish only the jsm-api artifact.
 # JitPack's default JDK is 25, which Gradle 8.14.4 cannot run on (its Kotlin DSL
 # compiler crashes parsing e.g. "25.0.4"), so switch to JDK 21 via the sdkman
-# that JitPack provides. (install-jdk.sh from sormuras/bach is a 2020 snapshot
-# and cannot resolve JDK 21 URLs, so it is not usable here.)
+# that JitPack provides. Note: the old "open" vendor suffix is not available for
+# JDK 21 in the current sdkman, use the Temurin suffix "-tem" instead.
 before_install:
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
-  - sdk install java 21.0.4-open
-  - sdk use java 21.0.4-open
+  - sdk install java 21.0.4-tem
+  - sdk use java 21.0.4-tem
 
 # sdk use sets JAVA_HOME in this shell; re-export explicitly as a fallback in
 # case JitPack runs each command in its own shell, and print the version for
 # diagnostics.
 install:
-  - export JAVA_HOME="$HOME/.sdkman/candidates/java/21.0.4-open"
+  - export JAVA_HOME="$HOME/.sdkman/candidates/java/21.0.4-tem"
   - export PATH="$JAVA_HOME/bin:$PATH"
   - java -version
   - ./gradlew :jsm-api:assemble
