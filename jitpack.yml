@@ -1,13 +1,14 @@
 # JitPack build config: publish only the jsm-api artifact.
-# Install JDK 21 explicitly (the `jdk:` field installs to a location Gradle's
-# toolchain detection cannot find, and foojay auto-provisioning is blocked in
-# the JitPack sandbox). install-jdk.sh sets JAVA_HOME, which Gradle toolchain
-# detection picks up automatically.
+# Note: use the raw.githubusercontent.com URL - the github.com/.../raw/ form
+# 404s, which silently broke JDK installation before.
 before_install:
-  - wget -q https://github.com/sormuras/bach/raw/master/install-jdk.sh
+  - wget -q https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
   - source install-jdk.sh --feature 21
 
-# Only build the api module; the full mod build (unimined/MC deps, docs) is not
-# needed for the maven artifact and would be slow/fragile on JitPack.
+# install-jdk.sh installs to $HOME/jdk-21 and exports JAVA_HOME in this shell;
+# re-export explicitly as a fallback and print the version for diagnostics.
 install:
+  - export JAVA_HOME="${HOME}/jdk-21"
+  - export PATH="${JAVA_HOME}/bin:${PATH}"
+  - java -version
   - ./gradlew :jsm-api:assemble

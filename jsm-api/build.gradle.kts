@@ -13,12 +13,10 @@ version = mod_version
 group = "xyz.wagyourtail.jsmacros"
 
 java {
+    // no toolchain block: toolchain auto-detection fails on JitPack (foojay is
+    // blocked there); compile with whatever JDK >= 21 the daemon runs on
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
-
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
 }
 
 tasks.jar {
