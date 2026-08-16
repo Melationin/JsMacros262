@@ -55,7 +55,6 @@ public class EditorScreen extends BaseScreen {
     public static final List<String> langs = Lists.newArrayList(
             "javascript",
             "lua",
-            "python",
             "clike",
             "regex",
             "json",
@@ -122,8 +121,6 @@ public class EditorScreen extends BaseScreen {
         String ext = fname[fname.length - 1].toLowerCase(Locale.ROOT);
 
         switch (ext) {
-            case "py":
-                return "python";
             case "lua":
                 return "lua";
             case "json":

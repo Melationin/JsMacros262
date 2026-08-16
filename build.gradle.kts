@@ -125,6 +125,7 @@ dependencies {
     val fabricRuntimeOnly by configurations.getting
 
     implementation(project(":jsm-api"))
+    implementation(files("../js-backend/api/build/libs/js-backend-api-0.1.0.jar"))
     fabricInclude(project(":jsm-api"))
     fabricRuntimeOnly(project(":jsm-api"))
 
@@ -136,9 +137,6 @@ dependencies {
     coreImplementation(libs.joor)
     coreImplementation(libs.nv.websocket)
     coreImplementation(libs.javassist)
-
-    jsmacrosExtensionInclude(project(":extension:graal")) { isTransitive = false }
-    jsmacrosExtensionInclude(project(":extension:graal:js")) { isTransitive = false }
 
     fabricModImplementation(fabricApi.fabricModule("fabric-api-base", libs.versions.fapi.get()))
     fabricModImplementation(fabricApi.fabricModule("fabric-lifecycle-events-v1", libs.versions.fapi.get()))
@@ -208,8 +206,6 @@ val processFabricResources by tasks.getting(ProcessResources::class) {
 }
 
 val fabricJar by tasks.getting(Zip::class) {
-    dependsOn(":extension:graal:jar")
-    dependsOn(":extension:graal:js:jar")
     from(fabric.output, sourceSets.main.get().output, core.output, client.output)
 
     isPreserveFileTimestamps = false
@@ -227,31 +223,6 @@ val remapFabricJar by tasks.getting(RemapJarTaskImpl::class) {
 
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
-}
-
-val generatePyDoc by tasks.registering(Javadoc::class) {
-    group = "documentation"
-    description = "Generates the python documentation for the project"
-    dependsOn(":doclet:jar")
-
-    source = sourceSets.main.get().allJava + core.allJava
-    setDestinationDir(File(rootProject.layout.buildDirectory.get().asFile, "docs/python/JsMacrosAC/"))
-    options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
-    options.docletpath(project(":doclet").tasks.jar.get().archiveFile.get().asFile)
-    (options as CoreJavadocOptions).addStringOption("v", mod_version)
-
-    doFirst {
-        classpath = sourceSets.main.get().compileClasspath + core.compileClasspath
-    }
-}
-
-val copyPyDoc by tasks.registering(Copy::class) {
-    group = "documentation"
-    dependsOn(generatePyDoc)
-
-    description = "Copies the python documentation to the build folder"
-    from(File(rootProject.rootDir, "docs/python"))
-    into(File(rootProject.layout.buildDirectory.get().asFile, "docs/python"))
 }
 
 val generateTSDoc by tasks.registering(Javadoc::class) {
@@ -314,11 +285,10 @@ val copyWebDoc by tasks.registering(Copy::class) {
 val createDist by tasks.registering(Copy::class) {
     group = "build"
     description = "Creates all files for the distribution of the project"
-    dependsOn(copyPyDoc, copyTSDoc, copyWebDoc)
+    dependsOn(copyTSDoc, copyWebDoc)
 
     from(File(rootProject.layout.buildDirectory.get().asFile, "docs"))
     from(File(rootProject.layout.buildDirectory.get().asFile, "libs"))
-    from(project(":extension:graal:python").tasks.jar.get().outputs)
     into(File(rootProject.rootDir, "dist"))
 }
 

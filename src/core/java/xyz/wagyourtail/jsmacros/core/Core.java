@@ -101,9 +101,12 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> implements
         } else {
             file = this.config.macroFolder.toPath().resolve(macro.scriptFile).toFile();
         }
-        LanguageExtension l = extensions.getExtensionForFile(file);
+        String requestedBackend = macro.backend != null && !macro.backend.isBlank()
+                ? macro.backend
+                : config.getOptions(CoreConfigV2.class).defaultBackend;
+        LanguageExtension l = selectLanguageExtension(file, requestedBackend);
         if (l == null) {
-            l = extensions.getHighestPriorityExtension();
+            throw new IllegalStateException("No JS backend is available for " + file);
         }
         return l.getLanguage(this).trigger(macro, event, then, catcher);
     }
@@ -119,9 +122,25 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> implements
      * @since 1.7.0
      */
     public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
-        LanguageExtension l = extensions.getExtensionForFile(fakeFile != null ? fakeFile : new File(lang.startsWith(".") ? lang : "." + lang));
-        assert l != null;
+        String requested = ("js".equals(lang) || "auto".equals(lang) || lang.startsWith(".")) ? null : lang;
+        File extFile = fakeFile != null ? fakeFile : new File(lang.startsWith(".") ? lang : "." + lang);
+        LanguageExtension l = selectLanguageExtension(extFile, requested);
+        if (l == null) {
+            throw new IllegalStateException("No JS backend is available for language " + lang);
+        }
         return l.getLanguage(this).trigger(lang, script, fakeFile, event, then, catcher);
+    }
+
+    private LanguageExtension selectLanguageExtension(File file, String requestedBackend) {
+        if (requestedBackend != null && !requestedBackend.isBlank() && !"auto".equals(requestedBackend)) {
+            LanguageExtension byName = extensions.getLanguageExtensionForName(requestedBackend);
+            if (byName != null) {
+                return byName;
+            }
+            System.err.println("Requested backend '" + requestedBackend + "' is not available, falling back to auto");
+        }
+        LanguageExtension byFile = extensions.getExtensionForFile(file);
+        return byFile != null ? byFile : extensions.getHighestPriorityExtension();
     }
 
     /**

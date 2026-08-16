@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.fabric.client.extensions;
 
+import dev.jsbackend.api.JsBackend;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import xyz.wagyourtail.jsmacros.api.BaseLibrary;
@@ -34,6 +35,17 @@ public class FabricExtensionLoader {
                 System.out.println("Loaded JsMacros extension: " + name + " (from mod " + container.getProvider().getMetadata().getId() + ")");
             } catch (Throwable e) {
                 System.err.println("Failed to load JsMacros extension: " + name);
+                e.printStackTrace();
+            }
+        }
+
+        for (EntrypointContainer<JsBackend> container : FabricLoader.getInstance().getEntrypointContainers("jsbackend", JsBackend.class)) {
+            try {
+                JsBackend backend = container.getEntrypoint();
+                JsMacrosClient.clientCore.extensions.registerJsBackend(backend);
+                System.out.println("Registered shared JS backend: " + backend.id() + " (from mod " + container.getProvider().getMetadata().getId() + ")");
+            } catch (Throwable e) {
+                System.err.println("Failed to register shared JS backend from " + container.getProvider().getMetadata().getId());
                 e.printStackTrace();
             }
         }

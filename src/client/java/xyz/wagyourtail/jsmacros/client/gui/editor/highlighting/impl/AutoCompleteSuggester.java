@@ -20,10 +20,6 @@ public class AutoCompleteSuggester {
 
     public AutoCompleteSuggester(String language) {
         switch (language) {
-            case "python":
-                this.language = ".py";
-                this.method_separator = ".";
-                break;
             case "lua":
                 this.language = ".lua";
                 this.method_separator = ":";

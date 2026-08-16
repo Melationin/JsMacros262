@@ -9,7 +9,6 @@ import io.noties.prism4j.languages.Prism_javascript;
 import io.noties.prism4j.languages.Prism_json;
 import io.noties.prism4j.languages.Prism_kotlin;
 import io.noties.prism4j.languages.Prism_lua;
-import io.noties.prism4j.languages.Prism_python;
 import io.noties.prism4j.languages.Prism_regex;
 import io.noties.prism4j.languages.Prism_ruby;
 import io.noties.prism4j.languages.Prism_typescript;
@@ -39,8 +38,6 @@ public class Prism implements GrammarLocator {
                 return Prism_javascript.create(prism4j);
             case "lua":
                 return Prism_lua.create(prism4j);
-            case "python":
-                return Prism_python.create(prism4j);
             case "clike":
                 return Prism_clike.create(prism4j);
             case "regex":
@@ -66,7 +63,6 @@ public class Prism implements GrammarLocator {
         return Sets.newHashSet(
                 "javascript",
                 "lua",
-                "python",
                 "clike",
                 "regex",
                 "json",

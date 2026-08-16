@@ -83,10 +83,6 @@ public class ClientConfigV2 {
             editorTheme.put("punctuation", new short[]{0xD8, 0xD8, 0xD8});
             editorTheme.put("interpolation-punctuation", new short[]{0xCC, 0x78, 0x32});
 
-            //py
-            editorTheme.put("builtin", new short[]{0x21, 0xB4, 0x3E});
-            editorTheme.put("format-spec", new short[]{0xCC, 0x78, 0x32});
-
             //regex
             editorTheme.put("regex", new short[]{0x12, 0xD4, 0x89});
             editorTheme.put("charset-negation", new short[]{0xCC, 0x78, 0x32});

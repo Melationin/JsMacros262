@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+import dev.jsbackend.api.JsBackend;
+import dev.jsbackend.api.JsBackendRegistry;
 import xyz.wagyourtail.jsmacros.api.LibraryExtension;
 
 import xyz.wagyourtail.jsmacros.api.Extension;
@@ -10,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.api.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.backend.JsBackendLanguageExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,6 +119,33 @@ public class ExtensionLoader {
         return extensions.stream().filter(e -> e.getExtensionName().equals(extName)).findFirst().orElse(null);
     }
 
+    public @Nullable LanguageExtension getLanguageExtensionForName(String extName) {
+        if (notLoaded()) {
+            loadExtensions();
+        }
+        return languageExtensions.stream()
+                .filter(e -> e.getExtensionName().equals(extName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public synchronized void registerJsBackend(JsBackend backend) {
+        if (extensions.stream().anyMatch(e -> e.getExtensionName().equals(backend.id()))) {
+            return;
+        }
+        JsBackendLanguageExtension adapter = new JsBackendLanguageExtension(backend);
+        extensions.add(adapter);
+        languageExtensions.add(adapter);
+        libraryExtensions.add(adapter);
+        if (loadingDone) {
+            adapter.init(core);
+            for (Class<? extends BaseLibrary> lib : adapter.getLibraries()) {
+                core.libraryRegistry.addLibrary(lib);
+            }
+        }
+        System.out.println("Registered JS backend: " + backend.id());
+    }
+
     public synchronized void loadExtensions() {
         if (classLoader != null) {
             System.err.println("Extensions already loaded");
@@ -220,6 +250,20 @@ public class ExtensionLoader {
             } catch (Exception e) {
                 throw new RuntimeException("Failed to load extension: " + extension.getExtensionName(), e);
             }
+        }
+        for (JsBackend backend : JsBackendRegistry.load(classLoader)) {
+            if (extensions.stream().anyMatch(e -> e.getExtensionName().equals(backend.id()))) {
+                continue;
+            }
+            JsBackendLanguageExtension adapter = new JsBackendLanguageExtension(backend);
+            adapter.init(core);
+            extensions.add(adapter);
+            languageExtensions.add(adapter);
+            libraryExtensions.add(adapter);
+            for (Class<? extends BaseLibrary> lib : adapter.getLibraries()) {
+                core.libraryRegistry.addLibrary(lib);
+            }
+            System.out.println("Registered JS backend: " + backend.id());
         }
         loadingDone = true;
     }
