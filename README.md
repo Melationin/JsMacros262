@@ -2,7 +2,7 @@
 
 基于 [JsMacros](https://github.com/wagyourtail/JsMacros) 的 **Minecraft 26.2 (Fabric)** 移植分支（即 **JsMacrosPlus**），并在其上扩展了**客户端命令脚本**与**独立 API 扩展（Addon）**体系。
 
-通过脚本与游戏深度交互：聊天、世界、实体、渲染、事件……脚本语言支持 **JavaScript / TypeScript / Python**。
+通过脚本与游戏深度交互：聊天、世界、实体、渲染、事件……脚本语言支持 **JavaScript / TypeScript**。
 
 ---
 
@@ -27,9 +27,8 @@
 ### 脚本系统
 | 语言 | 引擎 | 说明 |
 |---|---|---|
-| JavaScript | GraalJS (GraalVM) | 默认语言，完整支持 |
+| JavaScript | GraalJS（由 `js-backend-graaljs` Lib Mod 提供） | 默认语言，完整支持 |
 | TypeScript | GraalJS 回退 | 无独立 TS 引擎时按 JS 执行（类型语法报错，JS 语法可用） |
-| Python | GraalPython | 纯 Python + Java 桥接可用（C 扩展需 LLVM，未内置完整支持） |
 
 ### 核心能力
 - **事件系统**：按键、聊天、世界、实体、容器、渲染等 70+ 内置事件 + 自定义事件
@@ -58,8 +57,9 @@
 ## 安装
 
 1. 下载 `jsmacrosplus-26.2-2.0.0-fabric.jar`
-2. 放入游戏 `mods/` 文件夹
-3. 启动游戏（需要 Java 25/26 运行时）
+2. 下载 `js-backend-graaljs-0.1.0.jar`（共享 JS 后端）
+3. 两者都放入游戏 `mods/` 文件夹
+4. 启动游戏（需要 Java 25/26 运行时）
 
 可选依赖（建议安装以获得最佳体验）：
 - [ModMenu](https://modrinth.com/mod/modmenu)（`20.0.1`）
@@ -313,7 +313,7 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew fabricJar
 # 发布 jsmacrosplus-api 到本地 maven（Addon 开发用）
 JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew :jsm-api:publishToMavenLocal
 
-# 发布 doclet（TS/Python/Web 文档生成器）到本地 maven（Addon 的 genTSDoc 用）
+# 发布 doclet（TS/Web 文档生成器）到本地 maven（Addon 的 genTSDoc 用）
 JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew :doclet:publishToMavenLocal
 
 # 开发运行（Zulu 26 JVM，自动加载 mods 文件夹与依赖）
@@ -333,7 +333,7 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 | `build/libs/jsmacrosplus-26.2-2.0.0-fabric.jar` | 发布 jar（remap 后，放 mods 使用） |
 | `build/libs/jsmacrosplus-26.2-2.0.0-fabric-dev.jar` | 开发 jar |
 | `jsm-api/build/libs/jsmacrosplus-api-2.0.0.jar` | API 构件 |
-| `doclet/build/libs/jsmacrosplus-doclet-2.0.0.jar` | TS/Python/Web 文档生成 doclet |
+| `doclet/build/libs/jsmacrosplus-doclet-2.0.0.jar` | TS/Web 文档生成 doclet |
 | `addon-template/build/libs/jsmacrosplus-addon-template-1.0.0.jar` | 模板 Addon |
 | `addon-template/build/typescript/headers/*.d.ts` | 模板 Addon 的 TS API 声明（`genTSDoc` 产出） |
 
@@ -354,8 +354,8 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 │   ├── client/               # 客户端（GUI/渲染/事件/脚本 API）
 │   ├── fabric/               # Fabric 适配（命令注册、addon 发现）
 │   └── main/                 # 共享（FJavaUtils 等内置库）
-├── extension/graal/          # Graal 语言扩展（js / python 子工程）
-├── doclet/                   # TS/Python/Web 文档生成 doclet（Addon 的 genTSDoc 复用）
+├── src/core/.../backend/     # 共享 JS 后端适配层（JsBackend -> LanguageExtension）
+├── doclet/                   # TS/Web 文档生成 doclet（Addon 的 genTSDoc 复用）
 ├── addon-template/           # ★ Addon 开发模板（NBT IO + mixin 事件示例）
 └── build.gradle.kts          # 构建脚本
 ```
@@ -385,7 +385,6 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 
 ### 已知说明
 - **3D 渲染**（Draw3D）基于 26.2 的 FrameGraph + Gizmos 管线；与 Sodium 共存已验证启动/渲染无异常，实际效果建议实测
-- **Python** 的 C 扩展（numpy 等）需要 LLVM 引擎，当前未完整内置；纯 Python 脚本可用
 
 ---
 
@@ -403,7 +402,7 @@ JsMacros.on("X", JavaWrapper.methodToJava((e) => { ... }));
 - 确认事件名与内置/addon 事件一致（事件列表在 `K → 事件 → +` 中查看）
 
 ### 3. 游戏启动报 `NoClassDefFoundError: org/graalvm/polyglot/Engine`
-发布 jar 中 graal 依赖位于嵌套 jar（`META-INF/jsmacrosdeps/`），首次运行会自动解压到 `config/jsMacros/Extensions/tmp/`。若报错，删除 `config/jsMacros/Extensions/` 后重试。
+JS 后端由独立 Lib Mod `js-backend-graaljs` 提供。请确认 `mods/` 中同时安装了 JsMacrosPlus 和 `js-backend-graaljs-*.jar`。
 
 ### 4. 日志里的 `401 /player/certificates` 是什么？
 开发环境（runClient）离线账号的正常噪音，不影响单机功能。
