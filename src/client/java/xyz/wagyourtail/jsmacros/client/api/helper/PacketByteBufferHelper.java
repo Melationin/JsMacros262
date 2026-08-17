@@ -1761,6 +1761,25 @@ public class PacketByteBufferHelper extends BaseHelper<FriendlyByteBuf> {
         PACKETS.put("ScoreboardScoreResetS2CPacket", net.minecraft.network.protocol.game.ClientboundResetScorePacket.class);
 
         PACKETS.forEach((name, clazz) -> PACKET_NAMES.put(clazz, name));
+
+        // Build buffer -> packet decoders from each packet class's public static
+        // StreamCodec field. Without this, sendPacket(name)/toPacket(name) fail
+        // with NullPointerException from BUFFER_TO_PACKET.get(clazz).
+        PACKETS.values().stream().distinct().forEach(clazz -> {
+            try {
+                Field f = Arrays.stream(clazz.getFields())
+                        .filter(e -> e.getType().isAssignableFrom(StreamCodec.class))
+                        .findFirst()
+                        .orElse(null);
+                if (f != null) {
+                    StreamCodec<FriendlyByteBuf, Packet<?>> codec =
+                            (StreamCodec<FriendlyByteBuf, Packet<?>>) f.get(null);
+                    BUFFER_TO_PACKET.put(clazz, buf -> codec.decode(buf));
+                }
+            } catch (IllegalAccessException e) {
+                System.err.println("Failed to register packet decoder for " + clazz.getName() + ": " + e);
+            }
+        });
     }
 
     public static void main(String[] args) throws IOException {
