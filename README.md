@@ -1,6 +1,6 @@
-# JsMacrosPlus 26.2
+# JsMacrosPlus 26.1.2
 
-基于 [JsMacros](https://github.com/wagyourtail/JsMacros) 的 **Minecraft 26.2 (Fabric)** 移植分支（即 **JsMacrosPlus**），并在其上扩展了**客户端命令脚本**与**独立 API 扩展（Addon）**体系。
+基于 [JsMacros](https://github.com/wagyourtail/JsMacros) 的 **Minecraft 26.1.2 (Fabric)** 移植分支（即 **JsMacrosPlus**），并在其上扩展了**客户端命令脚本**与**独立 API 扩展（Addon）**体系。
 
 通过脚本与游戏深度交互：聊天、世界、实体、渲染、事件……脚本语言支持 **JavaScript / TypeScript**。
 
@@ -34,7 +34,7 @@
 - **事件系统**：按键、聊天、世界、实体、容器、渲染等 70+ 内置事件 + 自定义事件
 - **宏管理 GUI**（按 `K` 打开）：按键宏 / 事件宏 / 服务 / **命令脚本** / 设置
 - **脚本编辑器**：内置编辑器、自动补全、语法高亮、外部编辑器支持
-- **渲染**：2D HUD 覆盖层、3D 世界渲染（Gizmos / FrameGraph，26.2 渲染管线）
+- **渲染**：2D HUD 覆盖层、3D 世界渲染（Gizmos / FrameGraph，26.1.2 渲染管线）
 - **客户端命令**：脚本可注册/注销自定义客户端命令（`CommandBuilder`）
 - **命令脚本**（本分支新增）：`/js <command> [args...]` 一键触发绑定脚本
 - **扩展系统**（本分支新增）：独立 Addon jar 提供库类 / 事件 / helper / 配置，**只依赖 jsmacrosplus-api 编译**
@@ -45,7 +45,7 @@
 
 | 项目 | 要求 |
 |---|---|
-| Minecraft | 26.2（Fabric） |
+| Minecraft | 26.1.2（Fabric） |
 | Fabric Loader | ≥ 0.15.0（推荐 0.19.3） |
 | Java | **JDK 25 / 26**（普通 JDK 即可，如 Zulu 26；游戏与 Graal 脚本均已在 Zulu 26 验证） |
 | 内存 | 建议 ≥ 4GB（含 Graal 引擎） |
@@ -56,14 +56,14 @@
 
 ## 安装
 
-1. 下载 `jsmacrosplus-26.2-2.0.0-fabric.jar`
+1. 下载 `jsmacrosplus-26.1.2-2.0.1-fabric.jar`
 2. 下载 `js-backend-graaljs-0.1.0.jar`（共享 JS 后端）
 3. 两者都放入游戏 `mods/` 文件夹
 4. 启动游戏（需要 Java 25/26 运行时）
 
 可选依赖（建议安装以获得最佳体验）：
-- [ModMenu](https://modrinth.com/mod/modmenu)（`20.0.1`）
-- [Sodium](https://modrinth.com/mod/sodium)（`mc26.2-0.9.1`，已做兼容处理）
+- [ModMenu](https://modrinth.com/mod/modmenu)（`18.0.0-alpha.8`）
+- [Sodium](https://modrinth.com/mod/sodium)（`mc26.1.2-0.9.0-beta.1`，已做兼容处理）
 
 **Addon 扩展**（可选）：把第三方 `*-addon-*.jar` 放入 `mods/` 文件夹，随游戏加载（见[扩展系统](#扩展系统addon)）。
 
@@ -201,7 +201,7 @@ cd JsMacros2622
 ./gradlew :jsm-api:publishToMavenLocal
 ```
 
-**2. 创建 Addon 工程**（模板：`addon-template/`，依赖 `xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0`）：
+**2. 创建 Addon 工程**（模板：`addon-template/`，依赖 `xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1`）：
 
 ```jsonc
 // fabric.mod.json
@@ -209,7 +209,7 @@ cd JsMacros2622
   "id": "my-addon",
   "environment": "client",
   "entrypoints": { "jsmacrosplus": ["com.example.MyAddon"] },
-  "depends": { "jsmacrosplus": ">=2.0.0", "minecraft": "26.2" }
+  "depends": { "jsmacrosplus": ">=2.0.0", "minecraft": "26.1.2" }
 }
 ```
 
@@ -270,7 +270,7 @@ JsMacros.on("MyEvent", JavaWrapper.methodToJava((e) => {
 
 ### jsmacrosplus-api 构件
 
-- 坐标：`xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0`
+- 坐标：`xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1`
 - 内容：`Extension` / `LibraryExtension` / `Core`（接口）/ `Config` / `BaseLibrary`+`@Library` / `BaseEvent`+`@Event` / `EventFilterer` / `BaseHelper`
 - 零依赖（纯 JDK），无 MC/fabric 引用 → **无类名映射问题**，Addon 用 loom/unimined 构建 + remap 后与其他 mod 互操作安全
 
@@ -330,10 +330,10 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 
 | 文件 | 说明 |
 |---|---|
-| `build/libs/jsmacrosplus-26.2-2.0.0-fabric.jar` | 发布 jar（remap 后，放 mods 使用） |
-| `build/libs/jsmacrosplus-26.2-2.0.0-fabric-dev.jar` | 开发 jar |
-| `jsm-api/build/libs/jsmacrosplus-api-2.0.0.jar` | API 构件 |
-| `doclet/build/libs/jsmacrosplus-doclet-2.0.0.jar` | TS/Web 文档生成 doclet |
+| `build/libs/jsmacrosplus-26.1.2-2.0.1-fabric.jar` | 发布 jar（remap 后，放 mods 使用） |
+| `build/libs/jsmacrosplus-26.1.2-2.0.1-fabric-dev.jar` | 开发 jar |
+| `jsm-api/build/libs/jsmacrosplus-api-2.0.1.jar` | API 构件 |
+| `doclet/build/libs/jsmacrosplus-doclet-2.0.1.jar` | TS/Web 文档生成 doclet |
 | `addon-template/build/libs/jsmacrosplus-addon-template-1.0.0.jar` | 模板 Addon |
 | `addon-template/build/typescript/headers/*.d.ts` | 模板 Addon 的 TS API 声明（`genTSDoc` 产出） |
 
@@ -384,7 +384,7 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 | 其他 mod | 常规 fabric mod，无冲突；Addon 可安全引用其他 mod 类（loom/unimined remap） |
 
 ### 已知说明
-- **3D 渲染**（Draw3D）基于 26.2 的 FrameGraph + Gizmos 管线；与 Sodium 共存已验证启动/渲染无异常，实际效果建议实测
+- **3D 渲染**（Draw3D）基于 26.1.2 的 FrameGraph + Gizmos 管线；与 Sodium 共存已验证启动/渲染无异常，实际效果建议实测
 
 ---
 

@@ -81,7 +81,7 @@ public class FHud extends CoreBaseLibrary {
      */
     @Nullable
     public IScreen getOpenScreen() {
-        return (IScreen) mc.gui.screen();
+        return (IScreen) mc.screen;
     }
 
     /**
@@ -157,7 +157,7 @@ public class FHud extends CoreBaseLibrary {
     )
     @Nullable
     public String getOpenScreenName() {
-        return JsMacrosClient.getScreenName(mc.gui.screen());
+        return JsMacrosClient.getScreenName(mc.screen);
     }
 
     /**
@@ -165,7 +165,7 @@ public class FHud extends CoreBaseLibrary {
      * @since 1.1.2
      */
     public boolean isContainer() {
-        return mc.gui.screen() instanceof AbstractContainerScreen;
+        return mc.screen instanceof AbstractContainerScreen;
     }
 
     /**

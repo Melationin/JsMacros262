@@ -1423,21 +1423,18 @@ public class OptionsHelper extends BaseHelper<Options> {
         /**
          * @return {@code true} if touchscreen mode is enabled, {@code false} otherwise.
          * @since 1.8.4
-         * @deprecated MC 26.2 removed the touchscreen mode option.
          */
-        @Deprecated
         public boolean isTouchscreenEnabled() {
-            return false;
+            return base.touchscreen().get();
         }
 
         /**
          * @param val whether to enable touchscreen mode or not
          * @return self for chaining.
          * @since 1.8.4
-         * @deprecated MC 26.2 removed the touchscreen mode option.
          */
-        @Deprecated
         public ControlOptionsHelper enableTouchscreen(boolean val) {
+            base.touchscreen().set(val);
             return this;
         }
 

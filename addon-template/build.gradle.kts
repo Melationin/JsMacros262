@@ -24,7 +24,7 @@ repositories {
 }
 
 unimined.minecraft {
-    version("26.2")
+    version("26.1.2")
     side("joined")
 
     mappings {

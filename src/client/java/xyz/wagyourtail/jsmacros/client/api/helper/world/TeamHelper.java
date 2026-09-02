@@ -93,7 +93,8 @@ public class TeamHelper extends BaseHelper<PlayerTeam> {
      * @return the team's color, or {@link ChatFormatting#RESET} if it has no color.
      */
     private ChatFormatting getColorFormatting() {
-        return base.getColor().map(c -> ChatFormatting.values()[c.ordinal()]).orElse(ChatFormatting.RESET);
+        ChatFormatting color = base.getColor();
+        return color == null ? ChatFormatting.RESET : color;
     }
 
     /**

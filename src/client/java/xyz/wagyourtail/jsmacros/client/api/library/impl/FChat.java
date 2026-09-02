@@ -147,13 +147,13 @@ public class FChat extends CoreBaseLibrary {
     private static void logInternal(String message) {
         if (message != null) {
             Component text = Component.literal(message);
-            ((IChatHud) mc.gui.hud.getChat()).jsmacros_addMessageBypass(text);
+            ((IChatHud) mc.gui.getChat()).jsmacros_addMessageBypass(text);
         }
     }
 
     private static void logInternal(TextHelper text) {
         Minecraft mc = Minecraft.getInstance();
-        ((IChatHud) mc.gui.hud.getChat()).jsmacros_addMessageBypass(text.getRaw());
+        ((IChatHud) mc.gui.getChat()).jsmacros_addMessageBypass(text.getRaw());
     }
 
     /**
@@ -288,16 +288,16 @@ public class FChat extends CoreBaseLibrary {
             subtitlee = Component.literal(subtitle.toString());
         }
         if (title != null) {
-            mc.gui.hud.setTitle(titlee);
+            mc.gui.setTitle(titlee);
         }
         if (subtitle != null) {
-            mc.gui.hud.setSubtitle(subtitlee);
+            mc.gui.setSubtitle(subtitlee);
         }
         if (title == null && subtitle == null) {
-            mc.gui.hud.setTitle(null);
-            mc.gui.hud.setSubtitle(null);
+            mc.gui.setTitle(null);
+            mc.gui.setSubtitle(null);
         }
-        mc.gui.hud.setTimes(fadeIn, remain, fadeOut);
+        mc.gui.setTimes(fadeIn, remain, fadeOut);
     }
 
     /**
@@ -323,7 +323,7 @@ public class FChat extends CoreBaseLibrary {
         } else if (text != null) {
             textt = Component.literal(text.toString());
         }
-        mc.gui.hud.setOverlayMessage(textt, tinted);
+        mc.gui.setOverlayMessage(textt, tinted);
     }
 
     /**
@@ -334,7 +334,7 @@ public class FChat extends CoreBaseLibrary {
      * @since 1.2.5
      */
     public void toast(Object title, Object desc) {
-        ToastManager t = mc.gui.toastManager();
+        ToastManager t = mc.getToastManager();
         if (t != null) {
             Component titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? Component.literal(title.toString()) : null;
             Component descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Component.literal(desc.toString()) : null;
@@ -455,7 +455,7 @@ public class FChat extends CoreBaseLibrary {
      * @since 1.7.0
      */
     public ChatHistoryManager getHistory() {
-        return new ChatHistoryManager(mc.gui.hud.getChat());
+        return new ChatHistoryManager(mc.gui.getChat());
     }
 
     /**

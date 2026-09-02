@@ -52,28 +52,28 @@ public class MacroScreen extends BaseScreen {
         macros.clear();
         keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.keys"), btn -> {
             assert minecraft != null;
-            if (minecraft.gui.screen().getClass() != KeyMacrosScreen.class) {
+            if (minecraft.screen.getClass() != KeyMacrosScreen.class) {
                 minecraft.setScreenAndShow(new KeyMacrosScreen(this));
             }
         }));
 
         eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.events"), btn -> {
             assert minecraft != null;
-            if (minecraft.gui.screen().getClass() != EventMacrosScreen.class) {
+            if (minecraft.screen.getClass() != EventMacrosScreen.class) {
                 minecraft.setScreenAndShow(new EventMacrosScreen(this));
             }
         }));
 
         serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.services"), btn -> {
             assert minecraft != null;
-            if (minecraft.gui.screen().getClass() != ServiceScreen.class) {
+            if (minecraft.screen.getClass() != ServiceScreen.class) {
                 minecraft.setScreenAndShow(new ServiceScreen(this));
             }
         }));
 
         commandScreen = this.addDrawableChild(new Button(3 * this.width / 6 + 3, 0, this.width / 6 - 1, 20, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.commands"), btn -> {
             assert minecraft != null;
-            if (minecraft.gui.screen().getClass() != CommandScriptsScreen.class) {
+            if (minecraft.screen.getClass() != CommandScriptsScreen.class) {
                 minecraft.setScreenAndShow(new CommandScriptsScreen(this));
             }
         }));

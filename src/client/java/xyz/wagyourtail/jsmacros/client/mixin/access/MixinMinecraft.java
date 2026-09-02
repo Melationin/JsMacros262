@@ -40,6 +40,12 @@ class MixinMinecraft {
     protected int missTime;
 
     @Shadow
+    public Screen screen;
+
+    @Shadow
+    private Overlay overlay;
+
+    @Shadow
     private volatile boolean pause;
 
     @Shadow
@@ -63,6 +69,16 @@ class MixinMinecraft {
                 } catch (Throwable ignored) {
                 }
             }
+        }
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;removed()V"), method = "setScreen")
+    public void onCloseScreen(Screen screen, CallbackInfo ci) {
+        Consumer<IScreen> onClose = ((IScreen) this.screen).getOnClose();
+        try {
+            if (onClose != null) onClose.accept((IScreen) screen);
+        } catch (Throwable e) {
+            JsMacrosClient.clientCore.profile.logError(e);
         }
     }
 
@@ -102,8 +118,7 @@ class MixinMinecraft {
 
     @Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", args = "ldc=gameRenderer"), method = "tick")
     private void ensureOverrideInteractions(CallbackInfo ci) {
-        Minecraft mc = Minecraft.getInstance();
-        if (!(mc.gui.overlay() == null && mc.gui.screen() == null) && !pause) {
+        if (!(overlay == null && screen == null) && !pause) {
             if (InteractionProxy.Break.isBreaking()) {
                 continueAttack(true);
                 if (missTime > 0) --missTime;

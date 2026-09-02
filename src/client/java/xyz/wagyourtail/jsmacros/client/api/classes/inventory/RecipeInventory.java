@@ -156,7 +156,7 @@ public abstract class RecipeInventory<T extends AbstractRecipeBookScreen<? exten
      * @since 1.8.4
      */
     public void toggleRecipeBook() {
-        if (mc.gui.screen() != inventory) {
+        if (mc.screen != inventory) {
             return;
         }
         RecipeBookComponent<?> recipeBookWidget = getRecipeBookWidget();
@@ -172,7 +172,7 @@ public abstract class RecipeInventory<T extends AbstractRecipeBookScreen<? exten
      * @since 1.8.4
      */
     public void setRecipeBook(boolean open) {
-        if (mc.gui.screen() != inventory) {
+        if (mc.screen != inventory) {
             return;
         }
         RecipeBookComponent<?> recipeBookWidget = getRecipeBookWidget();

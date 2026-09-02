@@ -7,10 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 /**
- * Helpers for the {@link ChatFormatting} enum. MC 26.2 removed most of the old
- * accessor methods ({@code getColor}/{@code getId}/{@code getName}/{@code getChar}/{@code isColor}/
- * {@code isFormat}/{@code getByName}/{@code getById}), so we reimplement them here.
- * The enum constant order is unchanged from before, so ordinal-based lookups stay valid.
+ * Helpers for the {@link ChatFormatting} enum that provide stable access to
+ * formatting attributes ({@code getColor}/{@code getId}/{@code getName}/{@code getChar}/{@code isColor}/
+ * {@code isFormat}/{@code getByName}/{@code getById}).
+ * The enum constant order is unchanged, so ordinal-based lookups stay valid.
  */
 public class FormattingUtil {
 

@@ -31,7 +31,6 @@
     "access.MixinFontManager",
     "access.MixinFox",
     "access.MixinGui",
-    "access.MixinHud",
     "access.MixinHorse",
     "access.MixinInteraction",
     "access.MixinInteraction2",

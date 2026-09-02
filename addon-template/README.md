@@ -28,7 +28,7 @@ The addon only depends on `jsmacrosplus-api` at compile time.
    ```
 
 3. Copy `build/libs/jsmacrosplus-addon-template-1.0.0.jar` into your game's `mods/`
-   folder, alongside the JsMacrosPlus mod (any 26.2 build).
+   folder, alongside the JsMacrosPlus mod (any 26.1.2 build).
 
 ## Usage in scripts
 

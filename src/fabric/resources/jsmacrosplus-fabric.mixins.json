@@ -6,6 +6,7 @@
     "access.MixinDebugScreenOverlay",
     "access.MixinKeyboardHandler",
     "access.MixinMouseHandler",
+    "access.MixinGameRenderer",
     "fix.MixinSodiumVideoSettingsScreen"
   ],
   "injectors": {

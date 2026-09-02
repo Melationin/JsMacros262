@@ -956,7 +956,7 @@ public class FWorld extends CoreBaseLibrary {
      */
     @Nullable
     public TextHelper getTabListHeader() {
-        return TextHelper.wrap(((IPlayerListHud) mc.gui.hud.getTabList()).jsmacros_getHeader());
+        return TextHelper.wrap(((IPlayerListHud) mc.gui.getTabList()).jsmacros_getHeader());
     }
 
     /**
@@ -965,7 +965,7 @@ public class FWorld extends CoreBaseLibrary {
      */
     @Nullable
     public TextHelper getTabListFooter() {
-        return TextHelper.wrap(((IPlayerListHud) mc.gui.hud.getTabList()).jsmacros_getFooter());
+        return TextHelper.wrap(((IPlayerListHud) mc.gui.getTabList()).jsmacros_getFooter());
     }
 
     /**

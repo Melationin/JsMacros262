@@ -204,7 +204,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
         if (t == null) {
             return null;
         }
-        return t.getColor().map(c -> ChatFormatting.values()[c.ordinal()]).orElse(null);
+        return t.getColor();
     }
 
     /**

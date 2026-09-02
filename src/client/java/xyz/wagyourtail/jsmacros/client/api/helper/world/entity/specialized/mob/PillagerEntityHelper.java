@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.mob;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.illager.Pillager;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.DyeColor;
 
 /**
  * @author Etheradon
@@ -21,7 +20,7 @@ public class PillagerEntityHelper extends IllagerEntityHelper<Pillager> {
      * @since 1.8.4
      */
     public boolean isCaptain() {
-        return base.getItemBySlot(EquipmentSlot.HEAD).is(Items.BANNER.pick(DyeColor.WHITE));
+        return base.getItemBySlot(EquipmentSlot.HEAD).is(Items.WHITE_BANNER);
     }
 
 }
