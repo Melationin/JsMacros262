@@ -29,6 +29,7 @@
 |---|---|---|
 | JavaScript | GraalJS（由 `js-backend-graaljs` Lib Mod 提供） | 默认语言，完整支持 |
 | TypeScript | GraalJS 回退 | 无独立 TS 引擎时按 JS 执行（类型语法报错，JS 语法可用） |
+| Kotlin | K2 编译器（`kotlin-compiler-embeddable`，由 Kotlin 扩展提供） | 编译后执行；顶层代码 + 库/`event` 注入；支持 `.kt`/`.kts` |
 
 ### 核心能力
 - **事件系统**：按键、聊天、世界、实体、容器、渲染等 70+ 内置事件 + 自定义事件
@@ -111,6 +112,21 @@ JsMacros.on("Key", JavaWrapper.methodToJava((e) => {
 // 在任意脚本里运行其他脚本
 FJsMacros.runScript("other.js");
 ```
+
+### Kotlin 脚本（.kt / .kts）
+
+1. 把 Kotlin 扩展 jar（`jsmacrosplus-...-kotlin-extension.jar`）放入 `config/jsMacros/Extensions/`
+2. 按键/事件/服务宏选择 `.kt`（或 `.kts`）文件即可，顶层代码直接执行（与 JS 语义一致）：
+
+```kotlin
+// hello.kt —— 按键触发时执行
+Chat.log("Hello, JsMacros!")
+```
+
+- 全局变量 `event`（按具体事件类型强转）、`context`、`file` 以及所有库（`Chat`/`World`/`Player`/`Hud`/`FJsMacros` 等）自动注入
+- 回调可直接用 Kotlin lambda（SAM 转换），`JsMacros.on(...)` 在 Kotlin 中无需 `JavaWrapper.methodToJava` 包装
+- 首次编译约 0.5–2s，命中编译缓存后重复触发零编译开销；编译错误会定位到脚本行
+- v1 暂不支持脚本内的 `import`/`package`（顶层语句 + 注入全局即可满足多数场景）
 
 ---
 

@@ -28,6 +28,10 @@ public class AutoCompleteSuggester {
                 this.language = ".rb";
                 this.method_separator = ".";
                 break;
+            case "kotlin":
+                this.language = ".kt";
+                this.method_separator = ".";
+                break;
             default:
                 this.language = ".js";
                 this.method_separator = ".";

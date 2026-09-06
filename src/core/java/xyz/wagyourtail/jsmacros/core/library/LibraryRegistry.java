@@ -45,22 +45,53 @@ public class LibraryRegistry {
 
         for (Map.Entry<Library, Class<? extends CoreBaseLibrary>> lib : perExec.entrySet()) {
             try {
-                // prefer a constructor taking the concrete context type (e.g. GraalScriptContext),
-                // fall back to the generic BaseScriptContext constructor
-                Constructor<? extends CoreBaseLibrary> ctor;
-                try {
-                    ctor = lib.getValue().getConstructor(context.getClass());
-                } catch (NoSuchMethodException e) {
-                    ctor = lib.getValue().getConstructor(BaseScriptContext.class);
+                // Pick the constructor whose context parameter type is compatible with the actual
+                // context, preferring the most specific match. A per-exec library that requires a
+                // backend-specific context the current context is not an instance of (e.g.
+                // JsBackendFWrapper typed to JsBackendScriptContext) does not apply to this execution
+                // and is skipped, so mixed-backend scripts (JS + Kotlin) coexist.
+                Constructor<? extends CoreBaseLibrary> ctor =
+                        findCompatibleConstructor(lib.getValue(), context.getClass());
+                if (ctor == null) {
+                    continue;
                 }
                 libs.put(lib.getKey().value(), ctor.newInstance(context));
-            } catch (IllegalAccessException | InstantiationException | NoSuchMethodException |
-                     InvocationTargetException e) {
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 throw new RuntimeException("Failed to instantiate library, ", e);
             }
         }
 
         return libs;
+    }
+
+    private static <L extends CoreBaseLibrary> Constructor<L> findCompatibleConstructor(Class<L> clazz,
+                                                                                       Class<?> contextType) {
+        Constructor<?> best = null;
+        int bestDepth = -1;
+        for (Constructor<?> ctor : clazz.getConstructors()) {
+            if (ctor.getParameterCount() != 1) {
+                continue;
+            }
+            Class<?> param = ctor.getParameterTypes()[0];
+            if (param.isAssignableFrom(contextType)) {
+                int depth = classDepth(param);
+                if (depth > bestDepth) {
+                    bestDepth = depth;
+                    best = ctor;
+                }
+            }
+        }
+        @SuppressWarnings("unchecked")
+        Constructor<L> typed = (Constructor<L>) best;
+        return typed;
+    }
+
+    private static int classDepth(Class<?> c) {
+        int depth = 0;
+        for (Class<?> k = c; k != null; k = k.getSuperclass()) {
+            depth++;
+        }
+        return depth;
     }
 
     public synchronized void addLibrary(Class<? extends BaseLibrary> clazz) {

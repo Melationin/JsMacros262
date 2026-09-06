@@ -46,12 +46,20 @@ subprojects {
     }
 
     dependencies {
-        implementation(rootProject.sourceSets.main.get().output)
+        compileOnly(rootProject.sourceSets.main.get().output)
         for (dependency in rootProject.configurations.implementation.get().dependencies) {
-            implementation(dependency)
+            compileOnly(dependency)
+            runtimeOnly(dependency)
         }
 
         testImplementation(testFixtures(project(":extension")))
+        testRuntimeOnly(rootProject.libs.junit.jupiter.engine)
+        testRuntimeOnly(rootProject.libs.junit.platform.launcher)
+        // The root project's Loom-resolved runtime classpath carries the game's
+        // transitive libraries (gson, fastutil, ...) which plain sub-projects do
+        // not inherit from `compileOnly`/`runtimeOnly(root deps)` copies; add the
+        // full set so Core boots on a plain test JVM.
+        testRuntimeOnly(rootProject.sourceSets.main.get().runtimeClasspath)
     }
 
     // run tests interpreted on plain-JDK-like JVMs: -XX:-EnableJVMCI makes

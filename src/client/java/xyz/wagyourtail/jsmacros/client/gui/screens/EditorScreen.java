@@ -127,6 +127,8 @@ public class EditorScreen extends BaseScreen {
                 return "json";
             case "rb":
                 return "ruby";
+            case "kt":
+                return "kotlin";
             case "kts":
                 return "kotlin";
             case "groovy":

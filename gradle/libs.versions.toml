@@ -10,6 +10,7 @@ prism4j = "2.0.0"
 joor = "0.9.15"
 nv_websocket = "2.14"
 junit = "5.8.1"
+junit_platform = "1.8.1"
 javassist = "3.30.2-GA"
 slf4j = "2.0.17"
 
@@ -19,9 +20,11 @@ sodium = "mc26.2-0.9.1-fabric"
 malilib = "0.29.4"
 
 shadow = "8.3.6"
+kotlin = "2.2.20"
 
 [libraries]
 prism4j = { module = "io.noties:prism4j", version.ref = "prism4j" }
+kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 
 asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 joor = { module = "org.jooq:joor", version.ref = "joor" }
@@ -33,6 +36,8 @@ sodium = { module = "maven.modrinth:sodium", version.ref = "sodium" }
 malilib = { module = "maven.modrinth:malilib", version.ref = "malilib" }
 
 junit_api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit_jupiter_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit_platform_launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit_platform" }
 slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 
 [plugins]

@@ -39,3 +39,4 @@ doc/
 
 docs/web/[0-9]*
 /addon-template/
+/.gradle-home/
