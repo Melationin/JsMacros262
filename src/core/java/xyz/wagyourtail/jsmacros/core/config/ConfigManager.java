@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConfigManager implements xyz.wagyourtail.jsmacros.api.Config {
-    protected final static Gson gson = new GsonBuilder()
+    public final static Gson gson = new GsonBuilder()
         .registerTypeAdapter(File.class, new TypeAdapter<File>() {
             @Override
             public void write(JsonWriter jsonWriter, File file) throws IOException {
@@ -59,6 +59,8 @@ public class ConfigManager implements xyz.wagyourtail.jsmacros.api.Config {
     public final Logger LOGGER;
     int loadedAsVers = 3;
     public JsonObject rawOptions = null;
+    private Runnable saveListener;
+    private Runnable loadListener;
 
     public ConfigManager(Core<?, ?> runner, File configFolder, File macroFolder, Logger logger) {
         this.runner = runner;
@@ -192,6 +194,14 @@ public class ConfigManager implements xyz.wagyourtail.jsmacros.api.Config {
             LOGGER.info("    " + key);
         }
 
+        if (loadListener != null) {
+            try {
+                loadListener.run();
+            } catch (RuntimeException e) {
+                LOGGER.error("External config listener failed while loading", e);
+            }
+        }
+
     }
 
     public void loadDefaults() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
@@ -204,6 +214,9 @@ public class ConfigManager implements xyz.wagyourtail.jsmacros.api.Config {
 
     public void saveConfig() {
         try {
+            if (saveListener != null) {
+                saveListener.run();
+            }
             for (Map.Entry<String, Class<?>> optionClass : optionClasses.entrySet()) {
                 rawOptions.add(optionClass.getKey(), gson.toJsonTree(options.get(optionClass.getValue())));
             }
@@ -214,6 +227,15 @@ public class ConfigManager implements xyz.wagyourtail.jsmacros.api.Config {
             LOGGER.error("Config Failed To Save.");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Installs a platform-specific persistence listener while retaining the
+     * legacy JSON persistence for extensions and rollback compatibility.
+     */
+    public synchronized void setPersistenceListeners(Runnable loadListener, Runnable saveListener) {
+        this.loadListener = loadListener;
+        this.saveListener = saveListener;
     }
 
 }

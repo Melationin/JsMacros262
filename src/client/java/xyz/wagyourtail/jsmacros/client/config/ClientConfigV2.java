@@ -90,7 +90,6 @@ public class ClientConfigV2 {
             editorTheme.put("escape", new short[]{0xFF, 0xE2, 0x00});
             editorTheme.put("charclass", new short[]{0xFF, 0xE2, 0x00});
             editorTheme.put("quantifier", new short[]{0x79, 0xAB, 0xFF});
-            JsMacrosClient.clientCore.config.saveConfig();
         }
         return editorTheme;
     }

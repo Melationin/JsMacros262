@@ -36,8 +36,10 @@ import xyz.wagyourtail.jsmacros.client.api.helper.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.ClientProfile;
 import xyz.wagyourtail.jsmacros.client.config.CommandScriptsConfig;
+import xyz.wagyourtail.jsmacros.client.config.JsMacrosMalilibConfigs;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
+import xyz.wagyourtail.jsmacros.client.hotkeys.MalilibKeybindManager;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -60,6 +62,13 @@ public class JsMacrosClient extends JsMacros {
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException | IOException e) {
             e.printStackTrace();
         }
+
+        JsMacrosMalilibConfigs.initialize();
+
+        // Register after the profile/config system exists. The profile itself
+        // is loaded during Core construction, so initialize() also imports the
+        // already-loaded key triggers into malilib.
+        MalilibKeybindManager.initialize();
 
         // Init MovementQueue
         MovementQueue.clear();

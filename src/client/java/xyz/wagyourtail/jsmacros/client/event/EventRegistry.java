@@ -1,20 +1,20 @@
 package xyz.wagyourtail.jsmacros.client.event;
 
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
-import xyz.wagyourtail.jsmacros.client.listeners.KeyListener;
+import xyz.wagyourtail.jsmacros.client.hotkeys.MalilibKeybindManager;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
-import xyz.wagyourtail.jsmacros.api.Event;
 import xyz.wagyourtail.jsmacros.core.event.EventListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class EventRegistry extends BaseEventRegistry {
+    private final Set<ScriptTrigger> keyTriggers = new LinkedHashSet<>();
 
     public EventRegistry(Core<?, ?> runner) {
         super(runner);
@@ -32,13 +32,22 @@ public class EventRegistry extends BaseEventRegistry {
             }
             addListener(rawmacro.event, new EventListener(rawmacro, runner));
         } else {
-            addListener(EventKey.class.getAnnotation(Event.class).value(), new KeyListener(rawmacro, runner));
+            // Runtime key state and dispatch are owned by malilib. Keep the
+            // profile trigger in this registry for persistence and compatibility
+            // with the legacy API, but do not add a second JSM KeyListener.
+            keyTriggers.add(rawmacro);
+            MalilibKeybindManager.add(rawmacro);
         }
     }
 
     @Override
     public synchronized boolean removeScriptTrigger(ScriptTrigger rawmacro) {
-        final String event = rawmacro.triggerType == ScriptTrigger.TriggerType.EVENT ? rawmacro.event : EventKey.class.getAnnotation(Event.class).value();
+        if (rawmacro.triggerType != ScriptTrigger.TriggerType.EVENT) {
+            boolean removed = keyTriggers.remove(rawmacro);
+            MalilibKeybindManager.remove(rawmacro);
+            return removed;
+        }
+        final String event = rawmacro.event;
         for (IEventListener macro : listeners.get(event)) {
             if (macro instanceof BaseListener && ((BaseListener) macro).getRawTrigger() == rawmacro) {
                 removeListener(event, macro);
@@ -51,6 +60,7 @@ public class EventRegistry extends BaseEventRegistry {
     @Override
     public synchronized List<ScriptTrigger> getScriptTriggers() {
         final List<ScriptTrigger> rawProf = new ArrayList<>();
+        rawProf.addAll(keyTriggers);
         for (Set<IEventListener> eventMacros : listeners.values()) {
             for (IEventListener macro : eventMacros) {
                 if (macro instanceof BaseListener) {
@@ -59,6 +69,17 @@ public class EventRegistry extends BaseEventRegistry {
             }
         }
         return rawProf;
+    }
+
+    @Override
+    public synchronized void clearMacros() {
+        super.clearMacros();
+        keyTriggers.clear();
+        MalilibKeybindManager.clear();
+    }
+
+    public synchronized List<ScriptTrigger> getKeyScriptTriggers() {
+        return new ArrayList<>(keyTriggers);
     }
 
 }

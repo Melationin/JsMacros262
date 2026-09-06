@@ -12,6 +12,8 @@ public class ScriptTrigger {
     public Path scriptFile;
     public boolean enabled;
     public boolean joined;
+    /** The malilib keybind context: ingame, gui or any. */
+    public String keyContext = "ingame";
     public String backend = "auto";
 
     public ScriptTrigger(TriggerType triggerType, String event, Path scriptFile, boolean enabled, boolean joined) {
@@ -38,6 +40,7 @@ public class ScriptTrigger {
 
     public static ScriptTrigger copy(ScriptTrigger m) {
         ScriptTrigger copy = new ScriptTrigger(m.triggerType, m.event, m.scriptFile, m.enabled, m.joined);
+        copy.keyContext = m.keyContext;
         copy.backend = m.backend;
         return copy;
     }

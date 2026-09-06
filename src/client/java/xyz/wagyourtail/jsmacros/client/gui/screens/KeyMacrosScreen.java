@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -8,15 +7,12 @@ import net.minecraft.client.input.MouseButtonEvent;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
+import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.event.BaseListener;
-import xyz.wagyourtail.jsmacros.api.Event;
-import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class KeyMacrosScreen extends MacroScreen {
 
@@ -29,16 +25,7 @@ public class KeyMacrosScreen extends MacroScreen {
         super.init();
         keyScreen.setColor(0x4FFFFFFF);
 
-        Set<IEventListener> listeners = JsMacrosClient.clientCore.eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
-        List<ScriptTrigger> macros = new ArrayList<>();
-
-        if (listeners != null) {
-            for (IEventListener event : ImmutableList.copyOf(listeners)) {
-                if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) {
-                    macros.add(((BaseListener) event).getRawTrigger());
-                }
-            }
-        }
+        List<ScriptTrigger> macros = new ArrayList<>(((EventRegistry) JsMacrosClient.clientCore.eventRegistry).getKeyScriptTriggers());
 
         macros.sort(JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).getSortComparator());
 

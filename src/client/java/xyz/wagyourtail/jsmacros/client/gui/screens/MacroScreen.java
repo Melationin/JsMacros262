@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.gui.GuiBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -172,6 +173,10 @@ public class MacroScreen extends BaseScreen implements IProfileReloadable {
     }
 
     public void editFile(File file) {
+        editFile(this, file);
+    }
+
+    public static void editFile(Screen parent, File file) {
         if (file != null && file.exists() && file.isFile()) {
             if (JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).externalEditor) {
                 String[] args = JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
@@ -207,8 +212,7 @@ public class MacroScreen extends BaseScreen implements IProfileReloadable {
                 System.out.println(System.getenv("PATH"));
                 System.out.printf("Failed to run cmd '%s'", JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).externalEditorCommand);
             }
-            assert minecraft != null;
-            minecraft.setScreenAndShow(new EditorScreen(this, file));
+            Minecraft.getInstance().setScreenAndShow(new EditorScreen(parent, file));
         }
     }
 
