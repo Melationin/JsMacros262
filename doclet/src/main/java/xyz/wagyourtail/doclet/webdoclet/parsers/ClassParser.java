@@ -461,8 +461,12 @@ public class ClassParser {
 
                         if (List.of(ElementKind.INTERFACE, ElementKind.CLASS, ElementKind.ANNOTATION_TYPE, ElementKind.ENUM).contains(ele.getKind())) {
                             link.append(getClassName((TypeElement) ele));
+                        } else if (ele.getEnclosingElement() instanceof TypeElement enclosingType) {
+                            link.append(getClassName(enclosingType), "#", ele.toString());
                         } else {
-                            link.append(getClassName((TypeElement) ele.getEnclosingElement()), "#", ele.toString());
+                            // Javadoc can resolve links to package/module elements as well as members.
+                            // Those elements do not have a TypeElement enclosing element.
+                            link.append(ele.toString());
                         }
 
                         if (url.getValue()) {

@@ -4,9 +4,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.CommandScriptsConfig;
+import xyz.wagyourtail.jsmacros.client.gui.MacroPathUtils;
 import xyz.wagyourtail.jsmacros.client.gui.containers.CommandScriptContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.CommandScriptsTopbar;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
@@ -69,12 +69,12 @@ public class CommandScriptsScreen extends MacroScreen {
         if (!file.equals(JsMacrosClient.clientCore.config.macroFolder)) {
             dir = file.getParentFile();
         }
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, dir, file, this, (selected) -> {
-            String stored = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(selected.toPath()).toString();
+        openFileBrowser(dir, file, (selected) -> {
+            String stored = MacroPathUtils.toStoredPath(selected).toString();
             getConfig().commands.put(container.command, stored);
             container.setFile(stored);
             save();
-        }, this::editFile));
+        });
     }
 
     @Override

@@ -4,12 +4,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import xyz.wagyourtail.jsmacros.client.gui.MacroPathUtils;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.CommandScriptsScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
+
+import java.io.File;
 
 /**
  * A single command script entry in the {@link CommandScriptsScreen}: command name,
@@ -52,7 +55,7 @@ public class CommandScriptContainer extends MultiElementContainer<MacroScreen> {
             }));
         }));
 
-        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Component.literal("./" + file.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Component.literal(formatFile(file)), (btn) -> {
             parent.setFile(this);
         }));
 
@@ -63,7 +66,11 @@ public class CommandScriptContainer extends MultiElementContainer<MacroScreen> {
 
     public void setFile(String file) {
         this.file = file;
-        fileBtn.setMessage(Component.literal("./" + file.replaceAll("\\\\", "/")));
+        fileBtn.setMessage(Component.literal(formatFile(file)));
+    }
+
+    private static String formatFile(String file) {
+        return MacroPathUtils.toDisplayPath(new File(file).toPath());
     }
 
     private static boolean isValidCommandName(String name) {

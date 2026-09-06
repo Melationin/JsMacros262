@@ -40,7 +40,6 @@ import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class JsMacrosClient extends JsMacros {
     public static KeyMapping keyBinding = new KeyMapping("jsmacros.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, keyBindingCategory);
     public static final Core<ClientProfile, EventRegistry> clientCore = new Core<>(EventRegistry::new, ClientProfile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
 
-    private static BaseScreen prevScreen;
+    private static Screen prevScreen;
 
     public static void onInitializeClient() {
         try {
@@ -126,13 +125,13 @@ public class JsMacrosClient extends JsMacros {
         };
     }
 
-    public static BaseScreen prevScreen() {
+    public static Screen prevScreen() {
         if (prevScreen != null) return prevScreen;
         // Lazy init
         return prevScreen = new KeyMacrosScreen(null);
     }
 
-    public static void setPrevScreen(BaseScreen screen) {
+    public static void setPrevScreen(Screen screen) {
         prevScreen = screen;
     }
 

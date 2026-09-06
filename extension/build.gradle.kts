@@ -1,28 +1,16 @@
 plugins {
     java
-    alias(libs.plugins.shadow)
+    `java-test-fixtures`
+    alias(libs.plugins.shadow) apply false
 }
 
 val archives_base_name: String by project.properties
 
-repositories {
-    mavenCentral()
-    maven("https://libraries.minecraft.net/")
-}
-
 dependencies {
-    implementation(rootProject.sourceSets["core"].output)
-    for (dependency in rootProject.configurations["minecraftLibraries"].dependencies) {
-        implementation(dependency)
-    }
-
-    for (dependency in rootProject.configurations.implementation.get().dependencies) {
-        implementation(dependency)
-    }
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testImplementation("org.jetbrains:annotations:20.1.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testFixturesApi(rootProject.sourceSets.main.get().output)
+    testFixturesApi(project(":jsm-api"))
+    testFixturesApi(libs.junit.api)
+    testFixturesApi(libs.slf4j)
 }
 
 java {
@@ -35,8 +23,8 @@ java {
 }
 
 subprojects {
-    apply(plugin= "java")
-    apply(plugin= "com.github.johnrengelman.shadow")
+    apply(plugin = "java")
+    apply(plugin = "com.gradleup.shadow")
 
     base {
         archivesName = archives_base_name + "-${project.name}-extension"
@@ -57,46 +45,40 @@ subprojects {
         extendsFrom(jsmacrosExtensionInclude)
     }
 
-    repositories {
-        mavenCentral()
-        maven("https://libraries.minecraft.net/")
-    }
-
     dependencies {
-
-        implementation(parent!!.sourceSets.main.get().output)
-        for (dependency in parent!!.configurations.implementation.get().dependencies) {
+        implementation(rootProject.sourceSets.main.get().output)
+        for (dependency in rootProject.configurations.implementation.get().dependencies) {
             implementation(dependency)
         }
 
-        testImplementation(parent!!.sourceSets.test.get().output)
+        testImplementation(testFixtures(project(":extension")))
     }
 
     // run tests interpreted on plain-JDK-like JVMs: -XX:-EnableJVMCI makes
     // LibGraal (graal-sdk) fall back gracefully instead of crashing on
     // JVMCI-version mismatch (graal 24.0.1 vs GraalVM JDK 25)
     tasks.test {
+        useJUnitPlatform()
         jvmArgs("-XX:-EnableJVMCI")
     }
 
-    afterEvaluate {
-        var includeFiles = files(jsmacrosExtensionInclude) - files(parent!!.configurations.findByName("jsmacrosExtensionInclude") ?: emptySet<File>()).filter{ it.name.endsWith(".jar") }
+    val includeFiles = files(jsmacrosExtensionInclude) -
+        files(parent!!.configurations.findByName("jsmacrosExtensionInclude") ?: emptySet<File>())
+            .filter { it.name.endsWith(".jar") }
 
-        tasks.jar {
-            from(includeFiles) {
-                include("*")
-                into("META-INF/jsmacrosdeps")
-            }
-
-            isPreserveFileTimestamps = false
-            isReproducibleFileOrder = true
+    tasks.jar {
+        from(includeFiles) {
+            include("*")
+            into("META-INF/jsmacrosdeps")
         }
 
-        tasks.processResources {
-            filesMatching("jsmacros.ext.*.json") {
-                expand("dependencies" to includeFiles.joinToString("\", \"") { "META-INF/jsmacrosdeps/${it.name}" })
-            }
-        }
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
     }
 
+    tasks.processResources {
+        filesMatching("jsmacros.ext.*.json") {
+            expand("dependencies" to includeFiles.joinToString("\", \"") { "META-INF/jsmacrosdeps/${it.name}" })
+        }
+    }
 }

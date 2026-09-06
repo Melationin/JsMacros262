@@ -8,12 +8,12 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.gui.IJsMacrosScreen;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.api.BaseEvent;
 import xyz.wagyourtail.jsmacros.api.Event;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -80,7 +80,7 @@ public class EventKey extends BaseEvent {
                 if (JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) {
                     return false;
                 }
-                if (mc.gui.screen() instanceof BaseScreen) {
+                if (mc.gui.screen() instanceof IJsMacrosScreen) {
                     return false;
                 }
                 GuiEventListener focused = mc.gui.screen().getFocused();

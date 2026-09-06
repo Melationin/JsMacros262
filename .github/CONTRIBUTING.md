@@ -1,19 +1,13 @@
-## Setting up project
+## Setting up the project
 
-### 1.12 and up
+Use JDK 25 and clone the JS backend next to this repository:
 
-should just work in intellij idea.
-builds with `./gradlew build`, outputs are in `./dist` folder
+```bash
+git clone https://github.com/Melationin/JS-backend.git ../js-backend
+./gradlew build
+```
 
-### 1.8.9
-
-additional step of
-`./gradlew setupdevworkspace`
-and an extra refresh afterward.
-
-### notes
-
-forge sometimes doesn't like working in dev...
+Build outputs are written to `build/libs` and `dist`.
 
 ## PR Guidelines
 

@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.gui.MacroPathUtils;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
@@ -93,13 +94,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         }
 
 
-        final String fileName;
-        if (macro.scriptFile.isAbsolute()) {
-            fileName = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(macro.scriptFile).toString();
-        } else {
-            fileName = macro.scriptFile.toString();
-        }
-        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Component.literal("./" + fileName.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Component.literal(MacroPathUtils.toDisplayPath(macro.scriptFile)), (btn) -> {
             parent.setFile(this);
         }));
 
@@ -129,9 +124,8 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setFile(File f) {
-        macro.scriptFile = JsMacrosClient.clientCore.config.macroFolder.toPath().relativize(f.toPath());
-        final String fileName = macro.scriptFile.toString();
-        fileBtn.setMessage(Component.literal("./" + fileName.replaceAll("\\\\", "/")));
+        macro.scriptFile = MacroPathUtils.toStoredPath(f);
+        fileBtn.setMessage(Component.literal(MacroPathUtils.toDisplayPath(macro.scriptFile)));
     }
 
     @Override

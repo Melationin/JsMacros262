@@ -12,11 +12,6 @@ public class JsMacros {
     protected static final File configFolder = ServiceLoader.load(ConfigFolder.class).findFirst().orElseThrow().getFolder();
     protected static final ModLoader modLoader = ServiceLoader.load(ModLoader.class).findFirst().orElseThrow();
 
-//    public static final Core<Profile, EventRegistry> serverCore = new Core<>(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
-
-    public static void onInitialize() {
-    }
-
     public static ModLoader getModLoader() {
         return modLoader;
     }

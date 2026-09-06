@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.gui.GuiBase;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -12,11 +13,9 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
+import xyz.wagyourtail.jsmacros.client.gui.IProfileReloadable;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.AboutOverlay;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.EventChooser;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
@@ -29,8 +28,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class MacroScreen extends BaseScreen {
+public class MacroScreen extends BaseScreen implements IProfileReloadable {
     protected MultiElementContainer<MacroScreen> topbar;
     protected Scrollbar macroScroll;
     protected List<MultiElementContainer<MacroScreen>> macros = new ArrayList<>();
@@ -88,11 +88,10 @@ public class MacroScreen extends BaseScreen {
         macroScroll = this.addDrawableChild(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
         runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.running"), (btn) -> {
-            assert minecraft != null;
-            minecraft.setScreenAndShow(new CancelScreen(this));
+            GuiBase.openGui(new RunningContextsScreen(this));
         }));
 
-        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, font, this))));
+        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Component.translatable("jsmacros.about"), (btn) -> GuiBase.openGui(new AboutScreen(this))));
     }
 
     protected MultiElementContainer<MacroScreen> createTopbar() {
@@ -125,17 +124,25 @@ public class MacroScreen extends BaseScreen {
         if (!file.equals(JsMacrosClient.clientCore.config.macroFolder)) {
             dir = file.getParentFile();
         }
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, dir, file, this, ((MacroContainer) macro)::setFile, this::editFile));
+        openFileBrowser(dir, file, ((MacroContainer) macro)::setFile);
     }
 
     public void setEvent(MacroContainer macro) {
-        openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.font, macro.getRawMacro().event, this, macro::setEventType));
+        GuiBase.openGui(new EventSelectionScreen(
+            this,
+            macro.getRawMacro().event,
+            macro::setEventType
+        ));
     }
 
     public void runFile() {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, JsMacrosClient.clientCore.config.macroFolder, null, this, (file) -> {
+        openFileBrowser(JsMacrosClient.clientCore.config.macroFolder, null, (file) -> {
             JsMacrosClient.clientCore.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file.toPath(), true, false), null);
-        }, this::editFile));
+        });
+    }
+
+    protected void openFileBrowser(File directory, File selected, Consumer<File> selectAction) {
+        GuiBase.openGui(new MacroFileBrowserScreen(this, directory, selected, selectAction, this::editFile));
     }
 
     public void confirmRemoveMacro(MultiElementContainer<MacroScreen> macro) {

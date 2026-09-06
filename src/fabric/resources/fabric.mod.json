@@ -14,11 +14,8 @@
   },
   "license": "MPL-2.0",
   "icon": "assets/jsmacrosplus/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "xyz.wagyourtail.jsmacros.fabric.client.JsMacrosFabric"
-    ],
     "client": [
       "xyz.wagyourtail.jsmacros.fabric.client.JsMacrosFabric"
     ],
@@ -33,6 +30,7 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "minecraft": ["26.2"],
-    "js-backend-graaljs": ">=0.1.0"
+    "js-backend-graaljs": ">=0.1.0",
+    "malilib": ">=0.29.2 <0.30.0"
   }
 }

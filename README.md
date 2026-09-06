@@ -56,7 +56,7 @@
 
 ## 安装
 
-1. 下载 `jsmacrosplus-26.2-2.0.0-fabric.jar`
+1. 下载 `jsmacrosplus-26.2-2.0.1.jar`
 2. 下载 `js-backend-graaljs-0.1.0.jar`（共享 JS 后端）
 3. 两者都放入游戏 `mods/` 文件夹
 4. 启动游戏（需要 Java 25/26 运行时）
@@ -201,7 +201,7 @@ cd JsMacros2622
 ./gradlew :jsm-api:publishToMavenLocal
 ```
 
-**2. 创建 Addon 工程**（模板：`addon-template/`，依赖 `xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0`）：
+**2. 创建 Addon 工程**（模板：`addon-template/`，依赖 `xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1`）：
 
 ```jsonc
 // fabric.mod.json
@@ -209,7 +209,7 @@ cd JsMacros2622
   "id": "my-addon",
   "environment": "client",
   "entrypoints": { "jsmacrosplus": ["com.example.MyAddon"] },
-  "depends": { "jsmacrosplus": ">=2.0.0", "minecraft": "26.2" }
+  "depends": { "jsmacrosplus": ">=2.0.1", "minecraft": "26.2" }
 }
 ```
 
@@ -270,9 +270,9 @@ JsMacros.on("MyEvent", JavaWrapper.methodToJava((e) => {
 
 ### jsmacrosplus-api 构件
 
-- 坐标：`xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.0`
+- 坐标：`xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1`
 - 内容：`Extension` / `LibraryExtension` / `Core`（接口）/ `Config` / `BaseLibrary`+`@Library` / `BaseEvent`+`@Event` / `EventFilterer` / `BaseHelper`
-- 零依赖（纯 JDK），无 MC/fabric 引用 → **无类名映射问题**，Addon 用 loom/unimined 构建 + remap 后与其他 mod 互操作安全
+- 零依赖（纯 JDK），无 MC/Fabric 引用 → **无类名映射问题**，Addon 使用 Fabric Loom 构建后可与其他 mod 安全互操作
 
 ---
 
@@ -297,43 +297,48 @@ JsMacros.on("MyEvent", JavaWrapper.methodToJava((e) => {
 
 | 工具 | 版本 | 说明 |
 |---|---|---|
-| JDK | 21 | 运行 Gradle 构建（Gradle 8.14.4 不支持 JDK 25/26 作为守护 JVM） |
-| JDK | 25/26 | 编译 toolchain（自动下载）与游戏运行 |
-| Gradle | 8.14.4（wrapper） | 内置 |
+| JDK | 25 | 运行 Gradle、编译源码和启动开发环境 |
+| Gradle | 9.4.1（wrapper） | 内置 |
+
+主项目通过 Gradle composite build 使用相邻的 JS 后端仓库。首次构建前先克隆：
+
+```bash
+git clone https://github.com/Melationin/JS-backend.git ../js-backend
+```
 
 ### 构建命令
 
 ```bash
-# 完整构建（产出发布 jar）
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew build -x test
+# 完整构建（包含检查、文档与 dist）
+./gradlew build
 
 # 仅发布 jar（跳过文档等）
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew fabricJar
+./gradlew jar
 
 # 发布 jsmacrosplus-api 到本地 maven（Addon 开发用）
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew :jsm-api:publishToMavenLocal
+./gradlew :jsm-api:publishToMavenLocal
 
 # 发布 doclet（TS/Web 文档生成器）到本地 maven（Addon 的 genTSDoc 用）
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew :doclet:publishToMavenLocal
+./gradlew :doclet:publishToMavenLocal
 
-# 开发运行（Zulu 26 JVM，自动加载 mods 文件夹与依赖）
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew fabricRunClient
+# 开发运行
+./gradlew runClient
 
 # 构建模板 addon
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template build
+./gradlew -p addon-template build
 
 # 模板 addon：生成 TS API 声明（build/typescript/headers/*.d.ts）
-JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
+./gradlew -p addon-template genTSDoc
 ```
 
 ### 产物
 
 | 文件 | 说明 |
 |---|---|
-| `build/libs/jsmacrosplus-26.2-2.0.0-fabric.jar` | 发布 jar（remap 后，放 mods 使用） |
-| `build/libs/jsmacrosplus-26.2-2.0.0-fabric-dev.jar` | 开发 jar |
-| `jsm-api/build/libs/jsmacrosplus-api-2.0.0.jar` | API 构件 |
-| `doclet/build/libs/jsmacrosplus-doclet-2.0.0.jar` | TS/Web 文档生成 doclet |
+| `build/libs/jsmacrosplus-26.2-2.0.1.jar` | Fabric 发布 JAR（放入 mods 使用） |
+| `jsm-api/build/libs/jsmacrosplus-api-2.0.1.jar` | API 构件 |
+| `doclet/build/libs/jsmacrosplus-doclet-2.0.1.jar` | TS/Web 文档生成 doclet |
+| `../js-backend/graaljs/build/libs/js-backend-graaljs-0.1.0.jar` | GraalJS 后端 mod |
 | `addon-template/build/libs/jsmacrosplus-addon-template-1.0.0.jar` | 模板 Addon |
 | `addon-template/build/typescript/headers/*.d.ts` | 模板 Addon 的 TS API 声明（`genTSDoc` 产出） |
 
@@ -381,7 +386,7 @@ JAVA_HOME="C:\Program Files\Java\jdk-21" ./gradlew -p addon-template genTSDoc
 | ModMenu | ✅ 正常 |
 | 普通 JDK（Zulu/微软等） | ✅ Graal 解释模式运行 |
 | GraalVM JDK 25 | ✅ 可 JIT（graal-sdk 需与 JDK 匹配，见 FAQ） |
-| 其他 mod | 常规 fabric mod，无冲突；Addon 可安全引用其他 mod 类（loom/unimined remap） |
+| 其他 mod | 常规 Fabric mod，无冲突；Addon 可通过 Fabric Loom 安全引用其他 mod 类 |
 
 ### 已知说明
 - **3D 渲染**（Draw3D）基于 26.2 的 FrameGraph + Gizmos 管线；与 Sodium 共存已验证启动/渲染无异常，实际效果建议实测
@@ -419,7 +424,7 @@ JS 后端由独立 Lib Mod `js-backend-graaljs` 提供。请确认 `mods/` 中�
 可以。Addon 是标准 Fabric mod，声明 `mixins` 即可；jsmacrosplus 启动时通过 `"jsmacrosplus"` entrypoint 发现并初始化。
 
 ### 8. 构建报错 `generateWebDoc` 失败
-文档任务与代码无关，构建发布 jar 用 `./gradlew fabricJar` 或 `build -x test -x generateWebDoc`。
+文档任务与代码无关，仅构建发布 JAR 可使用 `./gradlew jar`；完整发行目录使用 `./gradlew build`。
 
 ---
 

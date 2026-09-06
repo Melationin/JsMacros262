@@ -1,16 +1,10 @@
 # JitPack build config: publish only the jsm-api artifact.
-# JitPack's default JDK is 25, which Gradle 8.14.4 cannot run on (its Kotlin DSL
-# compiler crashes parsing e.g. "25.0.4"), so switch to JDK 21 via the sdkman
-# that JitPack provides. Note: the old "open" vendor suffix is not available for
-# JDK 21 in the current sdkman, use the Temurin suffix "-tem" instead.
+# The API targets Java 21, so use the matching Temurin JDK for publication.
 before_install:
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
   - sdk install java 21.0.4-tem
   - sdk use java 21.0.4-tem
 
-# sdk use sets JAVA_HOME in this shell; re-export explicitly as a fallback in
-# case JitPack runs each command in its own shell, and print the version for
-# diagnostics.
 # publishToMavenLocal (not assemble): JitPack publishes by locating pom.xml
 # in build/ or ~/.m2, and assemble produces no pom, so no artifacts get
 # published otherwise ("No build artifacts found").
@@ -18,4 +12,4 @@ install:
   - export JAVA_HOME="$HOME/.sdkman/candidates/java/21.0.4-tem"
   - export PATH="$JAVA_HOME/bin:$PATH"
   - java -version
-  - ./gradlew :jsm-api:publishToMavenLocal
+  - ./gradlew :jsm-api:publishToMavenLocal -PapiOnly

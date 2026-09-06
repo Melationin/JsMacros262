@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.gui.MacroPathUtils;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
@@ -46,7 +47,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }));
         }));
 
-        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Component.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Component.literal(MacroPathUtils.toDisplayPath(getTrigger().file)), (btn) -> {
             parent.setFile(this);
         }));
 
@@ -94,9 +95,9 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public void setFile(File file) {
-        getTrigger().file = JsMacrosClient.clientCore.config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath());
+        getTrigger().file = MacroPathUtils.toStoredPath(file);
         JsMacrosClient.clientCore.services.disableReload(service);
-        fileBtn.setMessage(Component.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")));
+        fileBtn.setMessage(Component.literal(MacroPathUtils.toDisplayPath(getTrigger().file)));
     }
 
     @Override

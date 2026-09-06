@@ -43,7 +43,7 @@ public class ScriptScreen extends BaseScreen {
 
     @Override
     protected void init() {
-        BaseScreen prev = JsMacrosClient.prevScreen();
+        net.minecraft.client.gui.screens.Screen prev = JsMacrosClient.prevScreen();
         super.init();
         JsMacrosClient.setPrevScreen(prev);
     }

@@ -5,28 +5,23 @@ minecraft = "26.2"
 
 fabric_loader = "0.19.3"
 
-mixin = "0.8.7"
-mixin_extra = "0.3.2"
-
 asm = "9.10.1"
 prism4j = "2.0.0"
 joor = "0.9.15"
 nv_websocket = "2.14"
 junit = "5.8.1"
-jb_annotations = "20.1.0"
 javassist = "3.30.2-GA"
+slf4j = "2.0.17"
 
 fapi = "0.156.0+26.2"
 modmenu = "20.0.1"
 sodium = "mc26.2-0.9.1-fabric"
+malilib = "0.29.4"
 
 shadow = "8.3.6"
 
 [libraries]
 prism4j = { module = "io.noties:prism4j", version.ref = "prism4j" }
-
-mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
-mixin_extra = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixin_extra" }
 
 asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 joor = { module = "org.jooq:joor", version.ref = "joor" }
@@ -35,11 +30,10 @@ javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
 
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 sodium = { module = "maven.modrinth:sodium", version.ref = "sodium" }
+malilib = { module = "maven.modrinth:malilib", version.ref = "malilib" }
 
 junit_api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-
-jb_annotations = { module = "org.jetbrains:annotations", version.ref = "jb_annotations" }
+slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

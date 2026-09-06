@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventFallFlying;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeldItemChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventTick;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
+import xyz.wagyourtail.jsmacros.client.gui.screens.JsMacrosMainScreen;
 
 public class TickBasedEvents {
     private static ItemStack mainHand = ItemStack.EMPTY;
@@ -48,7 +49,7 @@ public class TickBasedEvents {
 
     public static void onTick(Minecraft mc) {
         if (JsMacrosClient.keyBinding.consumeClick() && mc.gui.screen() == null) {
-            mc.setScreenAndShow(JsMacrosClient.prevScreen());
+            mc.setScreenAndShow(new JsMacrosMainScreen(null));
         }
 
         FClient.tickSynchronizer.tick();

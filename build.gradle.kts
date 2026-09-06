@@ -1,8 +1,5 @@
-import xyz.wagyourtail.unimined.internal.minecraft.task.RemapJarTaskImpl
-
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.4.2-SNAPSHOT"
-    alias(libs.plugins.shadow)
+    id("net.fabricmc.fabric-loom") version "1.16.2"
 }
 
 val archives_base_name: String by project.properties
@@ -28,149 +25,92 @@ java {
 repositories {
     maven("https://maven.fabricmc.net/")
     maven("https://maven.terraformersmc.com/releases/")
-    maven("https://files.minecraftforge.net/maven/")
     maven("https://api.modrinth.com/maven/")
-    maven("https://jitpack.io")
     mavenCentral()
 }
 
-val core by sourceSets.creating {
-    compileClasspath += configurations.implementation.get()
-    runtimeClasspath += configurations.implementation.get()
-}
-
-val client by sourceSets.creating {
-    compileClasspath += core.output + core.compileClasspath + sourceSets.main.get().output
-    runtimeClasspath += core.output + core.runtimeClasspath + sourceSets.main.get().output
-}
-
-val fabric by sourceSets.creating {
-    compileClasspath += core.output + core.compileClasspath + sourceSets.main.get().output + client.output
-    runtimeClasspath += core.output + core.runtimeClasspath + sourceSets.main.get().output + client.output
-}
-
 sourceSets.main {
-    compileClasspath += core.output + core.compileClasspath
-    runtimeClasspath += core.output + core.runtimeClasspath
+    java.setSrcDirs(listOf(
+        "src/main/java",
+        "src/core/java",
+        "src/client/java",
+        "src/fabric/java"
+    ))
+    resources.setSrcDirs(listOf(
+        "src/main/resources",
+        "src/core/resources",
+        "src/client/resources",
+        "src/fabric/resources"
+    ))
 }
 
-unimined.minecraft {
-    version(libs.versions.minecraft.get())
-    side("server")
+loom {
+    // Minecraft 26.2 is non-obfuscated, so Loom's non-remapping plugin is used.
+    accessWidenerPath.set(file("src/main/resources/jsmacrosplus.accesswidener"))
+    fabricModJsonPath.set(file("src/fabric/resources/fabric.mod.json"))
 
-    mappings {
-        mojmap()
-    }
-
-    accessWidener {
-        accessWidener(file("src/main/resources/jsmacrosplus.accesswidener"))
-    }
-    if (sourceSet == sourceSets.main.get() || sourceSet == client) {
-        defaultRemapJar = false
-        runs.off = true
-    }
-}
-
-unimined.minecraft(client) {
-    combineWith(":core")
-    combineWith(":main")
-    side("joined")
-}
-
-unimined.minecraft(fabric) {
-    combineWith(":main")
-    side("joined")
-
-    runs.off = false
-
-    runs.config("client") {
-        javaLauncher.set(project.extensions.getByType(JavaToolchainService::class.java).launcherFor {
-            languageVersion.set(JavaLanguageVersion.of(26))
-            vendor.set(JvmVendorSpec.AZUL)
-        })
-
-        // JVMCI is incompatible with graal-sdk 24.0.1 on JDK 25 (LibGraal crash:
-        // NoSuchFieldError IS_BUILDING_NATIVE_IMAGE); disable it so the JS engine
-        // runs in interpreted mode, like on a plain JDK.
-        jvmArgs("-XX:-EnableJVMCI")
-    }
-
-    fabric {
-        loader(libs.versions.fabric.loader.get())
-        accessWidener(file("src/main/resources/jsmacrosplus.accesswidener"))
+    runs {
+        named("client") {
+            runDir("run")
+            vmArg("-XX:-EnableJVMCI")
+        }
     }
 }
 
 
-configurations.implementation.configure {
-    isCanBeResolved = true
-}
-
-val minecraftLibraries by configurations.getting
 val jsmacrosExtensionInclude by configurations.creating
 
-val clientCompileOnly by configurations.getting {
-    extendsFrom(configurations.compileOnly.get())
-}
-
-core.apply {
-    compileClasspath += minecraftLibraries
-    runtimeClasspath += minecraftLibraries
-}
-
 dependencies {
-    val coreImplementation by configurations.getting
-    val fabricModImplementation by configurations.getting
-    val fabricInclude by configurations.getting
-    val fabricRuntimeOnly by configurations.getting
+    minecraft("com.mojang:minecraft:${libs.versions.minecraft.get()}")
+    implementation("net.fabricmc:fabric-loader:${libs.versions.fabric.loader.get()}")
 
     implementation(project(":jsm-api"))
-    implementation(files("../js-backend/api/build/libs/js-backend-api-0.1.0.jar"))
-    fabricInclude(project(":jsm-api"))
-    fabricRuntimeOnly(project(":jsm-api"))
+    if (!providers.gradleProperty("apiOnly").isPresent) {
+        implementation("dev.jsbackend:js-backend-api:0.1.0")
+    }
+    include(project(":jsm-api"))
 
-    compileOnly(libs.mixin)
-    compileOnly(libs.mixin.extra)
-    implementation(libs.asm)
+    compileOnly(libs.asm)
+
+    val fabricApiVersion = libs.versions.fapi.get()
+    val embeddedFabricModules = listOf(
+        "fabric-api-base",
+        "fabric-rendering-v1",
+        "fabric-lifecycle-events-v1",
+        "fabric-key-mapping-api-v1",
+        "fabric-resource-loader-v1",
+        "fabric-command-api-v2"
+    )
+
+    for (module in embeddedFabricModules) {
+        implementation(fabricApi.module(module, fabricApiVersion))
+        include(fabricApi.module(module, fabricApiVersion))
+    }
+
+    implementation(fabricApi.module("fabric-screen-api-v1", fabricApiVersion))
+    compileOnly(libs.modmenu)
+    runtimeOnly(libs.modmenu)
+    compileOnly(libs.sodium)
+    runtimeOnly(libs.sodium)
+    implementation(libs.malilib)
 
     implementation(libs.prism4j)
-    coreImplementation(libs.joor)
-    coreImplementation(libs.nv.websocket)
-    coreImplementation(libs.javassist)
-
-    fabricModImplementation(fabricApi.fabricModule("fabric-api-base", libs.versions.fapi.get()))
-    fabricModImplementation(fabricApi.fabricModule("fabric-lifecycle-events-v1", libs.versions.fapi.get()))
-    fabricModImplementation(fabricApi.fabricModule("fabric-key-mapping-api-v1", libs.versions.fapi.get()))
-    fabricModImplementation(fabricApi.fabricModule("fabric-resource-loader-v1", libs.versions.fapi.get()))
-    fabricModImplementation(fabricApi.fabricModule("fabric-command-api-v2", libs.versions.fapi.get()))
-    fabricModImplementation(fabricApi.fabricModule("fabric-rendering-v1", libs.versions.fapi.get()))
-
-    fabricModImplementation(libs.modmenu)
-    fabricModImplementation(libs.sodium)
-    fabricModImplementation(fabricApi.fabricModule("fabric-screen-api-v1", libs.versions.fapi.get()))
-
-    fabricInclude(fabricApi.fabricModule("fabric-api-base", libs.versions.fapi.get()))
-    fabricInclude(fabricApi.fabricModule("fabric-rendering-v1", libs.versions.fapi.get()))
-    fabricInclude(fabricApi.fabricModule("fabric-lifecycle-events-v1", libs.versions.fapi.get()))
-    fabricInclude(fabricApi.fabricModule("fabric-key-mapping-api-v1", libs.versions.fapi.get()))
-    fabricInclude(fabricApi.fabricModule("fabric-resource-loader-v1", libs.versions.fapi.get()))
-    fabricInclude(fabricApi.fabricModule("fabric-command-api-v2", libs.versions.fapi.get()))
-
-    fabricInclude(libs.prism4j)
-    fabricInclude(libs.nv.websocket)
-    fabricInclude(libs.javassist)
-    fabricInclude(libs.joor)
-
-
+    include(libs.prism4j)
+    implementation(libs.nv.websocket)
+    implementation(libs.javassist)
+    implementation(libs.joor)
+    include(libs.nv.websocket)
+    include(libs.javassist)
+    include(libs.joor)
 
     for (file in file("extension").listFiles() ?: emptyArray()) {
         if (!file.isDirectory || file.name in listOf("build", "src", ".gradle", "gradle")) continue
 
-        fabricRuntimeOnly(project(":extension:${file.name}"))
+        runtimeOnly(project(":extension:${file.name}"))
 
         if (file.resolve("subprojects.txt").exists()) {
             for (subproject in file.resolve("subprojects.txt").readLines()) {
-                fabricRuntimeOnly(project(":extension:${file.name}:$subproject"))
+                runtimeOnly(project(":extension:${file.name}:$subproject"))
             }
         }
     }
@@ -184,8 +124,13 @@ tasks.clean.configure {
     finalizedBy(removeDist)
 }
 
-val processCoreResources by tasks.getting(ProcessResources::class) {
+tasks.processResources {
+    inputs.property("version", project.version)
     inputs.property("dependencies", jsmacrosExtensionInclude.files)
+
+    filesMatching("fabric.mod.json") {
+        expand("version" to project.version)
+    }
 
     filesMatching("jsmacros.extension.json") {
         expand("dependencies" to jsmacrosExtensionInclude.files.map { "\"META-INF/jsmacrosdeps/${it.name}\"" }.joinToString(", "))
@@ -193,21 +138,6 @@ val processCoreResources by tasks.getting(ProcessResources::class) {
 }
 
 tasks.jar {
-    enabled = false
-}
-
-val processFabricResources by tasks.getting(ProcessResources::class) {
-    inputs.property("version", project.version)
-
-    filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
-    }
-
-}
-
-val fabricJar by tasks.getting(Zip::class) {
-    from(fabric.output, sourceSets.main.get().output, core.output, client.output)
-
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 
@@ -219,10 +149,8 @@ val fabricJar by tasks.getting(Zip::class) {
     }
 }
 
-val remapFabricJar by tasks.getting(RemapJarTaskImpl::class) {
-
-    isPreserveFileTimestamps = false
-    isReproducibleFileOrder = true
+val documentedSources = files("src/main/java", "src/core/java").asFileTree.matching {
+    include("**/*.java")
 }
 
 val generateTSDoc by tasks.registering(Javadoc::class) {
@@ -230,10 +158,8 @@ val generateTSDoc by tasks.registering(Javadoc::class) {
     description = "Generates the typescript documentation for the project"
     dependsOn(":doclet:jar")
 
-    source = sourceSets.main.get().allJava + core.allJava
-    doFirst {
-        classpath = sourceSets.main.get().compileClasspath + core.compileClasspath
-    }
+    source = documentedSources
+    classpath = sourceSets.main.get().compileClasspath
     setDestinationDir(File(rootProject.layout.buildDirectory.get().asFile, "docs/typescript/headers/"))
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
     options.docletpath(project(":doclet").tasks.jar.get().archiveFile.get().asFile)
@@ -254,17 +180,14 @@ val generateWebDoc by tasks.registering(Javadoc::class) {
     description = "Generates the web documentation for the project"
     dependsOn(":doclet:jar")
 
-    source = sourceSets.main.get().allJava + core.allJava
+    source = documentedSources
+    classpath = sourceSets.main.get().compileClasspath
     setDestinationDir(File(rootProject.layout.buildDirectory.get().asFile, "docs/web/"))
     options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
     options.docletpath(project(":doclet").tasks.jar.get().archiveFile.get().asFile)
     (options as CoreJavadocOptions).addStringOption("v", mod_version)
     (options as CoreJavadocOptions).addStringOption("mcv", libs.versions.minecraft.get())
     (options as StandardJavadocDocletOptions).links("https://docs.oracle.com/javase/8/docs/api/", "https://www.javadoc.io/doc/org.slf4j/slf4j-api/1.7.30/", "https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/")
-
-    doFirst {
-        classpath = sourceSets.main.get().compileClasspath + core.compileClasspath
-    }
 }
 
 val copyWebDoc by tasks.registering(Copy::class) {

@@ -1,5 +1,5 @@
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.4.2-SNAPSHOT"
+    id("net.fabricmc.fabric-loom") version "1.16.2"
 }
 
 base {
@@ -20,26 +20,17 @@ java {
 
 repositories {
     mavenLocal()
+    maven("https://maven.fabricmc.net/")
     mavenCentral()
 }
 
-unimined.minecraft {
-    version("26.2")
-    side("joined")
-
-    mappings {
-        mojmap()
-    }
-
-    fabric {
-        loader("0.19.3")
-    }
-}
-
 dependencies {
+    minecraft("com.mojang:minecraft:26.2")
+    implementation("net.fabricmc:fabric-loader:0.19.3")
+
     // JsMacrosPlus API - the only JsMacrosPlus dependency an addon needs at compile time.
     // Build it first in the JsMacrosPlus repo with: ./gradlew :jsm-api:publishToMavenLocal
-    implementation("xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1")
+    compileOnly("xyz.wagyourtail.jsmacros:jsmacrosplus-api:2.0.1")
 }
 
 // expand ${version} in fabric.mod.json (same as the main mod's build)

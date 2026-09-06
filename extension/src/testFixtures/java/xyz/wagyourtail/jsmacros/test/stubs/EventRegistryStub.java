@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.test.stubs;
 
-import com.google.common.collect.ImmutableList;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
@@ -24,7 +23,7 @@ public class EventRegistryStub extends BaseEventRegistry {
 
     @Override
     public List<ScriptTrigger> getScriptTriggers() {
-        return ImmutableList.of();
+        return List.of();
     }
 
 }

@@ -6,7 +6,6 @@ import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 
@@ -61,7 +60,7 @@ public class ServiceScreen extends MacroScreen {
         if (!file.equals(JsMacrosClient.clientCore.config.macroFolder)) {
             dir = file.getParentFile();
         }
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, dir, file, this, ((ServiceContainer) macro)::setFile, this::editFile));
+        openFileBrowser(dir, file, ((ServiceContainer) macro)::setFile);
     }
 
     @Override

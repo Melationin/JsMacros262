@@ -17,10 +17,12 @@ import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
+import xyz.wagyourtail.jsmacros.client.gui.IJsMacrosRootScreen;
+import xyz.wagyourtail.jsmacros.client.gui.IJsMacrosScreen;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
-public abstract class BaseScreen extends Screen implements IOverlayParent {
+public abstract class BaseScreen extends Screen implements IOverlayParent, IJsMacrosScreen {
     protected Screen parent;
     protected OverlayContainer overlay;
 
@@ -35,6 +37,11 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
 
     public void setParent(Screen parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public void setJsMacrosParent(Screen parent) {
+        this.setParent(parent);
     }
 
     public void reload() {
@@ -171,7 +178,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     @Override
     public void onClose() {
         assert minecraft != null;
-        if (minecraft.level == null) {
+        if (minecraft.level == null || parent instanceof IJsMacrosRootScreen) {
             openParent();
         } else {
             setFocused(null);

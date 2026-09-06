@@ -3,8 +3,7 @@ package xyz.wagyourtail.jsmacros.fabric.client;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screens.Screen;
-import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.screens.JsMacrosMainScreen;
 
 public class ModMenuEntry implements ModMenuApi {
     private final JsMacroScreen jsmacrosscreenfactory = new JsMacroScreen();
@@ -14,10 +13,10 @@ public class ModMenuEntry implements ModMenuApi {
         return jsmacrosscreenfactory;
     }
 
-    public static class JsMacroScreen implements ConfigScreenFactory<BaseScreen> {
+    public static class JsMacroScreen implements ConfigScreenFactory<Screen> {
         @Override
-        public BaseScreen create(Screen parent) {
-            return JsMacrosClient.prevScreen();
+        public Screen create(Screen parent) {
+            return new JsMacrosMainScreen(parent);
         }
 
     }

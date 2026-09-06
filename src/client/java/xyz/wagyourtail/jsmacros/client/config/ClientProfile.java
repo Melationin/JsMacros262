@@ -99,7 +99,7 @@ import xyz.wagyourtail.jsmacros.client.api.library.impl.FPlayer;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FPositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FWorld;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
-import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
+import xyz.wagyourtail.jsmacros.client.gui.IProfileReloadable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
@@ -118,8 +118,8 @@ public class ClientProfile extends BaseProfile {
     protected boolean loadProfile(String profileName) {
         boolean val = super.loadProfile(profileName);
         final Minecraft mc = Minecraft.getInstance();
-        if (mc.gui != null && mc.gui.screen() instanceof MacroScreen) {
-            mc.execute(() -> ((MacroScreen) mc.gui.screen()).reload());
+        if (mc.gui != null && mc.gui.screen() instanceof IProfileReloadable screen) {
+            mc.execute(screen::reload);
         }
         return val;
     }

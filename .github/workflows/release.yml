@@ -1,9 +1,7 @@
 name: Build Release
 
 # Builds the release artifacts when a GitHub release is created and attaches
-# them to the release. Replaces the old delegation to the upstream
-# jsmacros/jsmacros releasebuild.yml (whose JDK setup crashes Gradle 8.14.4's
-# Kotlin DSL compiler on JDK 25: "java.lang.IllegalArgumentException: 25.0.4").
+# them to the release.
 
 on:
   release:
@@ -22,32 +20,26 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21 (Gradle daemon JVM)
-        id: jdk21
-        uses: actions/setup-java@v4
+      - name: Check out JS backend
+        uses: actions/checkout@v4
         with:
-          distribution: temurin
-          java-version: 21
-          cache: gradle
+          repository: Melationin/JS-backend
+          path: js-backend
 
-      # Compile toolchain for the build (java = 25 in gradle/libs.versions.toml).
-      # Pre-installed so Gradle does not have to download it via foojay on CI.
-      - name: Set up JDK 25 (compile toolchain)
-        id: jdk25
+      - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 25
+          cache: gradle
 
       - name: Make gradlew executable
         run: chmod +x gradlew
 
       - name: Build release artifacts
-        env:
-          # Pin the daemon JVM to 21; Gradle 8.14.4 does not support JDK 25/26
-          # as the daemon JVM (Kotlin DSL version parse crashes on 25.x).
-          JAVA_HOME: ${{ steps.jdk21.outputs.path }}
-        run: ./gradlew remapFabricJar :jsm-api:jar -x test -Porg.gradle.java.installations.paths=${{ steps.jdk25.outputs.path }}
+        run: |
+          ./gradlew -p js-backend :graaljs:shadowJar
+          ./gradlew build -x test -PjsBackendDir=js-backend
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
@@ -55,5 +47,6 @@ jobs:
           files: |
             build/libs/*.jar
             jsm-api/build/libs/*.jar
+            js-backend/graaljs/build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

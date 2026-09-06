@@ -1,10 +1,6 @@
 pluginManagement {
     repositories {
-        mavenLocal()
-        maven("https://maven.wagyourtail.xyz/releases")
-        maven("https://maven.wagyourtail.xyz/snapshots")
-        maven("https://maven.neoforged.net/releases")
-        mavenCentral()
+        maven("https://maven.fabricmc.net/")
         gradlePluginPortal()
     }
 }
