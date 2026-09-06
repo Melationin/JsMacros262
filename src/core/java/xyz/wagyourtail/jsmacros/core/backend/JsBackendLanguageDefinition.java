@@ -49,6 +49,20 @@ public class JsBackendLanguageDefinition extends BaseLanguage<JsContext, JsBacke
             allGlobals.putAll(libs);
         }
 
+        // JsContextConfig uses Map.copyOf(), which intentionally rejects null
+        // values. JSM still exposes null globals (notably event/file for
+        // single-run and string scripts), so install those after the context
+        // has been created through the backend API instead of passing them in
+        // the immutable configuration map.
+        Map<String, Object> deferredGlobals = new HashMap<>();
+        allGlobals.entrySet().removeIf(entry -> {
+            if (entry.getValue() == null) {
+                deferredGlobals.put(entry.getKey(), null);
+                return true;
+            }
+            return false;
+        });
+
         JsContextConfig config = new JsContextConfig(
                 currentDir == null ? runner.config.macroFolder.toPath() : currentDir.toPath(),
                 conf.extraOptions,
@@ -57,7 +71,9 @@ public class JsBackendLanguageDefinition extends BaseLanguage<JsContext, JsBacke
                 true,
                 true
         );
-        return backend.createContext(config);
+        JsContext context = backend.createContext(config);
+        deferredGlobals.forEach(context::setGlobal);
+        return context;
     }
 
     @Override

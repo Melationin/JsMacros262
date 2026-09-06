@@ -49,7 +49,11 @@ public class TickBasedEvents {
 
     public static void onTick(Minecraft mc) {
         if (JsMacrosClient.keyBinding.consumeClick() && mc.gui.screen() == null) {
-            mc.setScreenAndShow(new MacroManagementScreen(JsMacrosClient.prevScreen()));
+            // The K shortcut is only handled from the in-game view. Do not use
+            // the legacy prevScreen cache here: it may contain the old
+            // KeyMacrosScreen, which would reappear when the malilib screen is
+            // closed with Escape.
+            mc.setScreenAndShow(new MacroManagementScreen(null));
         }
 
         FClient.tickSynchronizer.tick();

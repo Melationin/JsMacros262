@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
-import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiDialogBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.render.GuiContext;
@@ -48,17 +47,6 @@ public final class AboutScreen extends GuiDialogBase implements IJsMacrosScreen 
         x += this.addLinkButton(x, y, "Website", "https://jsmacros.wagyourtail.xyz") + 4;
         x += this.addLinkButton(x, y, "Discord", "https://discord.gg/P6W58J8") + 4;
         x += this.addLinkButton(x, y, "CurseForge", "https://www.curseforge.com/minecraft/mc-mods/jsmacros") + 4;
-
-        String done = StringUtils.translate("malilib.gui.button.done");
-        int doneWidth = this.getStringWidth(done) + 20;
-        ButtonGeneric doneButton = new ButtonGeneric(
-            this.dialogLeft + this.dialogWidth - doneWidth - 10,
-            y,
-            doneWidth,
-            20,
-            done
-        );
-        this.addButton(doneButton, (button, mouseButton) -> GuiBase.openGui(this.getParent()));
     }
 
     private int addLinkButton(int x, int y, String label, String uri) {

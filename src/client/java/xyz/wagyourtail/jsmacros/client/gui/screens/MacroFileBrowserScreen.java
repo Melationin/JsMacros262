@@ -104,7 +104,6 @@ public final class MacroFileBrowserScreen extends GuiListBase<
         int secondRowY = this.height - 30;
         int x = 10;
 
-        x += this.addActionButton(x, firstRowY, "jsmacros.back", () -> GuiBase.openGui(this.getParent())) + 4;
         x += this.addActionButton(x, firstRowY, "jsmacros.openfolder", this::openCurrentDirectory) + 4;
         this.addActionButton(x, firstRowY, "jsmacros.new", this::openCreateDialog);
 

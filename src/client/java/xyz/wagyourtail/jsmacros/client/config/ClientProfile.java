@@ -143,7 +143,7 @@ public class ClientProfile extends BaseProfile {
                     return;
                 }
                 // un-wrap exceptions
-                if (ex.getMessage().equals(ex.getCause().toString())) {
+                if (ex.getMessage() != null && ex.getMessage().equals(ex.getCause().toString())) {
                     ex = ex.getCause();
                 }
             }

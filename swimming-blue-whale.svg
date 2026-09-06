@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680" role="img" aria-labelledby="title desc">
+  <title id="title">游泳的蓝鲸</title>
+  <desc id="desc">一只蓝鲸在碧蓝的海水中舒展鳍和尾巴，身旁浮着气泡，阳光透入水中。</desc>
+  <defs>
+    <linearGradient id="sea" x2="0.2" y2="1">
+      <stop stop-color="#b7eee9"/><stop offset=".48" stop-color="#4eabc5"/><stop offset="1" stop-color="#125475"/>
+    </linearGradient>
+    <linearGradient id="body" x1=".2" y1="0" x2=".6" y2="1">
+      <stop stop-color="#529dc5"/><stop offset=".4" stop-color="#287ca8"/><stop offset="1" stop-color="#164967"/>
+    </linearGradient>
+    <linearGradient id="belly" x2=".3" y2="1">
+      <stop stop-color="#afd9de"/><stop offset="1" stop-color="#64a6be"/>
+    </linearGradient>
+    <linearGradient id="fin" x2=".8" y2="1">
+      <stop stop-color="#337fa4"/><stop offset="1" stop-color="#143e60"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop stop-color="#ecfff1" stop-opacity=".55"/><stop offset="1" stop-color="#ecfff1" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-50%" width="160%" height="220%"><feGaussianBlur stdDeviation="17"/></filter>
+  </defs>
+  <rect width="1000" height="680" rx="32" fill="url(#sea)"/>
+  <ellipse cx="305" cy="32" rx="560" ry="340" fill="url(#glow)"/>
+  <g fill="#e3fff6" opacity=".1">
+    <path d="M120 0H190L420 610 295 610Z"/><path d="M240 0H282L666 680H561Z"/>
+    <path d="M450 0H476L926 622 858 641Z"/>
+  </g>
+  <g fill="none" stroke="#e2fff8" stroke-linecap="round">
+    <path d="M51 99Q150 79 249 99T448 99M594 74Q686 53 778 74T947 74" opacity=".35" stroke-width="3"/>
+    <path d="M95 125Q153 112 211 125M740 109Q800 96 860 109" opacity=".22" stroke-width="2"/>
+  </g>
+  <g fill="#c0eeed" opacity=".35">
+    <circle cx="106" cy="300" r="2"/><circle cx="326" cy="179" r="3"/><circle cx="516" cy="137" r="2"/>
+    <circle cx="679" cy="207" r="2"/><circle cx="898" cy="431" r="3"/><circle cx="520" cy="557" r="2"/>
+    <circle cx="269" cy="488" r="2"/><circle cx="777" cy="539" r="2"/><circle cx="149" cy="552" r="3"/>
+  </g>
+  <ellipse cx="501" cy="512" rx="282" ry="29" fill="#153e60" opacity=".18" filter="url(#shadow)"/>
+  <g>
+    <!-- 远侧胸鳍 -->
+    <path d="M488 368Q552 395 640 463Q666 483 638 481Q542 464 465 407Z" fill="#246385"/>
+    <!-- 尾柄和舒展的尾鳍 -->
+    <path d="M707 313Q776 321 820 279Q842 252 846 224Q812 229 786 207Q768 193 767 180Q820 188 855 205Q877 170 934 154Q925 197 886 228Q878 304 808 352L723 383Z" fill="url(#body)"/>
+    <path d="M851 211Q862 222 864 242M864 219Q898 195 918 177" fill="none" stroke="#84bfd4" stroke-width="3" opacity=".55" stroke-linecap="round"/>
+    <!-- 背鳍 -->
+    <path d="M631 288Q648 240 673 235Q669 269 699 301Z" fill="#28739b"/>
+    <!-- 修长鲸身与宽阔鲸头 -->
+    <path d="M162 301C214 258 327 250 439 257C555 265 638 289 729 312Q770 327 811 307Q791 352 747 374C654 421 545 449 397 444C278 442 194 411 159 367Q133 334 162 301Z" fill="url(#body)"/>
+    <!-- 腹部及喉褶 -->
+    <path d="M151 347C199 374 287 391 379 389C476 387 558 374 622 371Q558 417 474 435C338 461 209 416 167 375Q156 363 151 347Z" fill="url(#belly)"/>
+    <g fill="none" stroke="#447f9c" stroke-width="2.2" opacity=".66" stroke-linecap="round">
+      <path d="M167 365Q282 439 474 419"/>
+      <path d="M187 381Q302 449 467 429"/>
+      <path d="M170 357Q291 418 489 402"/>
+      <path d="M212 396Q304 442 397 439"/>
+    </g>
+    <!-- 背部反光与斑纹 -->
+    <path d="M176 299C294 246 445 272 548 285" fill="none" stroke="#8bc7db" stroke-width="7" stroke-linecap="round" opacity=".48"/>
+    <g fill="#92c5d5" opacity=".17">
+      <ellipse cx="332" cy="291" rx="25" ry="8"/><ellipse cx="391" cy="307" rx="16" ry="6"/>
+      <ellipse cx="459" cy="290" rx="20" ry="5"/><ellipse cx="514" cy="320" rx="27" ry="8"/>
+      <ellipse cx="588" cy="310" rx="13" ry="5"/><ellipse cx="655" cy="332" rx="18" ry="5"/>
+      <ellipse cx="357" cy="335" rx="12" ry="5"/><ellipse cx="597" cy="353" rx="22" ry="6"/>
+    </g>
+    <!-- 近侧胸鳍 -->
+    <path d="M434 373C467 385 484 425 516 458Q545 489 574 504Q584 514 564 515C508 507 458 474 417 419Q399 392 411 380" fill="url(#fin)"/>
+    <path d="M425 389Q467 468 556 506" fill="none" stroke="#5797b6" stroke-width="3" stroke-linecap="round" opacity=".65"/>
+    <!-- 嘴线、眼睛与呼吸孔 -->
+    <path d="M152 345Q208 372 295 370Q318 370 334 363" fill="none" stroke="#143e59" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M282 334Q293 327 304 335" fill="none" stroke="#66a7c2" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="294" cy="341" rx="7" ry="6.5" fill="#102e43"/>
+    <circle cx="292" cy="339" r="2" fill="#edfdf9"/>
+    <path d="M287 271Q302 267 316 270" fill="none" stroke="#205573" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <!-- 上浮的气泡 -->
+  <g fill="#dcfffa" fill-opacity=".08" stroke="#d9fff8" stroke-opacity=".65" stroke-width="2">
+    <circle cx="165" cy="254" r="13"/><circle cx="135" cy="214" r="7"/><circle cx="173" cy="176" r="9"/>
+    <circle cx="150" cy="144" r="4"/><circle cx="116" cy="277" r="4"/>
+  </g>
+  <g fill="#f1fff9" opacity=".8"><circle cx="161" cy="249" r="3"/><circle cx="170" cy="173" r="2"/></g>
+  <!-- 海流 -->
+  <g fill="none" stroke="#b0e9e6" stroke-linecap="round" opacity=".3" stroke-width="2">
+    <path d="M758 395Q812 386 850 366M774 414Q829 405 858 387M87 450Q127 458 151 450"/>
+    <path d="M650 574Q753 552 862 572M93 602Q210 578 332 600"/>
+  </g>
+</svg>

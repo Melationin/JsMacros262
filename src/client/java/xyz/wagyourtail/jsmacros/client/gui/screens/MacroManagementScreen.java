@@ -8,7 +8,6 @@ import fi.dy.masa.malilib.gui.GuiKeybindSettings;
 import fi.dy.masa.malilib.gui.button.ConfigButtonKeybind;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.interfaces.IConfigInfoProvider;
-import fi.dy.masa.malilib.gui.interfaces.IDialogHandler;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.WidgetBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetKeybindSettings;
@@ -18,12 +17,15 @@ import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.interfaces.IConfirmationListener;
 import fi.dy.masa.malilib.render.GuiContext;
 import fi.dy.masa.malilib.render.RenderUtils;
+import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.Nullable;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.CommandScriptsConfig;
@@ -34,6 +36,8 @@ import xyz.wagyourtail.jsmacros.client.hotkeys.MalilibKeybindManager;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
+import xyz.wagyourtail.jsmacros.core.service.EventService;
 import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import xyz.wagyourtail.jsmacros.util.TranslationUtil;
 
@@ -41,6 +45,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -53,7 +58,7 @@ import java.util.function.Function;
  * The main JsMacros management page.
  *
  * <p>This intentionally follows QuickCraft's configuration screen pattern: the
- * four sections are tabs on one screen and changing a tab only rebuilds the
+ * five sections are tabs on one screen and changing a tab only rebuilds the
  * list below it. The legacy screens remain available as a compatibility
  * fallback, but are no longer needed for normal navigation.</p>
  */
@@ -64,14 +69,20 @@ public final class MacroManagementScreen extends GuiListBase<
 > implements IJsMacrosScreen {
     private static final int LIST_TOP = 50;
     private static final int ENTRY_HEIGHT = 26;
+    private static final int RUNNING_STOP_WIDTH = 64;
+    private static final int RUNNING_DURATION_WIDTH = 82;
+    private static final int RUNNING_REFRESH_INTERVAL_TICKS = 5;
 
     private static Section currentSection = Section.KEYS;
 
     private List<Entry> entries = List.of();
+    private int runningRefreshTicks;
     private final KeybindHost keybindHost = new KeybindHost(this);
     private final Map<ConfigButtonKeybind, ScriptTrigger> keybindTriggers = new IdentityHashMap<>();
     @Nullable
     private ConfigButtonKeybind activeKeybindButton;
+    @Nullable
+    private RestrictedKeybindSettingsOverlay keybindSettingsOverlay;
 
     public MacroManagementScreen(Screen parent) {
         super(10, LIST_TOP);
@@ -105,6 +116,7 @@ public final class MacroManagementScreen extends GuiListBase<
     public void initGui() {
         super.initGui();
         this.addSectionTabs();
+        this.addTopActionButtons();
         this.addFooterButtons();
     }
 
@@ -123,27 +135,71 @@ public final class MacroManagementScreen extends GuiListBase<
         }
     }
 
+    private void addTopActionButtons() {
+        int y = 26;
+        int settingsWidth = this.buttonWidth("jsmacros.settings");
+        int runWidth = this.buttonWidth("jsmacros.run");
+        int x = this.width - 10 - settingsWidth;
+
+        this.addFooterButton(x, y, "jsmacros.settings", this::openSettings);
+        x -= runWidth + 4;
+        this.addFooterButton(x, y, "jsmacros.run", this::runFile);
+    }
+
     private String sectionHover(Section section) {
         return StringUtils.translate("jsmacros.management.section." + section.name().toLowerCase());
     }
 
     private void addFooterButtons() {
-        int x = 10;
         int y = this.height - 30;
-        x += this.addFooterButton(x, y, "jsmacros.back", () -> GuiBase.openGui(this.getParent())) + 4;
 
-        if (currentSection == Section.KEYS || currentSection == Section.EVENTS) {
-            x += this.addFooterButton(x, y, "jsmacros.run", this::runFile) + 4;
-            x += this.addFooterButton(x, y, "jsmacros.new", this::addMacro) + 4;
-        } else if (currentSection == Section.SERVICES) {
-            x += this.addFooterButton(x, y, "jsmacros.new", this::addService) + 4;
-        } else if (currentSection == Section.COMMANDS) {
-            x += this.addFooterButton(x, y, "jsmacros.new", this::addCommand) + 4;
+        if (currentSection == Section.RUNNING) {
+            this.addShowServicesButton(this.width - 10, y);
+            return;
         }
 
-        x += this.addFooterButton(x, y, "jsmacros.settings", this::openSettings) + 4;
-        x += this.addFooterButton(x, y, "jsmacros.running", () -> GuiBase.openGui(new RunningContextsScreen(this))) + 4;
-        this.addFooterButton(x, y, "jsmacros.about", () -> GuiBase.openGui(new AboutScreen(this)));
+        Runnable newAction = this.getNewAction();
+        if (newAction != null) {
+            int newWidth = this.buttonWidth("jsmacros.new");
+            this.addFooterButton(this.width - 10 - newWidth, y, "jsmacros.new", newAction);
+        }
+    }
+
+    private void addShowServicesButton(int right, int y) {
+        String label = StringUtils.translate("jsmacros.showservices");
+        int width = Math.max(20, Math.min(this.getStringWidth(label) + 34, this.width - 20));
+        ButtonGeneric button = new ButtonGeneric(right - width, y, width, 20, "");
+        button.setHoverStrings(StringUtils.translate("jsmacros.showservices"));
+        button.setHoverInfoRequiresShift(false);
+        this.updateShowServicesButton(button);
+        this.addButton(button, (clicked, mouseButton) -> {
+            ClientConfigV2 config = JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class);
+            config.showRunningServices = !config.showRunningServices;
+            this.updateShowServicesButton(button);
+            this.refreshEntries();
+        });
+    }
+
+    private void updateShowServicesButton(ButtonGeneric button) {
+        boolean enabled = JsMacrosClient.clientCore.config
+            .getOptions(ClientConfigV2.class)
+            .showRunningServices;
+        String prefix = enabled ? TXT_GREEN + "[x] " : TXT_RED + "[ ] ";
+        button.setDisplayString(prefix + StringUtils.translate("jsmacros.showservices") + TXT_RST);
+    }
+
+    @Nullable
+    private Runnable getNewAction() {
+        return switch (currentSection) {
+            case KEYS, EVENTS -> this::addMacro;
+            case SERVICES -> this::addService;
+            case COMMANDS -> this::addCommand;
+            case RUNNING -> null;
+        };
+    }
+
+    private int buttonWidth(String translationKey) {
+        return this.getStringWidth(StringUtils.translate(translationKey)) + 20;
     }
 
     private int addFooterButton(int x, int y, String translationKey, Runnable action) {
@@ -186,6 +242,7 @@ public final class MacroManagementScreen extends GuiListBase<
                 .stream()
                 .map(entry -> (Entry) new CommandEntry(entry.getKey(), entry.getValue()))
                 .toList();
+            case RUNNING -> this.collectRunningContexts();
         };
     }
 
@@ -203,6 +260,51 @@ public final class MacroManagementScreen extends GuiListBase<
         List<ScriptTrigger> sorted = new ArrayList<>(triggers);
         sorted.sort(JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).getSortComparator());
         return sorted.stream().map(trigger -> (Entry) new TriggerEntry(trigger)).toList();
+    }
+
+    private List<Entry> collectRunningContexts() {
+        boolean showServices = JsMacrosClient.clientCore.config
+            .getOptions(ClientConfigV2.class)
+            .showRunningServices;
+        List<RunningEntry> running = new ArrayList<>();
+
+        for (BaseScriptContext<?> context : JsMacrosClient.clientCore.getContexts()) {
+            if (context == null || context.isContextClosed()) {
+                continue;
+            }
+            if (!showServices && context.getTriggeringEvent() instanceof EventService) {
+                continue;
+            }
+            running.add(new RunningEntry(context));
+        }
+
+        running.sort(Comparator.comparing(entry -> getContextName(entry.context())));
+        return running.stream().map(entry -> (Entry) entry).toList();
+    }
+
+    private static String getContextName(BaseScriptContext<?> context) {
+        if (context.getTriggeringEvent() instanceof EventService service) {
+            return service.serviceName;
+        }
+        Thread thread = context.getMainThread();
+        return thread != null ? thread.getName() : "<unknown>";
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (currentSection == Section.RUNNING
+            && ++this.runningRefreshTicks >= RUNNING_REFRESH_INTERVAL_TICKS) {
+            this.runningRefreshTicks = 0;
+            List<Entry> updated = this.collectEntries();
+            if (!updated.equals(this.entries)) {
+                this.entries = updated;
+                EntryListWidget listWidget = this.getListWidget();
+                if (listWidget != null) {
+                    listWidget.refreshEntries();
+                }
+            }
+        }
     }
 
     private void collectTriggersFrom(
@@ -224,14 +326,29 @@ public final class MacroManagementScreen extends GuiListBase<
     }
 
     private void runFile() {
-        this.openFileBrowser(JsMacrosClient.clientCore.config.macroFolder, null, file ->
-            JsMacrosClient.clientCore.exec(new ScriptTrigger(
+        this.openFileBrowser(JsMacrosClient.clientCore.config.macroFolder, null, file -> {
+            if (file == null || !file.isFile()) {
+                return;
+            }
+
+            ScriptTrigger trigger = new ScriptTrigger(
                 ScriptTrigger.TriggerType.EVENT,
                 "",
-                file.toPath(),
+                file.toPath().toAbsolutePath().normalize(),
                 true,
                 false
-            ), null));
+            );
+            try {
+                JsMacrosClient.clientCore.exec(
+                    trigger,
+                    null,
+                    null,
+                    JsMacrosClient.clientCore.profile::logError
+                );
+            } catch (Throwable throwable) {
+                JsMacrosClient.clientCore.profile.logError(throwable);
+            }
+        });
     }
 
     private void addMacro() {
@@ -275,7 +392,7 @@ public final class MacroManagementScreen extends GuiListBase<
     }
 
     private void openSettings() {
-        GuiBase.openGui(new LegacySettingsScreen(this));
+        GuiBase.openGui(new JsMacrosConfigScreen(this));
     }
 
     private void openTextInput(String titleKey, String defaultText, Function<String, Boolean> consumer) {
@@ -324,6 +441,10 @@ public final class MacroManagementScreen extends GuiListBase<
 
     @Override
     public boolean onKeyTyped(KeyEvent input) {
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.keyPressed(input);
+            return true;
+        }
         if (this.activeKeybindButton != null) {
             this.activeKeybindButton.onKeyPressed(input.key());
             return true;
@@ -333,6 +454,10 @@ public final class MacroManagementScreen extends GuiListBase<
 
     @Override
     public boolean onCharTyped(CharacterEvent input) {
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.charTyped(input);
+            return true;
+        }
         if (this.activeKeybindButton != null) {
             return true;
         }
@@ -341,12 +466,74 @@ public final class MacroManagementScreen extends GuiListBase<
 
     @Override
     public boolean onMouseClicked(MouseButtonEvent click, boolean doubleClick) {
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.mouseClicked(click, doubleClick);
+            return true;
+        }
         boolean handled = super.onMouseClicked(click, doubleClick);
         if (this.activeKeybindButton != null
             && !this.activeKeybindButton.isMouseOver((int) click.x(), (int) click.y())) {
             this.keybindHost.setActiveKeybindButton(null);
         }
         return handled;
+    }
+
+    @Override
+    public boolean onMouseReleased(MouseButtonEvent click) {
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.mouseReleased(click);
+            return true;
+        }
+        return super.onMouseReleased(click);
+    }
+
+    @Override
+    public boolean onMouseDragged(MouseButtonEvent click, double dragXAmount, double dragYAmount) {
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.mouseDragged(click, dragXAmount, dragYAmount);
+            return true;
+        }
+        return super.onMouseDragged(click, dragXAmount, dragYAmount);
+    }
+
+    @Override
+    public boolean onMouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return true;
+        }
+        return super.onMouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
+
+    @Override
+    public void extractRenderState(
+        GuiGraphicsExtractor drawContext,
+        int mouseX,
+        int mouseY,
+        float partialTicks
+    ) {
+        super.extractRenderState(drawContext, mouseX, mouseY, partialTicks);
+        if (this.keybindSettingsOverlay != null) {
+            this.keybindSettingsOverlay.renderOverlay(drawContext, mouseX, mouseY, partialTicks);
+        }
+    }
+
+    private void openKeybindSettings(IKeybind keybind, String keybindName, Runnable onChanged) {
+        this.closeKeybindSettings();
+        this.keybindSettingsOverlay = new RestrictedKeybindSettingsOverlay(
+            keybind,
+            keybindName,
+            this,
+            onChanged
+        );
+    }
+
+    private void closeKeybindSettings() {
+        RestrictedKeybindSettingsOverlay overlay = this.keybindSettingsOverlay;
+        if (overlay != null) {
+            this.keybindSettingsOverlay = null;
+            overlay.removed();
+        }
     }
 
     private void setActiveKeybindButton(@Nullable ConfigButtonKeybind button) {
@@ -562,6 +749,7 @@ public final class MacroManagementScreen extends GuiListBase<
 
     @Override
     public void removed() {
+        this.closeKeybindSettings();
         this.keybindHost.setActiveKeybindButton(null);
         this.saveServices();
         JsMacrosClient.clientCore.profile.saveProfile();
@@ -626,7 +814,7 @@ public final class MacroManagementScreen extends GuiListBase<
      * trigger after the dialog is closed.
      */
     private static final class RestrictedKeybindSettingsWidget extends WidgetKeybindSettings {
-        private final Screen parent;
+        private final MacroManagementScreen screen;
         private final Runnable onChanged;
 
         private RestrictedKeybindSettingsWidget(
@@ -637,24 +825,18 @@ public final class MacroManagementScreen extends GuiListBase<
             IKeybind keybind,
             String keybindName,
             WidgetListBase<?, ?> widgetList,
-            Screen parent,
+            MacroManagementScreen screen,
             Runnable onChanged
         ) {
             super(x, y, width, height, keybind, keybindName, widgetList, null);
-            this.parent = parent;
+            this.screen = screen;
             this.onChanged = onChanged;
         }
 
         @Override
         protected boolean onMouseClickedImpl(MouseButtonEvent click, boolean doubleClick) {
             if (click.input() == 0) {
-                GuiBase.openGui(new RestrictedKeybindSettingsScreen(
-                    this.keybind,
-                    this.keybindName,
-                    null,
-                    this.parent,
-                    this.onChanged
-                ));
+                this.screen.openKeybindSettings(this.keybind, this.keybindName, this.onChanged);
                 return true;
             }
             if (click.input() == 1) {
@@ -671,18 +853,19 @@ public final class MacroManagementScreen extends GuiListBase<
      * and context. Extra-key matching and input cancellation remain JSM
      * controlled instead of becoming per-macro settings.
      */
-    private static final class RestrictedKeybindSettingsScreen extends GuiKeybindSettings {
+    private static final class RestrictedKeybindSettingsOverlay extends GuiKeybindSettings {
         private final Runnable onChanged;
+        private final Runnable closeAction;
 
-        private RestrictedKeybindSettingsScreen(
+        private RestrictedKeybindSettingsOverlay(
             IKeybind keybind,
             String keybindName,
-            @Nullable IDialogHandler dialogHandler,
-            Screen parent,
+            MacroManagementScreen parent,
             Runnable onChanged
         ) {
-            super(keybind, keybindName, dialogHandler, parent);
+            super(keybind, keybindName, null, parent);
             this.onChanged = onChanged;
+            this.closeAction = parent::closeKeybindSettings;
             this.setWidthAndHeight(this.dialogWidth, 2 * 22 + 30);
             this.centerOnScreen();
             this.init(this.dialogWidth, this.dialogHeight);
@@ -699,6 +882,41 @@ public final class MacroManagementScreen extends GuiListBase<
         }
 
         @Override
+        public boolean onKeyTyped(KeyEvent input) {
+            if (input.key() == KeyCodes.KEY_ESCAPE) {
+                this.closeAction.run();
+                return true;
+            }
+            return super.onKeyTyped(input);
+        }
+
+        private void renderOverlay(
+            GuiGraphicsExtractor drawContext,
+            int mouseX,
+            int mouseY,
+            float partialTicks
+        ) {
+            GuiContext ctx = GuiContext.fromGuiGraphics(drawContext);
+            ctx.nextStratum();
+            RenderUtils.drawRect(ctx, 0, 0, this.getParent().width, this.getParent().height, 0x80000000);
+            this.drawScreenBackground(ctx, mouseX, mouseY);
+            this.drawTitle(ctx, mouseX, mouseY, partialTicks);
+            this.drawWidgets(ctx, mouseX, mouseY);
+            this.drawButtons(ctx, mouseX, mouseY, partialTicks);
+            this.drawContents(ctx, mouseX, mouseY, partialTicks);
+            this.drawTextFields(ctx, mouseX, mouseY);
+            this.drawTextFieldsMultiLine(ctx, mouseX, mouseY);
+            this.drawHoveredWidget(ctx, mouseX, mouseY);
+            this.drawButtonHoverTexts(ctx, mouseX, mouseY, partialTicks);
+            this.drawGuiMessages(ctx);
+        }
+
+        @Override
+        protected boolean shouldRenderHoverStuff() {
+            return true;
+        }
+
+        @Override
         public void removed() {
             super.removed();
             this.onChanged.run();
@@ -712,6 +930,9 @@ public final class MacroManagementScreen extends GuiListBase<
     }
 
     private record ServiceEntry(String name) implements Entry {
+    }
+
+    private record RunningEntry(BaseScriptContext<?> context) implements Entry {
     }
 
     private static final class CommandEntry implements Entry {
@@ -740,7 +961,8 @@ public final class MacroManagementScreen extends GuiListBase<
         KEYS("jsmacros.keys"),
         EVENTS("jsmacros.events"),
         SERVICES("jsmacros.services"),
-        COMMANDS("jsmacros.commands");
+        COMMANDS("jsmacros.commands"),
+        RUNNING("jsmacros.running");
 
         private final String translationKey;
 
@@ -804,6 +1026,8 @@ public final class MacroManagementScreen extends GuiListBase<
                 this.createServiceButtons(serviceEntry);
             } else if (this.entry instanceof CommandEntry commandEntry) {
                 this.createCommandButtons(commandEntry);
+            } else if (this.entry instanceof RunningEntry runningEntry) {
+                this.createRunningButtons(runningEntry);
             }
         }
 
@@ -920,7 +1144,7 @@ public final class MacroManagementScreen extends GuiListBase<
                 keybind,
                 "JsMacros",
                 this.screen.getListWidget(),
-                null,
+                this.screen,
                 () -> this.screen.applyKeybindSettings(entry)
             );
             this.rowWidgets.add(widget);
@@ -986,6 +1210,26 @@ public final class MacroManagementScreen extends GuiListBase<
             );
         }
 
+        private void createRunningButtons(RunningEntry entry) {
+            ButtonGeneric stop = new ButtonGeneric(
+                this.x + this.width - RUNNING_STOP_WIDTH,
+                this.y + 3,
+                RUNNING_STOP_WIDTH,
+                BUTTON_HEIGHT,
+                StringUtils.translate("gui.cancel")
+            );
+            stop.setHoverStrings(StringUtils.translate("jsmacros.management.button.stop"));
+            stop.setHoverInfoRequiresShift(false);
+            this.rowWidgets.add(stop);
+            this.addButton(stop, (button, mouseButton) -> {
+                BaseScriptContext<?> context = entry.context();
+                if (!context.isContextClosed()) {
+                    context.closeContext();
+                }
+                this.screen.refreshEntries();
+            });
+        }
+
         private ButtonGeneric add(String label, int width, Consumer<ButtonGeneric> action) {
             return this.add(label, width, action, null);
         }
@@ -1023,7 +1267,45 @@ public final class MacroManagementScreen extends GuiListBase<
                 ? 0xA0707070
                 : this.isOdd ? 0xA0101010 : 0xA0303030;
             RenderUtils.drawRect(ctx, this.x, this.y, this.width, this.height - 1, background);
+
+            if (this.entry instanceof RunningEntry runningEntry) {
+                BaseScriptContext<?> context = runningEntry.context();
+                int textY = this.y + (this.height - this.fontHeight) / 2;
+                int nameWidth = Math.max(
+                    20,
+                    this.width - RUNNING_STOP_WIDTH - RUNNING_DURATION_WIDTH - 18
+                );
+                String name = this.trimToWidth(
+                    MacroManagementScreen.getContextName(context),
+                    nameWidth
+                );
+                this.drawString(ctx, this.x + 6, textY, 0xFFFFFFFF, name);
+
+                String duration = DurationFormatUtils.formatDurationHMS(
+                    Math.max(0L, System.currentTimeMillis() - context.startTime)
+                );
+                this.drawString(
+                    ctx,
+                    this.x + this.width - RUNNING_STOP_WIDTH - RUNNING_DURATION_WIDTH - 8,
+                    textY,
+                    0xFFC0C0C0,
+                    duration
+                );
+            }
             super.render(ctx, mouseX, mouseY, selected);
+        }
+
+        private String trimToWidth(String value, int maxWidth) {
+            if (this.getStringWidth(value) <= maxWidth) {
+                return value;
+            }
+
+            String ellipsis = "...";
+            int end = value.length();
+            while (end > 0 && this.getStringWidth(value.substring(0, end) + ellipsis) > maxWidth) {
+                end--;
+            }
+            return value.substring(0, end) + ellipsis;
         }
     }
 }

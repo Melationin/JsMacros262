@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
-import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
@@ -68,13 +67,7 @@ public final class RunningContextsScreen extends GuiListBase<
         super.initGui();
 
         int y = this.height - 30;
-        String back = StringUtils.translate("jsmacros.back");
         int x = 10;
-        int backWidth = this.getStringWidth(back) + 20;
-        ButtonGeneric backButton = new ButtonGeneric(x, y, backWidth, 20, back);
-        this.addButton(backButton, (button, mouseButton) -> GuiBase.openGui(this.getParent()));
-
-        x += backWidth + 6;
         String services = StringUtils.translate("jsmacros.showservices");
         int servicesWidth = Math.max(20, Math.min(this.getStringWidth(services) + 34, this.width - x - 10));
         this.servicesButton = new ButtonGeneric(x, y, servicesWidth, 20, "");
